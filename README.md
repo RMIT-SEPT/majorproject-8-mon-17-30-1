@@ -1,18 +1,18 @@
 # RMIT SEPT 2020 Major Project
 
-# Group 00
+# Group 01
 
 ## Members
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
-* SURNAME, GivenName (sXXXX)
+* BERBEROVIC, Edvin (sXXXX)
+* FURLONG, Lachlan (sXXXX)
+* MELLOR, Lucas (sXXXX)
+* BOLTE, Dean (sXXXX)
+* MOLONEY, Matthew (sXXXX)
 
 ## Records
 
 * Github repository : https://github.com/RMIT-SEPT/MajorProject/Groupx
-* ClickUp Workspace : https://app.clickup.com/xxxx/yyyy
+* ClickUp Workspace : https://app.clickup.com/6915667/home/landing
 
 
 ## Code documentation
