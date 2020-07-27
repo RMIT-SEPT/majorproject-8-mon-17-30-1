@@ -16,8 +16,8 @@
 
 ## Roles
 
-* Scrum Master
-* Product Owner
+* Scrum Master - Lachlan Furlong
+* Product Owner - Edvin Berberovic
 
 ## Code documentation
 
