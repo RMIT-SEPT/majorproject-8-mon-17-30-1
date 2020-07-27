@@ -3,17 +3,21 @@
 # Group 01
 
 ## Members
-* BERBEROVIC, Edvin (sXXXX)
-* FURLONG, Lachlan (sXXXX)
-* MELLOR, Lucas (sXXXX)
-* BOLTE, Dean (sXXXX)
-* MOLONEY, Matthew (sXXXX)
+* BERBEROVIC, Edvin (s3722163)
+* FURLONG, Lachlan (s3722243)
+* MELLOR, Lucas (s3720988)
+* BOLTE, Dean (s3784365)
+* MOLONEY, Matthew (s3717566)
 
 ## Records
 
 * Github repository : https://github.com/RMIT-SEPT/MajorProject/Groupx
 * ClickUp Workspace : https://app.clickup.com/6915667/home/landing
 
+## Roles
+
+* Scrum Master
+* Product Owner
 
 ## Code documentation
 
