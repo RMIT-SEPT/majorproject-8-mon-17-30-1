@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.rmit.sept</groupId>
+    <artifactId>sept-backend-agg</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>sept-backend-agg</name>
+    <description>API for customer operations</description>
+
+    <!--  This can include multiple modules if the backend needs to be split  -->
+    <modules>
+        <module>sept-backend</module>
+    </modules>
+
+</project>
