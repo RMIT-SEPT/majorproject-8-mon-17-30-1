@@ -13,7 +13,6 @@
 
 * Github repository : https://github.com/RMIT-SEPT/majorproject-8-mon-17-30-1
 * ClickUp Workspace : https://app.clickup.com/6915667/home/landing
-* Trello sprint board : https://trello.com/b/0IMFERnp/sprint-board
 
 ## Roles
 

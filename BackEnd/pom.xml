@@ -3,10 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rmit.sept</groupId>
-    <artifactId>sept-backend-agg</artifactId>
+    <artifactId>sept-backend-all</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sept-backend-agg</name>
+    <name>sept-backend-all</name>
     <description>API for customer operations</description>
+    <packaging>pom</packaging>
 
     <!--  This can include multiple modules if the backend needs to be split  -->
     <modules>
