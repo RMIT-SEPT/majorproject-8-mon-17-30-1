@@ -1,16 +1,17 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/auth/";
+// For local development, this is hardcoded in at the moment
+const API_URL = "http://localhost:8080/api/v1/auth/";
 
-class AuthService {
+class Auth {
   login(username, password) {
     return axios
-      .post(API_URL + "signin", {
+      .post(API_URL + "login", {
         username,
         password
       })
       .then(response => {
-        if (response.data.accessToken) {
+        if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
 
@@ -22,11 +23,16 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(username, email, password) {
-    return axios.post(API_URL + "signup", {
+  register(username, password, firstName, lastName, streetAddress, city, state, postcode) {
+    return axios.post(API_URL + "register", {
       username,
-      email,
-      password
+      password,
+      firstName,
+      lastName,
+      streetAddress,
+      city,
+      state,
+      postcode
     });
   }
 
@@ -35,4 +41,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new Auth();
