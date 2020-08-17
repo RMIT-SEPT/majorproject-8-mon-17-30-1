@@ -1,11 +1,11 @@
 package com.rmit.sept.septbackend.controller;
 
-import com.rmit.sept.septbackend.entity.User;
+import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("v1/user")
+@RequestMapping("api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -15,8 +15,13 @@ public class UserController {
     }
 
     @GetMapping("/{user-id}")
-    public User getUser(@PathVariable(name = "user-id") Integer userId) {
+    public UserEntity getUser(@PathVariable(name = "user-id") Integer userId) {
         return userService.getUserById(userId);
+    }
+
+    @PostMapping()
+    public UserEntity createUser(@RequestBody UserEntity userEntity) {
+        return userService.createUser(userEntity);
     }
 
 }

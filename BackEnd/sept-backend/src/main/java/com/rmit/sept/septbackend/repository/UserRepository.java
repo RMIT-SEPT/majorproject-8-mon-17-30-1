@@ -1,12 +1,14 @@
 package com.rmit.sept.septbackend.repository;
 
-import com.rmit.sept.septbackend.entity.User;
+import com.rmit.sept.septbackend.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 
-    User getByUserId(Integer userId);
+    UserEntity getByUserId(Integer userId);
+
+    UserEntity getByUsername(String username);
 
 }

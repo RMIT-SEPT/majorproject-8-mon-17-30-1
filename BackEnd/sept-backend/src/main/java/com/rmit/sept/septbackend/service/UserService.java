@@ -1,6 +1,6 @@
 package com.rmit.sept.septbackend.service;
 
-import com.rmit.sept.septbackend.entity.User;
+import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +13,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(Integer userId) {
+    public UserEntity getUserById(Integer userId) {
+        // Complex stuff here
+
         return userRepository.getByUserId(userId);
     }
 
+    public UserEntity createUser(UserEntity userEntity) {
+        return userRepository.save(userEntity);
+    }
 }
