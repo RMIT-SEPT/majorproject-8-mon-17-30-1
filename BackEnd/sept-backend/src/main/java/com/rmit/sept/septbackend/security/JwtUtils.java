@@ -1,6 +1,8 @@
 package com.rmit.sept.septbackend.security;
 
 import io.jsonwebtoken.*;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,19 +16,20 @@ public class JwtUtils {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${jwt.secret}")
+    @Setter(AccessLevel.PACKAGE)
     private String jwtSecret;
 
     @Value("${jwt.expiration.ms}")
+    @Setter(AccessLevel.PACKAGE)
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
