@@ -3,14 +3,14 @@ drop table if exists Administrator, Customer, Worker, Services, Bookings, Timeta
 
 create table Administrator (
     a_user_id int primary key,
-    password varchar(8) not null primary key,
+    password varchar(8) not null,
     first_name varchar(255) not null,
     last_name varchar(255) not null
-)
+);
 
 create table Customer (
     c_user_id int primary key,
-    password varchar(8) not null primary key,
+    password varchar(8) not null,
     first_name varchar(255) not null,
     last_name varchar(255) not null,
     address varchar(255) not null,
@@ -19,23 +19,22 @@ create table Customer (
 
 create table Worker (
     w_user_id int primary key,
-    password varchar(8) not null primary key,
+    password varchar(8) not null,
     first_name varchar(255) not null,
-    last_name varchar(255) not null,
-    time_id int foreign key REFERENCES Timetable(time_id)
+    last_name varchar(255) not null
 );
 
 create table Services (
     service_id int primary key,
     service_date date,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
+    w_user_id int REFERENCES Worker(w_user_id)
 );
 
 create table Bookings (
     booking_id int primary key,
-    service_id int foreign key REFERENCES Services(service_id), 
+    service_id int REFERENCES Services(service_id),
     service_date date,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
+    w_user_id int REFERENCES Worker(w_user_id)
 );
 
 create table Timetable (
@@ -43,5 +42,5 @@ create table Timetable (
     month varchar(255),
     day varchar(255),
     hours int,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
+    w_user_id int REFERENCES Worker(w_user_id)
 );
