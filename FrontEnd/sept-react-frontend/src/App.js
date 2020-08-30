@@ -3,6 +3,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+import {
+  Button
+} from 'reactstrap'
+
 import AuthService from "./service/auth";
 
 import Login from "./component/login";
@@ -12,6 +16,7 @@ import Profile from "./component/profile";
 import Dashboard from "./component/dashboard";
 import About from "./component/about";
 import Contact from "./component/contact";
+import Bookings from "./component/Bookings"
 // import BoardUser from "./components/board-user.component";
 // import BoardModerator from "./components/board-moderator.component";
 // import BoardAdmin from "./components/board-admin.component";
@@ -43,6 +48,10 @@ class App extends Component {
 
   logOut() {
     AuthService.logout();
+  }
+
+  onSubmit() {
+
   }
 
   render() {
@@ -124,6 +133,8 @@ class App extends Component {
               </div>
             )}
           </nav>
+
+          <Bookings></Bookings>
 
           <div className="container mt-3">
             <Switch>
