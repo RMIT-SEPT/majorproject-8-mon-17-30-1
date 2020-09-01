@@ -22,4 +22,9 @@ public class AuthenticationController {
     public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return authenticationService.authenticateUser(loginRequest);
     }
+
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+//    }
+
 }
