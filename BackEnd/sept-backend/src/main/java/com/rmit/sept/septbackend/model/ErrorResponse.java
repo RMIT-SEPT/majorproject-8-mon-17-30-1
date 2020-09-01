@@ -12,14 +12,11 @@ import org.springframework.http.HttpStatus;
 @EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class JwtResponse implements Response {
-    private final String type = "Bearer";
-    private String token;
-    private String username;
-    private Role role;
+public class ErrorResponse implements Response {
+    private String message;
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.OK;
+        return HttpStatus.BAD_REQUEST;
     }
 }

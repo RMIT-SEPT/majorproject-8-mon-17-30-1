@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class AdminEntity {
     @Id
     @GeneratedValue
+    @Column(name = "admin_id")
     private int adminId;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

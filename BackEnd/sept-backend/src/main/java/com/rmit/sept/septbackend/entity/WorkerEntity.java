@@ -16,6 +16,7 @@ import java.util.Set;
 public class WorkerEntity {
     @Id
     @GeneratedValue
+    @Column(name = "worker_id")
     private int workerId;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

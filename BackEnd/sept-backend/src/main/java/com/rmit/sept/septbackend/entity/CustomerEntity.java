@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class CustomerEntity {
     @Id
     @GeneratedValue
+    @Column(name = "customer_id")
     private int customerId;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

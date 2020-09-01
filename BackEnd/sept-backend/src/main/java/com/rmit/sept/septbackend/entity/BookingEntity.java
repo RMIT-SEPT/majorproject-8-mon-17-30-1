@@ -1,5 +1,6 @@
 package com.rmit.sept.septbackend.entity;
 
+import com.rmit.sept.septbackend.model.Status;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 public class BookingEntity {
     @Id
     @GeneratedValue
+    @Column(name = "booking_id")
     private int bookingId;
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
@@ -26,7 +28,5 @@ public class BookingEntity {
     private LocalDate bookingTime;
     private LocalDate createdTime;
     private LocalDate lastModifiedTime;
-    @ManyToOne
-    @JoinColumn(name = "status_id", referencedColumnName = "status_id")
-    private StatusEntity status;
+    private Status status;
 }

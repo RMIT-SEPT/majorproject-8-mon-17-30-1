@@ -16,13 +16,14 @@ import java.util.Set;
 public class ServiceEntity {
     @Id
     @GeneratedValue
+    @Column(name = "service_id")
     private int serviceId;
     @ManyToOne
     @JoinColumn(name = "business_id", referencedColumnName = "business_id")
     private BusinessEntity business;
     private String serviceName;
     private int durationMinutes;
-    @ManyToMany(mappedBy = "worker")
+    @ManyToMany(mappedBy = "services")
     private Set<WorkerEntity> workers;
 
     public void addWorker(WorkerEntity workerEntity) {
