@@ -2,9 +2,11 @@ package com.rmit.sept.septbackend.service;
 
 import com.rmit.sept.septbackend.model.JwtResponse;
 import com.rmit.sept.septbackend.model.LoginRequest;
-import com.rmit.sept.septbackend.model.Response;
 import com.rmit.sept.septbackend.model.Role;
+import com.rmit.sept.septbackend.repository.AdminRepository;
+import com.rmit.sept.septbackend.repository.CustomerRepository;
 import com.rmit.sept.septbackend.repository.UserRepository;
+import com.rmit.sept.septbackend.repository.WorkerRepository;
 import com.rmit.sept.septbackend.security.JwtUtils;
 import com.rmit.sept.septbackend.security.UserDetailsImpl;
 import org.junit.jupiter.api.Assertions;
@@ -32,13 +34,19 @@ public class AuthenticationServiceTests {
     @Mock
     private UserRepository userRepository;
     @Mock
+    private AdminRepository adminRepository;
+    @Mock
+    private WorkerRepository workerRepository;
+    @Mock
+    private CustomerRepository customerRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
     private AuthenticationService authenticationService;
 
     @BeforeAll
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        authenticationService = new AuthenticationService(authenticationManager, jwtUtils, userRepository, passwordEncoder);
+        authenticationService = new AuthenticationService(authenticationManager, jwtUtils, passwordEncoder, userRepository, adminRepository, workerRepository, customerRepository);
     }
 
     @Test
@@ -60,10 +68,10 @@ public class AuthenticationServiceTests {
                 .thenReturn("token");
 
 
-        Response expected = new JwtResponse("token", "test_username", Role.CUSTOMER);
+        JwtResponse expected = new JwtResponse("token", "test_username", Role.CUSTOMER);
 
         LoginRequest request = new LoginRequest("test_username", "test_password");
-        Response actual = authenticationService.authenticateUser(request);
+        JwtResponse actual = authenticationService.authenticateUser(request);
 
         Assertions.assertEquals(expected, actual);
     }

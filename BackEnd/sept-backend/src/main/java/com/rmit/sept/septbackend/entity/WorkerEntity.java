@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "worker")
 public class WorkerEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "worker_id")
     private int workerId;
     @OneToOne
@@ -27,15 +27,8 @@ public class WorkerEntity {
             inverseJoinColumns = {@JoinColumn(name = "service_id")})
     private Set<ServiceEntity> services;
 
-    public void addService(ServiceEntity serviceEntity) {
-        services.add(serviceEntity);
-        serviceEntity.getWorkers().add(this);
+    public WorkerEntity(UserEntity user) {
+        this.user = user;
     }
-
-    public void removeService(ServiceEntity serviceEntity) {
-        services.remove(serviceEntity);
-        serviceEntity.getWorkers().remove(this);
-    }
-
 }
 

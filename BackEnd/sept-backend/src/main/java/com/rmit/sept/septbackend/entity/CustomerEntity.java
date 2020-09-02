@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "customer")
 public class CustomerEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private int customerId;
     @OneToOne
@@ -26,4 +26,12 @@ public class CustomerEntity {
     @Enumerated(EnumType.STRING)
     private State state;
     private String postcode;
+
+    public CustomerEntity(UserEntity user, String streetAddress, String city, State state, String postcode) {
+        this.user = user;
+        this.streetAddress = streetAddress;
+        this.city = city;
+        this.state = state;
+        this.postcode = postcode;
+    }
 }

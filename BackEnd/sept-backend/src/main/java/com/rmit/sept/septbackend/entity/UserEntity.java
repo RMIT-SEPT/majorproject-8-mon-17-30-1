@@ -2,6 +2,7 @@ package com.rmit.sept.septbackend.entity;
 
 import com.rmit.sept.septbackend.model.Role;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
@@ -23,6 +24,7 @@ public class UserEntity {
     @Column(name = "user_id")
     private int userId;
     // The @Column annotation isn't strictly necessary, unless providing extra information about a column, such as here
+    @NaturalId
     @Column(unique = true)
     private String username;
     private String password;

@@ -14,9 +14,13 @@ import javax.persistence.*;
 @Table(name = "business")
 public class BusinessEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "business_id")
     private int businessId;
     private String businessName;
+
+    public BusinessEntity(String businessName) {
+        this.businessName = businessName;
+    }
 }
 

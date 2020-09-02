@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +17,7 @@ import java.time.LocalDate;
 @Table(name = "booking")
 public class BookingEntity {
     @Id
-    @GeneratedValue
-    @Column(name = "booking_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
@@ -25,8 +25,8 @@ public class BookingEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private CustomerEntity customer;
-    private LocalDate bookingTime;
-    private LocalDate createdTime;
-    private LocalDate lastModifiedTime;
+    private LocalDateTime bookingTime;
+    private LocalDateTime createdTime;
+    private LocalDateTime lastModifiedTime;
     private Status status;
 }

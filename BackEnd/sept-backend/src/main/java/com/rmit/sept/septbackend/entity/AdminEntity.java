@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "admin")
 public class AdminEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
     private int adminId;
     @OneToOne
@@ -23,5 +23,10 @@ public class AdminEntity {
     @ManyToOne
     @JoinColumn(name = "business_id", referencedColumnName = "business_id")
     private BusinessEntity business;
+
+    public AdminEntity(UserEntity user, BusinessEntity business) {
+        this.user = user;
+        this.business = business;
+    }
 }
 

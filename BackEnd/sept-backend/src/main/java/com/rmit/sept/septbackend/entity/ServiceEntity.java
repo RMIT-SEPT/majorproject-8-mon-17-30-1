@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "service")
 public class ServiceEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_id")
     private int serviceId;
     @ManyToOne
@@ -23,17 +23,10 @@ public class ServiceEntity {
     private BusinessEntity business;
     private String serviceName;
     private int durationMinutes;
-    @ManyToMany(mappedBy = "services")
+    @ManyToMany
+    @JoinTable(name = "service_worker",
+            joinColumns = {@JoinColumn(name = "service_id")},
+            inverseJoinColumns = {@JoinColumn(name = "worker_id")})
     private Set<WorkerEntity> workers;
-
-    public void addWorker(WorkerEntity workerEntity) {
-        workers.add(workerEntity);
-        workerEntity.getServices().add(this);
-    }
-
-    public void removeWorker(WorkerEntity workerEntity) {
-        workers.remove(workerEntity);
-        workerEntity.getServices().remove(this);
-    }
 }
 
