@@ -8,10 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class LoginRequest {
-    private String username;
-    private String password;
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+public class AdminRegisterRequest extends AbstractRegisterRequest {
+    private String businessName;
 }

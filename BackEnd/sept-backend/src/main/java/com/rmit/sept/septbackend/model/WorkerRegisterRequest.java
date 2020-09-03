@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class LoginRequest {
-    private String username;
-    private String password;
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+public class WorkerRegisterRequest extends AbstractRegisterRequest {
+
 }

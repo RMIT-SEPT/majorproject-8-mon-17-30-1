@@ -3,18 +3,18 @@ package com.rmit.sept.septbackend.model;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class JwtResponse {
-    private final String type = "Bearer";
-    private String token;
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+public abstract class AbstractRegisterRequest implements RegisterRequest {
     private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
     private Role role;
 }
