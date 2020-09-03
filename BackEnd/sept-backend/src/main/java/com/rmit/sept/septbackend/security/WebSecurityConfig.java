@@ -1,8 +1,9 @@
 package com.rmit.sept.septbackend.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rmit.sept.septbackend.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -55,10 +56,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/v1/auth/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/service").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/v1/service").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/v1/service").hasAuthority(Role.WORKER.name())
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 
+        // For the H2 console - can be removed later if needed
         http.headers().frameOptions().disable();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

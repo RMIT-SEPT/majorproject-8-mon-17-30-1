@@ -17,6 +17,7 @@ public class BusinessEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "business_id")
     private int businessId;
+    @Column(unique = true)
     private String businessName;
 
     public BusinessEntity(String businessName) {

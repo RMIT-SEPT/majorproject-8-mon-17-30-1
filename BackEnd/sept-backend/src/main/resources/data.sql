@@ -28,7 +28,7 @@ insert into service (service_id, business_id, service_name, duration_minutes) va
 ;
 
 insert into service_worker values
-    (0, 0)
+    (0, 0, 0)
 ;
 
 insert into booking values

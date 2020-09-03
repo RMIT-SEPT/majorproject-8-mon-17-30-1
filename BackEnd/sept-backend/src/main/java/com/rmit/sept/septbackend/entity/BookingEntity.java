@@ -4,7 +4,6 @@ import com.rmit.sept.septbackend.model.Status;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -20,8 +19,8 @@ public class BookingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
     @ManyToOne
-    @JoinColumn(name = "service_id", referencedColumnName = "service_id")
-    private ServiceEntity service;
+    @JoinColumn(name = "service_worker_id", referencedColumnName = "service_worker_id")
+    private ServiceWorkerEntity serviceWorker;
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private CustomerEntity customer;

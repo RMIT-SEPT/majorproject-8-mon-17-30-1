@@ -45,7 +45,8 @@ drop table if exists business;
 create table  business (
     business_id int not null auto_increment,
     business_name varchar(255),
-    constraint business_pk primary key (business_id)
+    constraint business_pk primary key (business_id),
+    constraint business_unique_business_name unique (business_name)
 );
 
 drop table if exists service;
@@ -59,15 +60,16 @@ create table service (
 
 drop table if exists service_worker;
 create table service_worker (
+    service_worker_id int not null auto_increment,
     service_id int not null,
     worker_id int not null,
-    constraint service_worker_pk primary key (service_id, worker_id)
+    constraint service_worker_pk primary key (service_worker_id)
 );
 
 drop table if exists booking;
 create table booking (
     booking_id int not null auto_increment,
-    service_id int not null,
+    service_worker_id int not null,
     customer_id int not null,
     booking_time timestamp not null,
     created_time timestamp not null,
@@ -90,5 +92,5 @@ alter table service add constraint service_foreign_business_id foreign key (busi
 alter table service_worker add constraint service_worker_foreign_service_id foreign key (service_id) references service(service_id);
 alter table service_worker add constraint service_worker_foreign_worker_id foreign key (worker_id) references worker(worker_id);
 
-alter table booking add constraint booking_foreign_service_id foreign key (service_id) references service(service_id);
+alter table booking add constraint booking_foreign_service_id foreign key (service_worker_id) references service_worker(service_worker_id);
 alter table booking add constraint booking_foreign_customer_id foreign key (customer_id) references customer(customer_id);

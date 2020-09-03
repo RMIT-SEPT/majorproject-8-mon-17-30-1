@@ -3,7 +3,6 @@ package com.rmit.sept.septbackend.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,10 +22,11 @@ public class ServiceEntity {
     private BusinessEntity business;
     private String serviceName;
     private int durationMinutes;
-    @ManyToMany
-    @JoinTable(name = "service_worker",
-            joinColumns = {@JoinColumn(name = "service_id")},
-            inverseJoinColumns = {@JoinColumn(name = "worker_id")})
-    private Set<WorkerEntity> workers;
+
+    public ServiceEntity(BusinessEntity business, String serviceName, int durationMinutes) {
+        this.business = business;
+        this.serviceName = serviceName;
+        this.durationMinutes = durationMinutes;
+    }
 }
 
