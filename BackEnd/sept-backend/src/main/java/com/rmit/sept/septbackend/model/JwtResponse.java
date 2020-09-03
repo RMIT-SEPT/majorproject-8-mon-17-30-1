@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class JwtResponse {
     private final String type = "Bearer";
     private String token;
