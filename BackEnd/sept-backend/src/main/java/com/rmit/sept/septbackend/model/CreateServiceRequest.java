@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class CreateServiceRequest {
     @NotNull
     private String businessName;
