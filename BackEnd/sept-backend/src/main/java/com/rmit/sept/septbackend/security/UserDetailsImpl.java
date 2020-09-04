@@ -29,7 +29,7 @@ public class UserDetailsImpl implements UserDetails {
 
     public static UserDetailsImpl build(UserEntity userEntity) {
         List<GrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority(userEntity.getRole().getRole().name())
+                new SimpleGrantedAuthority(userEntity.getRole().name())
         );
 
         return new UserDetailsImpl(

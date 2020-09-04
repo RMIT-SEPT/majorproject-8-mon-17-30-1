@@ -1,47 +1,37 @@
--- For local development only
-drop table if exists Administrator, Customer, Worker, Services, Bookings, Timetable;
+-- Test values
+insert into business (business_id, business_name) values
+    (0, 'Virtucon')
+;
 
-create table Administrator (
-    a_user_id int primary key,
-    password varchar(8) not null primary key,
-    first_name varchar(255) not null,
-    last_name varchar(255) not null
-)
+insert into user (user_id, username, password, first_name, last_name, role) values
+    (0, 'John_Smith', '$2a$10$04qYVTsskUNhDATOFF3Hk.jVmQVaHG/MxzNMU2AMaSWx/t344pIhS'/*test_password*/, 'John', 'Smith', 2),
+    (1, 'no2', '$2a$10$Pv/aDCOvwmdKIr.m0jWUPOZpw5Y5jGauOue2uN4EAEAtjRypkVjeW'/*another_test_password*/, 'Number', 'Two', 1),
+    (2, 'dr_evil', '$2a$10$04qYVTsskUNhDATOFF3Hk.jVmQVaHG/MxzNMU2AMaSWx/t344pIhS'/*test_password*/, 'Dr', 'Evil', 0),
+    (3, 'ap', '$2a$10$Pv/aDCOvwmdKIr.m0jWUPOZpw5Y5jGauOue2uN4EAEAtjRypkVjeW'/*another_test_password*/, 'Austin', 'Powers', 1)
+;
 
-create table Customer (
-    c_user_id int primary key,
-    password varchar(8) not null primary key,
-    first_name varchar(255) not null,
-    last_name varchar(255) not null,
-    address varchar(255) not null,
-    phone_number varchar (255) not null
-);
+insert into admin (admin_id, user_id, business_id) values
+    (0, 2, 0)
+;
 
-create table Worker (
-    w_user_id int primary key,
-    password varchar(8) not null primary key,
-    first_name varchar(255) not null,
-    last_name varchar(255) not null,
-    time_id int foreign key REFERENCES Timetable(time_id)
-);
+insert into customer (customer_id, user_id, street_address, city, state, postcode) values
+    (0, 0, '123 ABC Street', 'Melbourne', 0, '3000'),
+    (1, 3, 'London Pad', 'Melbourne', 0, '3000')
+;
 
-create table Services (
-    service_id int primary key,
-    service_date date,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
-);
+insert into worker (worker_id, user_id) values
+    (0, 1)
+;
 
-create table Bookings (
-    booking_id int primary key,
-    service_id int foreign key REFERENCES Services(service_id), 
-    service_date date,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
-);
+insert into service (service_id, business_id, service_name, duration_minutes) values
+    (0, 0, 'Preparation H', 30)
+;
 
-create table Timetable (
-    time_id int primary key,
-    month varchar(255),
-    day varchar(255),
-    hours int,
-    w_user_id int foreign key REFERENCES Worker(w_user_id)
-);
+insert into service_worker values
+    (0, 0, 0)
+;
+
+insert into booking values
+    (0, 0, 0, {ts '2020-09-25 08:00:00.00'}, {ts '2020-08-17 18:47:52.69'}, {ts '2020-08-17 18:47:52.69'}, 0),
+    (1, 0, 1, {ts '2020-10-03 15:30:00.00'}, {ts '2020-08-18 18:47:52.69'}, {ts '2020-08-20 00:00:00.00'}, 1)
+;

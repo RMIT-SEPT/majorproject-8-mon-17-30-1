@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -11,7 +13,11 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class LoginRequest {
-    private String username;
-    private String password;
+public class CreateServiceRequest {
+    @NotNull
+    private String businessName;
+    @NotNull
+    private String serviceName;
+    @NotNull
+    private int durationMinutes;
 }
