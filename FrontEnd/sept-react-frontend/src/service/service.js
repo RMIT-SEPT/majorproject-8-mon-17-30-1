@@ -4,10 +4,11 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api/v1/auth/";
 
 class Service {
-    bookService(service, date, time) {
+    bookService(service, worker, date, time) {
         return axios
             .post(API_URL + "bookService", {
                 service,
+                worker,
                 date,
                 time
             })
