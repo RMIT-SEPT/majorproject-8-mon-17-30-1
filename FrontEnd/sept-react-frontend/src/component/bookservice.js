@@ -1,10 +1,9 @@
 import React, {Component} from "react";
 import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Select from "react-validation/build/select";
 
-
+import Service from "../service/service"
 
 const required = value => {
     if (!value) {
@@ -62,7 +61,25 @@ export default class BookService extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
+            Service.bookService(this.state.service, this.state.date, this.state.time).then(
+                error => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
 
+                    this.setState({
+                        loading: false,
+                        message: resMessage
+                    });
+                }
+            );
+        } else {
+            this.setState({
+                loading: false
+            });
         }
     }
 
