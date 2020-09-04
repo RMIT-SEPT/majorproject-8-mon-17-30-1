@@ -28,4 +28,10 @@ public class BookingEntity {
     private LocalDateTime createdTime;
     private LocalDateTime lastModifiedTime;
     private Status status;
+
+    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime) {
+        this.serviceWorker = serviceWorker;
+        this.customer = customer;
+        this.bookingTime = bookingTime;
+    }
 }
