@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
 //import Select from "react-validation/build/select";
-import Select from 'react-select'
+import Select from "react-select";
 
 import Service from "../service/service"
 
