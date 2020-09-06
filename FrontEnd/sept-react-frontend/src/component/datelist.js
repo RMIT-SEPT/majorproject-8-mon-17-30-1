@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class Home extends Component {
+export default class DateList extends Component {
     constructor(props) {
         super(props);
     }
