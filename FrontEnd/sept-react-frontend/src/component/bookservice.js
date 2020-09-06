@@ -7,15 +7,11 @@ import ServiceList from "../component/servicelist";
 import WorkerList from "../component/workerlist";
 import Service from "../service/service"
 
-const required = value => {
-    if (!value) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                This field is required!
-            </div>
-        );
-    }
-};
+// List components
+const businessListComponent = <BusinessList />;
+const serviceListComponent = <ServiceList />;
+const workerListComponent = <WorkerList />;
+const dateListComponent = <DateList />;
 
 export default class BookService extends Component {
     constructor(props) {
@@ -23,10 +19,10 @@ export default class BookService extends Component {
         this.handleBooking = this.handleBooking.bind(this);
 
         this.state = {
-            service: "",
-            worker: "",
-            date: "",
-            time: "",
+            businessID: "",
+            serviceID: "",
+            workerID: "",
+            dateTime: "",
             loading: false,
             message: ""
         };
@@ -37,13 +33,17 @@ export default class BookService extends Component {
 
         this.setState({
             message: "",
-            loading: true
+            loading: true,
+            businessID: businessListComponent.state.selected,
+            serviceID: serviceListComponent.state.selected,
+            workerID: workerListComponent.state.selected,
+            dateTime: dateListComponent.state.selected
         });
 
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            Service.bookService(this.state.service, this.state.worker, this.state.date, this.state.time).then(
+            Service.bookService(this.state.businessID, this.state.serviceID, this.state.workerID, this.state.dateTime).then(
                 error => {
                     const resMessage =
                         (error.response &&
@@ -79,19 +79,19 @@ export default class BookService extends Component {
                             <h3>Book a Service.</h3>
 
                             <div className="form-group">
-                                <BusinessList />
+                                {businessListComponent}
                             </div>
 
                             <div className="form-group">
-                                <ServiceList />
+                                {serviceListComponent}
                             </div>
 
                             <div className="form-group">
-                                <WorkerList />
+                                {workerListComponent}
                             </div>
 
                             <div className="form-group">
-                                <DateList />
+                                {dateListComponent}
                             </div>
 
                             <div className="form-group">
