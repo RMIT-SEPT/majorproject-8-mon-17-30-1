@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
-//import Select from "react-validation/build/select";
-import Select from "react-select";
-
+import DateList from "../component/datelist";
+// import WorkerList from "../component/workerList";
 import Service from "../service/service"
 
 const required = value => {
@@ -25,19 +24,6 @@ const workerOptions = [
     { value: 'worker 1', label: 'Worker 1' },
     { value: 'worker 2', label: 'Worker 2' },
 ]
-
-const dateOptions = [
-    { value: 'date 1', label: 'Date 1' },
-    { value: 'date 2', label: 'Date 2' },
-    { value: 'date 3', label: 'Date 3' }
-]
-
-const timeOptions = [
-    { value: 'time 1', label: 'Time 1' },
-    { value: 'time 2', label: 'Time 2' },
-    { value: 'time 3', label: 'Time 3' }
-]
-
 
 export default class BookService extends Component {
     constructor(props) {
@@ -148,25 +134,7 @@ export default class BookService extends Component {
                                 />
                             </div>
 
-                            <div className="form-group">
-                                <label htmlFor="date">Date</label>
-                                <Select name='date'
-                                        options={dateOptions}
-                                        value={this.state.date}
-                                        onChange={this.onChangeDate}
-                                        validations={[required]}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="time">Time</label>
-                                <Select name='time'
-                                        options={timeOptions}
-                                        value={this.state.time}
-                                        onChange={this.onChangeTime}
-                                        validations={[required]}
-                                />
-                            </div>
+                            <DateList />
 
                             <div className="form-group">
                                 <button
