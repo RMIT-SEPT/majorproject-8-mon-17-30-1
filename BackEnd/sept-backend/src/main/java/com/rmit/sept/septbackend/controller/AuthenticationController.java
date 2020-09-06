@@ -2,6 +2,7 @@ package com.rmit.sept.septbackend.controller;
 
 import com.rmit.sept.septbackend.model.JwtResponse;
 import com.rmit.sept.septbackend.model.LoginRequest;
+import com.rmit.sept.septbackend.model.RegisterRequest;
 import com.rmit.sept.septbackend.service.AuthenticationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,5 +22,10 @@ public class AuthenticationController {
     @PostMapping("/login")
     public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return authenticationService.authenticateUser(loginRequest);
+    }
+
+    @PostMapping("/register")
+    public JwtResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        return authenticationService.registerUser(registerRequest);
     }
 }

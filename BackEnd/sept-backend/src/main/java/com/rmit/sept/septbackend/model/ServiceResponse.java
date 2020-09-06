@@ -11,7 +11,8 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class LoginRequest {
-    private String username;
-    private String password;
+public class ServiceResponse {
+    private String businessName;
+    private String serviceName;
+    private int durationMinutes;
 }
