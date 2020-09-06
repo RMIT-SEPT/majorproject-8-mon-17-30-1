@@ -2,7 +2,9 @@ import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
 import DateList from "../component/datelist";
-// import WorkerList from "../component/workerList";
+import BusinessList from "../component/businesslist";
+import ServiceList from "../component/servicelist";
+import WorkerList from "../component/workerlist";
 import Service from "../service/service"
 
 const required = value => {
@@ -15,24 +17,10 @@ const required = value => {
     }
 };
 
-const serviceOptions = [
-    { value: 'service 1', label: 'Service 1' },
-    { value: 'service 2', label: 'Service 2' },
-]
-
-const workerOptions = [
-    { value: 'worker 1', label: 'Worker 1' },
-    { value: 'worker 2', label: 'Worker 2' },
-]
-
 export default class BookService extends Component {
     constructor(props) {
         super(props);
         this.handleBooking = this.handleBooking.bind(this);
-        this.onChangeService = this.onChangeService.bind(this);
-        this.onChangeWorker = this.onChangeWorker.bind(this);
-        this.onChangeDate = this.onChangeDate.bind(this);
-        this.onChangeTime = this.onChangeTime.bind(this);
 
         this.state = {
             service: "",
@@ -42,30 +30,6 @@ export default class BookService extends Component {
             loading: false,
             message: ""
         };
-    }
-
-    onChangeService(e) {
-        this.setState({
-            service: e.target.value
-        });
-    }
-
-    onChangeWorker(e) {
-        this.setState({
-            worker: e.target.value
-        });
-    }
-
-    onChangeDate(e) {
-        this.setState({
-            date: e.target.value
-        });
-    }
-
-    onChangeTime(e) {
-        this.setState({
-            time: e.target.value
-        });
     }
 
     handleBooking(e) {
@@ -114,25 +78,11 @@ export default class BookService extends Component {
                                 this.form = c;
                             }}
                         >
-                            <div className="form-group">
-                                <label htmlFor="service">Service</label>
-                                <Select name='service'
-                                        options={serviceOptions}
-                                        value={this.state.service}
-                                        onChange={this.onChangeService}
-                                        validations={[required]}
-                                />
-                            </div>
+                            <BusinessList />
 
-                            <div className="form-group">
-                                <label htmlFor="worker">Worker</label>
-                                <Select name='worker'
-                                        options={workerOptions}
-                                        value={this.state.worker}
-                                        onChange={this.onChangeWorker}
-                                        validations={[required]}
-                                />
-                            </div>
+                            <ServiceList />
+
+                            <WorkerList />
 
                             <DateList />
 
