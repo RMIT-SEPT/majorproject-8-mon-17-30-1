@@ -23,7 +23,6 @@ public class CustomerEntity {
     private UserEntity user;
     private String streetAddress;
     private String city;
-    @Enumerated(EnumType.STRING)
     private State state;
     private String postcode;
 
