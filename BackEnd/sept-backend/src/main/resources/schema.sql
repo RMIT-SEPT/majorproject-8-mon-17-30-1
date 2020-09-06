@@ -7,7 +7,7 @@ create table user (
     password varchar(255) not null,
     first_name varchar(255) not null,
     last_name varchar(255) not null,
-    role int not null, -- 0=ADMIN,1=WORKER,2=CUSTOMER
+    role varchar(10) not null,
     constraint user_pk primary key (user_id),
     constraint user_unique_username unique (username)
 );
@@ -27,7 +27,7 @@ create table customer (
     user_id int not null,
     street_address varchar(255) not null,
     city varchar(255) not null,
-    state int not null,
+    state varchar(3) not null,
     postcode varchar(4) not null,
     constraint customer_pk primary key (customer_id),
     constraint customer_unique_user_id unique (user_id)
@@ -74,7 +74,7 @@ create table booking (
     booking_time timestamp not null,
     created_time timestamp not null,
     last_modified_time timestamp not null,
-    status int not null, -- 0=ACTIVE,1=CANCELLED
+    status varchar(10) not null, -- 0=ACTIVE,1=CANCELLED
     constraint booking_pk primary key (booking_id)
 );
 

@@ -1,6 +1,5 @@
 package com.rmit.sept.septbackend.controller;
 
-import com.rmit.sept.septbackend.entity.ServiceEntity;
 import com.rmit.sept.septbackend.model.CreateServiceRequest;
 import com.rmit.sept.septbackend.model.ServiceResponse;
 import com.rmit.sept.septbackend.service.ServiceService;
@@ -29,12 +28,12 @@ public class ServiceController {
     }
 
     @GetMapping
-    public List<ServiceResponse> getServicesForBusinessName(@RequestParam(name = "business-name", required = false) Optional<String> businessName,
+    public List<ServiceResponse> getServicesForBusinessName(@RequestParam(name = "business-id", required = false) Optional<Integer> businessId,
                                                             @RequestParam(name = "username", required = false) Optional<String> username) {
         List<ServiceResponse> serviceResponses;
-        if (!(businessName.isPresent() && username.isPresent())) {
-            if (businessName.isPresent()) {
-                serviceResponses = serviceService.getServicesForBusinessName(businessName.get());
+        if (!(businessId.isPresent() && username.isPresent())) {
+            if (businessId.isPresent()) {
+                serviceResponses = serviceService.getServicesForBusinessId(businessId.get());
 
             } else if (username.isPresent()) {
                 serviceResponses = serviceService.getServicesForUsername(username.get());

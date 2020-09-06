@@ -30,6 +30,7 @@ public class UserEntity {
     private String password;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public UserEntity(String username, String password, String firstName, String lastName, Role role) {

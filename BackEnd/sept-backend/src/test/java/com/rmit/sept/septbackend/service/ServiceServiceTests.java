@@ -40,14 +40,14 @@ public class ServiceServiceTests {
     }
 
     @Test
-    public void testGetServicesForBusinessName() {
-        Mockito.when(businessRepository.existsByBusinessName(Mockito.any()))
+    public void testGetServicesForBusinessId() {
+        Mockito.when(businessRepository.existsById(Mockito.any()))
                 .thenReturn(true);
-        Mockito.when(serviceRepository.getAllByBusinessBusinessName(Mockito.any()))
+        Mockito.when(serviceRepository.getAllByBusinessBusinessId(Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
-                                new ServiceEntity(new BusinessEntity("testBusiness"), "testService", 60),
-                                new ServiceEntity(new BusinessEntity("testBusiness"), "anotherTestService", 124235)
+                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "testService", 60),
+                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "anotherTestService", 124235)
                         )
                 );
 
@@ -56,7 +56,7 @@ public class ServiceServiceTests {
                 new ServiceResponse("testBusiness", "anotherTestService", 124235)
         );
 
-        List<ServiceResponse> actual = serviceService.getServicesForBusinessName("testBusiness");
+        List<ServiceResponse> actual = serviceService.getServicesForBusinessId(0);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -93,7 +93,7 @@ public class ServiceServiceTests {
         Mockito.when(businessRepository.existsByBusinessName(Mockito.any()))
                 .thenReturn(false);
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> serviceService.getServicesForBusinessName("testBusiness"));
+        Assertions.assertThrows(ResponseStatusException.class, () -> serviceService.getServicesForBusinessId(0));
     }
 
     @Test
