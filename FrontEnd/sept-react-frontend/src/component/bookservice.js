@@ -67,24 +67,32 @@ export default class BookService extends Component {
 
     render() {
         return (
-            <div className="container">
-                <h3>Book a Service.</h3>
-
+            <div className="card-container">
                 <div className="col-md-12">
-                    <div className="card card-container col-md-12">
+                    <div className="card col-md-12">
                         <Form
                             onSubmit={this.handleBooking}
                             ref={c => {
                                 this.form = c;
                             }}
                         >
-                            <BusinessList />
+                            <h3>Book a Service.</h3>
 
-                            <ServiceList />
+                            <div className="form-group">
+                                <BusinessList />
+                            </div>
 
-                            <WorkerList />
+                            <div className="form-group">
+                                <ServiceList />
+                            </div>
 
-                            <DateList />
+                            <div className="form-group">
+                                <WorkerList />
+                            </div>
+
+                            <div className="form-group">
+                                <DateList />
+                            </div>
 
                             <div className="form-group">
                                 <button
