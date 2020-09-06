@@ -28,4 +28,15 @@ public class BookingEntity {
     private LocalDateTime createdTime;
     private LocalDateTime lastModifiedTime;
     private Status status;
+
+    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime) {
+        this.serviceWorker = serviceWorker;
+        this.customer = customer;
+        this.bookingTime = bookingTime;
+        this.createdTime = LocalDateTime.now();
+        this.lastModifiedTime = LocalDateTime.now();
+        this.status = Status.ACTIVE;
+    }
+
+
 }

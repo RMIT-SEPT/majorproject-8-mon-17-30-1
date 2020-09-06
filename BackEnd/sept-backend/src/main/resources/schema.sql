@@ -27,7 +27,7 @@ create table customer (
     user_id int not null,
     street_address varchar(255) not null,
     city varchar(255) not null,
-    state varchar(3) not null,
+    state int not null,
     postcode varchar(4) not null,
     constraint customer_pk primary key (customer_id),
     constraint customer_unique_user_id unique (user_id)
