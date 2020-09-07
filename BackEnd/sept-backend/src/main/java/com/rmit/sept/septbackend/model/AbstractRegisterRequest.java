@@ -4,14 +4,17 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class LoginRequest {
+public abstract class AbstractRegisterRequest implements RegisterRequest {
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
+    private Role role;
 }

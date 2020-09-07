@@ -16,7 +16,8 @@
     "@coreui/react": "^2.0.5",
     "react-loadable": "^5.4.0",
     "reactstrap": "^6.4.0",
-    "react-notifications": "1.6.0"
+    "react-notifications": "1.6.0",
+    "react-table": "^7.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-table-6": "^6.11.0"
   }
 }

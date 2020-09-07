@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -11,7 +13,10 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class LoginRequest {
-    private String username;
-    private String password;
+public class BookingResponse {
+    private String serviceName;
+    private String workerFullName;
+    private LocalDateTime date;
+
+
 }
