@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/booking")
+@RequestMapping("api/v1/business")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class BusinessController {
