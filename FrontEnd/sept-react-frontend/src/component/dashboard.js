@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import AuthService from "../service/auth";
+import {Link} from "react-router-dom";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -30,6 +31,11 @@ export default class Dashboard extends Component {
       <div className="container">
         <header className="jumbotron">
           <h3>Dashboard</h3>
+          <button id="bookingsButton">
+            <Link to={"/bookings"} className="nav-link">
+              Bookings
+            </Link>
+          </button>
         </header>
         {currentUser ? (
           <p>Logged in as {currentUser.role}</p>
