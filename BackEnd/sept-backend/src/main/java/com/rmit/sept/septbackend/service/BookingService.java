@@ -8,10 +8,13 @@ import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +55,17 @@ public class BookingService {
         );
 
         bookingRepository.save(bookingEntity);
+    }
+
+    public void cancelBooking(int bookingId) {
+        Optional<BookingEntity> entity = bookingRepository.findById(bookingId);
+        if (entity.isPresent()) {
+            BookingEntity bookingEntity = entity.get();
+            bookingEntity.setStatus(Status.CANCELLED);
+            bookingRepository.save(bookingEntity);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking not found");
+        }
     }
 
 }

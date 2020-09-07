@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
 import AuthService from "./service/auth";
 
 import Login from "./component/login";
@@ -84,6 +83,12 @@ class App extends Component {
                 <li className="nav-item">
                   <Link to={"/contact"} className="nav-link">
                     Contact us
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to={"/bookings"} className="nav-link">
+                    Bookings
                   </Link>
                 </li>
 
