@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/v1/service").hasAuthority(Role.WORKER.name())
                 .antMatchers(HttpMethod.GET, "/api/v1/booking").hasAuthority(Role.CUSTOMER.name())
                 .antMatchers(HttpMethod.POST, "/api/v1/booking").hasAuthority(Role.CUSTOMER.name())
+                .antMatchers(HttpMethod.DELETE, "/api/v1/booking").hasAuthority(Role.CUSTOMER.name())
                 .antMatchers(HttpMethod.GET, "/api/v1/business").fullyAuthenticated()
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();

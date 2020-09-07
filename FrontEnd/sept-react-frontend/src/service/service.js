@@ -20,6 +20,12 @@ class Service {
             });
     }
 
+    cancelBooking(bookingID) {
+        return axios.delete(BOOKING_URL + "cancel/" + bookingID, {headers: authHeader()}).then(response => {
+                return response.data;
+            });
+    }
+
     // Probably an incorrect place to put this
     getBusinessesAll() {
         return axios.get(BUSINESS_URL, {headers: authHeader()}).then(response => {
