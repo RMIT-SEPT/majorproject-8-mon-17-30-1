@@ -15,7 +15,8 @@
     "react-validation": "^3.0.7",
     "@coreui/react": "^2.0.5",
     "react-loadable": "^5.4.0",
-    "reactstrap": "^6.4.0"
+    "reactstrap": "^6.4.0",
+    "react-notifications": "1.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
