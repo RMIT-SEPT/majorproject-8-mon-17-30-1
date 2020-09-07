@@ -77,15 +77,17 @@ public class AuthenticationServiceTests {
 
     @Test
     public void testRegisterCustomer() {
-        CustomerRegisterRequest customerRegisterRequest = new CustomerRegisterRequest(
+        RegisterRequest registerRequest = new RegisterRequest(
                 "test_username",
                 "test_password",
                 "test_first",
                 "test_last",
-                "test_address",
-                "test_city",
-                State.QLD,
-                "1234"
+                new CustomerRegisterArguments(
+                        "test_address",
+                        "test_city",
+                        State.QLD,
+                        "1234"
+                )
         );
 
         Mockito.when(userRepository.existsByUsername(Mockito.any())).thenReturn(false);
@@ -105,7 +107,7 @@ public class AuthenticationServiceTests {
         Mockito.when(jwtUtils.generateJwtToken(Mockito.any()))
                 .thenReturn("token");
 
-        JwtResponse actual = authenticationService.registerUser(customerRegisterRequest);
+        JwtResponse actual = authenticationService.registerUser(registerRequest);
 
         JwtResponse expected = new JwtResponse("token", "test_username", Role.CUSTOMER);
 
@@ -118,15 +120,17 @@ public class AuthenticationServiceTests {
         Assertions.assertThrows(
                 ResponseStatusException.class,
                 () -> authenticationService.registerUser(
-                        new CustomerRegisterRequest(
+                        new RegisterRequest(
                                 "test_username",
                                 "test_password",
                                 "test_first",
                                 "test_last",
-                                "test_address",
-                                "test_city",
-                                State.QLD,
-                                "1234"
+                                new CustomerRegisterArguments(
+                                        "test_address",
+                                        "test_city",
+                                        State.QLD,
+                                        "1234"
+                                )
                         )
                 )
         );

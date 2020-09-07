@@ -10,6 +10,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class WorkerRegisterRequest extends AbstractRegisterRequest {
+public class WorkerRegisterArguments extends AbstractRegisterArguments {
 
 }
