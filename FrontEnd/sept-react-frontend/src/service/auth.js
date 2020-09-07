@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // For local development, this is hardcoded in at the moment
-const API_URL = "http://localhost:8080/api/v1/auth/";
+const API_URL = "http://localhost:8080/api/v1/auth";
 const kebabcaseKeys = require('kebabcase-keys');
 
 class Auth {
   login(username, password) {
     return axios
-      .post(API_URL + "login", {
+      .post(API_URL + "/login", {
         username,
         password
       })
@@ -25,7 +25,7 @@ class Auth {
   }
 
   register(username, password, firstName, lastName, roleArgs) {
-    return axios.post(API_URL + "register", kebabcaseKeys({
+    return axios.post(API_URL + "/register", kebabcaseKeys({
       username,
       password,
       firstName,
