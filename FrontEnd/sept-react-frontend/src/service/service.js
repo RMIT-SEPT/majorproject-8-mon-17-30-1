@@ -1,31 +1,32 @@
 import axios from "axios";
-import Auth from "auth"
+import authHeader from './auth-header';
 
 // For local development, this is hardcoded in at the moment
-const AUTH_URL = "http://localhost:8080/api/v1/auth/";
 const SERVICE_URL = "http://localhost:8080/api/v1/service/";
-const BOOKING_URL = "http://localhost:8080/api/v1/auth/";
+const BOOKING_URL = "http://localhost:8080/api/v1/booking/";
 
 class Service {
-    bookService(businessID, serviceID, workerID, dateTime) {
-        const currentUser = Auth.getCurrentUser();
+    bookService(serviceID, workerID, dateTime, username) {
         return axios
-            .post(BOOKING_URL + "bookService", {
-                businessID,
+            .post(BOOKING_URL + "create", {
                 serviceID,
                 workerID,
                 dateTime,
-                // currentUser.userID
-            })
+                username
+            }, {headers: authHeader()})
     }
 
     // Probably an incorrect place to put this
-    // getBusinessesAll() {
-    //     return
-    // }
+    getBusinessesAll() {
+        return axios.get();
+    }
 
     getServicesByBusinessID(businessID) {
         return axios.get(SERVICE_URL, businessID);
+    }
+
+    getWorkersByServiceID(serviceID) {
+
     }
 
 }

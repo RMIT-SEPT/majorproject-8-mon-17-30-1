@@ -48,7 +48,7 @@ export default class BookService extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            Service.bookService(this.state.businessID, this.state.serviceID, this.state.workerID, this.state.dateTime).then(
+            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime).then(
                 error => {
                     const resMessage =
                         (error.response &&
