@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkerRepository extends CrudRepository<WorkerEntity, Integer> {
     boolean existsByUserUsername(String username);
+
+
 }
