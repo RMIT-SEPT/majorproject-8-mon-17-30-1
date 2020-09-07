@@ -1,30 +1,27 @@
 package com.rmit.sept.septbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.*;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "role", visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = AdminRegisterRequest.class, name = "ADMIN"),
-        @JsonSubTypes.Type(value = WorkerRegisterRequest.class, name = "WORKER"),
-        @JsonSubTypes.Type(value = CustomerRegisterRequest.class, name = "CUSTOMER")
-})
-public interface RegisterRequest {
-    String getUsername();
+import javax.validation.constraints.NotNull;
 
-    void setUsername(String username);
-
-    String getPassword();
-
-    void setPassword(String password);
-
-    String getFirstName();
-
-    void setFirstName(String firstName);
-
-    String getLastName();
-
-    void setLastName(String lastName);
-
-    Role getRole();
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+public class RegisterRequest {
+    @NotNull
+    private String username;
+    @NotNull
+    private String password;
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
+    @NotNull
+    private RoleRegisterArguments roleArgs;
 }
