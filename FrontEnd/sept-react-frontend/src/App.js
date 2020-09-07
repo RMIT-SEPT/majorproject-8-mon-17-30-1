@@ -90,6 +90,12 @@ class App extends Component {
                   </Link>
                 </li>
 
+                <li className="nav-item">
+                  <Link to={"/bookings"} className="nav-link">
+                    Bookings
+                  </Link>
+                </li>
+
               {currentUser && (
                 <li className="nav-item">
                   <Link to={"/dashboard"} className="nav-link">
