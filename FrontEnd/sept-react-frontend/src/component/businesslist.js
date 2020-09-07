@@ -32,6 +32,7 @@ export default class BusinessList extends Component {
 
     onChangeBusiness = (selected) => {
         this.setState({ selected });
+        // props.onBusinessChange();
     }
 
     render() {

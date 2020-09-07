@@ -2,20 +2,35 @@ import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
 import DateList from "../component/datelist";
-import BusinessList from "../component/businesslist";
-import ServiceList from "../component/servicelist";
-import WorkerList from "../component/workerlist";
-import Service from "../service/service"
+import Service from "../service/service";
+import Select from "react-select";
+
+let businessOptions;
+let serviceOptions;
+let workerOptions;
+
+const required = value => {
+    if (!value) {
+        return (
+            <div className="alert alert-danger" role="alert">
+                This field is required!
+            </div>
+        );
+    }
+};
 
 export default class BookService extends Component {
     // List component refs
-    businessListRef = React.createRef();
-    serviceListRef = React.createRef();
-    workerListRef = React.createRef();
     dateListRef = React.createRef();
 
     constructor(props) {
         super(props);
+        this.onChangeBusiness = this.onChangeBusiness.bind(this);
+        this.onChangeService = this.onChangeService.bind(this);
+        this.onChangeWorker = this.onChangeWorker.bind(this);
+
+        this.populateBusinessList();
+
         this.handleBooking = this.handleBooking.bind(this);
 
         this.state = {
@@ -28,20 +43,43 @@ export default class BookService extends Component {
         };
     }
 
+    onChangeBusiness = (businessID) => {
+        this.setState({ businessID });
+        this.populateServiceList(businessID);
+    }
+
+    onChangeService = (serviceID) => {
+        this.setState({ serviceID });
+        this.populateWorkerList(serviceID);
+    }
+
+    onChangeWorker = (workerID) => {
+        this.setState({ workerID });
+    }
+
+    populateBusinessList() {
+        // businessOptions = Service.getBusinessesAll();
+        console.log(Service.getBusinessesAll());
+    }
+
+    populateServiceList(businessID) {
+        serviceOptions = Service.getServicesByBusinessID(businessID);
+        console.log(serviceOptions);
+    }
+
+    populateWorkerList(serviceID) {
+        workerOptions = Service.getWorkersByServiceID(serviceID);
+        console.log(workerOptions);
+    }
+
     handleBooking(e) {
         e.preventDefault();
 
-        const businessList = this.businessListRef.current;
-        const serviceList = this.serviceListRef.current;
-        const workerList = this.workerListRef.current;
         const dateList = this.dateListRef.current;
 
         this.setState({
             message: "",
             loading: true,
-            businessID: businessList.state.selected,
-            serviceID: serviceList.state.selected,
-            workerID: workerList.state.selected,
             dateTime: dateList.state.selected
         });
 
@@ -84,18 +122,34 @@ export default class BookService extends Component {
                             <h3>Book a Service.</h3>
 
                             <div className="form-group">
-                                <BusinessList ref={this.businessListRef}/>
+                                <h6>Please select a Business</h6>
+                                <Select name='business'
+                                        options={businessOptions}
+                                        onChange={this.onChangeBusiness}
+                                        validations={[required]}
+                                />
                             </div>
 
                             <div className="form-group">
-                                <ServiceList ref={this.serviceListRef}/>
+                                <h6>Please select a Service</h6>
+                                <Select name='service'
+                                        options={serviceOptions}
+                                        onChange={this.onChangeService}
+                                        validations={[required]}
+                                />
                             </div>
 
                             <div className="form-group">
-                                <WorkerList ref={this.workerListRef}/>
+                                <h6>Please select a Worker</h6>
+                                <Select name='worker'
+                                        options={workerOptions}
+                                        onChange={this.onChangeWorker}
+                                        validations={[required]}
+                                />
                             </div>
 
                             <div className="form-group">
+                                <h6>Please select a Date and Time</h6>
                                 <DateList ref={this.dateListRef}/>
                             </div>
 
