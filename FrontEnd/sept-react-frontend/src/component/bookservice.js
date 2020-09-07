@@ -7,13 +7,13 @@ import ServiceList from "../component/servicelist";
 import WorkerList from "../component/workerlist";
 import Service from "../service/service"
 
-// List components
-const businessListComponent = <BusinessList />;
-const serviceListComponent = <ServiceList />;
-const workerListComponent = <WorkerList />;
-const dateListComponent = <DateList />;
-
 export default class BookService extends Component {
+    // List components
+    businessListRef = React.createRef();
+    serviceListRef = React.createRef();
+    workerListRef = React.createRef();
+    dateListRef = React.createRef();
+
     constructor(props) {
         super(props);
         this.handleBooking = this.handleBooking.bind(this);
@@ -31,13 +31,18 @@ export default class BookService extends Component {
     handleBooking(e) {
         e.preventDefault();
 
+        const businessList = this.businessListRef.current;
+        const serviceList = this.serviceListRef.current;
+        const workerList = this.workerListRef.current;
+        const dateList = this.dateListRef.current;
+
         this.setState({
             message: "",
             loading: true,
-            businessID: businessListComponent.state.selected,
-            serviceID: serviceListComponent.state.selected,
-            workerID: workerListComponent.state.selected,
-            dateTime: dateListComponent.state.selected
+            businessID: businessList.state.selected,
+            serviceID: serviceList.state.selected,
+            workerID: workerList.state.selected,
+            dateTime: dateList.state.selected
         });
 
         this.form.validateAll();
@@ -79,19 +84,19 @@ export default class BookService extends Component {
                             <h3>Book a Service.</h3>
 
                             <div className="form-group">
-                                {businessListComponent}
+                                <BusinessList ref={this.businessListRef}/>
                             </div>
 
                             <div className="form-group">
-                                {serviceListComponent}
+                                <ServiceList ref={this.serviceListRef}/>
                             </div>
 
                             <div className="form-group">
-                                {workerListComponent}
+                                <WorkerList ref={this.workerListRef}/>
                             </div>
 
                             <div className="form-group">
-                                {dateListComponent}
+                                <DateList ref={this.dateListRef}/>
                             </div>
 
                             <div className="form-group">

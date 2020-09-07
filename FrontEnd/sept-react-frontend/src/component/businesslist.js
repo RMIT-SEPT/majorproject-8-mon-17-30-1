@@ -1,6 +1,10 @@
 import React, {Component} from "react";
 import Select from "react-select";
 
+/*
+    These list components will require a major refactoring to get rid of all this duplicate code
+ */
+
 const businessOptions = [
     { value: 'template', label: 'Template' }
 ]
