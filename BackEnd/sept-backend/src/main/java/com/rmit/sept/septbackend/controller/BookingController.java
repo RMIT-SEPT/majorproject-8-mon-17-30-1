@@ -25,4 +25,9 @@ public class BookingController {
     public void createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         bookingService.createBooking(bookingRequest);
     }
+
+    @DeleteMapping("/cancel/{bookingId}")
+    public void cancelBooking(@Valid @PathVariable int bookingId) {
+        bookingService.cancelBooking(bookingId);
+    }
 }

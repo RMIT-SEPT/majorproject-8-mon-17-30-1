@@ -45,10 +45,6 @@ class App extends Component {
     AuthService.logout();
   }
 
-  onSubmit() {
-
-  }
-
   render() {
     const { currentUser
       // , showModeratorBoard, showAdminBoard 
