@@ -27,6 +27,7 @@ public class BookingEntity {
     private LocalDateTime bookingTime;
     private LocalDateTime createdTime;
     private LocalDateTime lastModifiedTime;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime) {
