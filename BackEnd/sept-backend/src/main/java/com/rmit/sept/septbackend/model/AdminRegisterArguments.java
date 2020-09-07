@@ -11,6 +11,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class AdminRegisterRequest extends AbstractRegisterRequest {
+public class AdminRegisterArguments extends AbstractRegisterArguments {
     private String businessName;
 }
