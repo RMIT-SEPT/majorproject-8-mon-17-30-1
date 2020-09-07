@@ -8,7 +8,7 @@ import WorkerList from "../component/workerlist";
 import Service from "../service/service"
 
 export default class BookService extends Component {
-    // List components
+    // List component refs
     businessListRef = React.createRef();
     serviceListRef = React.createRef();
     workerListRef = React.createRef();
