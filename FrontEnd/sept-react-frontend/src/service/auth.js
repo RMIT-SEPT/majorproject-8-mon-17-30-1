@@ -25,13 +25,14 @@ class Auth {
   }
 
   register(username, password, firstName, lastName, roleArgs) {
+    console.log(roleArgs)
     return axios.post(API_URL + "/register", kebabcaseKeys({
       username,
       password,
       firstName,
       lastName,
       roleArgs
-    }))
+    }, {deep: true}))
     .then(response => {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));

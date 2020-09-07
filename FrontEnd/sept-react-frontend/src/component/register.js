@@ -1,12 +1,27 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
+import Auth from "../service/auth";
+
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
+
 export default class Register extends Component {
   constructor(props) {
     super(props);
-    this.handleRoleChange = this.handleRoleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleCustomerChange = this.handleCustomerChange.bind(this);
+    this.handleAdminChange = this.handleAdminChange.bind(this);
+    this.handleWorkerChange = this.handleWorkerChange.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
 
     this.state = {
@@ -16,16 +31,20 @@ export default class Register extends Component {
       lastName: "",
       loading: false,
       message: "",
-      role: "CUSTOMER", // default option
+      role: "CUSTOMER",
       CUSTOMER: {
-        streetAddress,
-        city,
-        state,
-        postcode,
+        role: "CUSTOMER",
+        streetAddress: "",
+        city: "",
+        state: "VIC",
+        postcode: "",
       },
-      WORKER: {},
+      WORKER: {
+        role: "WORKER",
+      },
       ADMIN: {
-        businessName,
+        role: "ADMIN",
+        businessName: "",
       },
     };
   }
@@ -74,6 +93,7 @@ export default class Register extends Component {
     this.form.validateAll();
 
     if (this.checkBtn.context._errors.length === 0) {
+      console.log(this.state);
       Auth.register(
         this.state.username,
         this.state.password,
@@ -114,17 +134,16 @@ export default class Register extends Component {
         </header>
 
         <div className="card card-container">
-          <Input
-            type="select"
+          <select
             name="role"
+            value={this.state.role}
             onChange={this.handleChange}
-            label="Multiple Select"
-            multiple
+            label="Select"
           >
             <option value="CUSTOMER">Customer</option>
             <option value="WORKER">Worker</option>
             <option value="ADMIN">Admin</option>
-          </Input>
+          </select>
           <Form
             onSubmit={this.handleRegister}
             ref={(c) => {
@@ -173,13 +192,14 @@ export default class Register extends Component {
                 type="text"
                 className="form-control"
                 name="lastName"
-                value={this.state.firstName}
+                value={this.state.lastName}
                 onChange={this.handleChange}
                 validations={[required]}
               />
             </div>
 
             {this.state.role === "CUSTOMER" && (
+              <Fragment>
                 <div className="form-group">
                   <label htmlFor="streetAddress">Street address</label>
                   <Input
@@ -187,11 +207,10 @@ export default class Register extends Component {
                     className="form-control"
                     name="streetAddress"
                     value={this.state.CUSTOMER.streetAddress}
-                    onChange={this.handleChange}
+                    onChange={this.handleCustomerChange}
                     validations={[required]}
                   />
                 </div>
-              ) && (
                 <div className="form-group">
                   <label htmlFor="city">City</label>
                   <Input
@@ -199,19 +218,17 @@ export default class Register extends Component {
                     className="form-control"
                     name="city"
                     value={this.state.CUSTOMER.city}
-                    onChange={this.handleChange}
+                    onChange={this.handleCustomerChange}
                     validations={[required]}
                   />
                 </div>
-              ) && (
                 <div className="form-group">
                   <label htmlFor="state">State</label>
-                  <Input
-                    type="select"
+                  <select
                     name="state"
-                    onChange={this.handleChange}
-                    label="Multiple Select"
-                    multiple
+                    onChange={this.handleCustomerChange}
+                    label="Select"
+                    value={this.state.CUSTOMER.state}
                   >
                     <option value="VIC">VIC</option>
                     <option value="QLD">QLD</option>
@@ -221,9 +238,8 @@ export default class Register extends Component {
                     <option value="WA">WA</option>
                     <option value="ACT">ACT</option>
                     <option value="NT">NT</option>
-                  </Input>
+                  </select>
                 </div>
-              ) && (
                 <div className="form-group">
                   <label htmlFor="postcode">Postcode</label>
                   <Input
@@ -231,11 +247,12 @@ export default class Register extends Component {
                     className="form-control"
                     name="postcode"
                     value={this.state.CUSTOMER.postcode}
-                    onChange={this.handleChange}
+                    onChange={this.handleCustomerChange}
                     validations={[required]}
                   />
                 </div>
-              )}
+              </Fragment>
+            )}
 
             {
               this.state.role === "WORKER"
@@ -243,17 +260,19 @@ export default class Register extends Component {
             }
 
             {this.state.role === "ADMIN" && (
-              <div className="form-group">
-                <label htmlFor="businessName">Business name</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="businessName"
-                  value={this.state.ADMIN.businessName}
-                  onChange={this.handleChange}
-                  validations={[required]}
-                />
-              </div>
+              <Fragment>
+                <div className="form-group">
+                  <label htmlFor="businessName">Business name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="businessName"
+                    value={this.state.ADMIN.businessName}
+                    onChange={this.handleAdminChange}
+                    validations={[required]}
+                  />
+                </div>
+              </Fragment>
             )}
 
             <div className="form-group">
