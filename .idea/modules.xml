@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/majorproject-8-mon-17-30-1.iml" filepath="$PROJECT_DIR$/.idea/majorproject-8-mon-17-30-1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BackEnd/sept-backend/sept-backend.iml" filepath="$PROJECT_DIR$/BackEnd/sept-backend/sept-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BackEnd/sept-backend-all.iml" filepath="$PROJECT_DIR$/BackEnd/sept-backend-all.iml" />
     </modules>
   </component>
 </project>

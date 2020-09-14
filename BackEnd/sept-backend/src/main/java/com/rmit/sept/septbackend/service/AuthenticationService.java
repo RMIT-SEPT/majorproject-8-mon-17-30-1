@@ -76,54 +76,40 @@ public class AuthenticationService {
                     encoder.encode(registerRequest.getPassword()),
                     registerRequest.getFirstName(),
                     registerRequest.getLastName(),
-                    registerRequest.getRole()
+                    registerRequest.getRoleArgs().getRole()
             );
 
             userRepository.save(user);
 
-            switch (registerRequest.getRole()) {
+            switch (registerRequest.getRoleArgs().getRole()) {
                 case ADMIN:
-                    AdminRegisterRequest adminRegisterRequest;
-                    try {
-                        adminRegisterRequest = (AdminRegisterRequest) registerRequest;
-                    } catch (ClassCastException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mismatched role and for given request");
-                    }
+                    AdminRegisterArguments adminRegisterArguments = (AdminRegisterArguments) registerRequest.getRoleArgs();
 
                     AdminEntity adminEntity = new AdminEntity();
                     adminEntity.setUser(user);
-                    adminEntity.setBusiness(new BusinessEntity(adminRegisterRequest.getBusinessName()));
+                    adminEntity.setBusiness(new BusinessEntity(adminRegisterArguments.getBusinessName()));
 
                     adminRepository.save(adminEntity);
                     break;
 
                 case WORKER:
-                    WorkerRegisterRequest workerRegisterRequest;
-                    try {
-                        workerRegisterRequest = (WorkerRegisterRequest) registerRequest;
-                    } catch (ClassCastException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mismatched role and for given request");
-                    }
+                    // Worker doesn't currently have extra info
+                    // WorkerRegisterArguments workerRegisterArguments = (WorkerRegisterArguments) registerRequest.getRoleArgs();
 
                     WorkerEntity workerEntity = new WorkerEntity(user);
-
                     workerRepository.save(workerEntity);
                     break;
 
                 case CUSTOMER:
-                    CustomerRegisterRequest customerRegisterRequest;
-                    try {
-                        customerRegisterRequest = (CustomerRegisterRequest) registerRequest;
-                    } catch (ClassCastException e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mismatched role and for given request");
-                    }
+                    CustomerRegisterArguments customerRegisterArguments = (CustomerRegisterArguments) registerRequest.getRoleArgs();
+
 
                     CustomerEntity customerEntity = new CustomerEntity(
                             user,
-                            customerRegisterRequest.getStreetAddress(),
-                            customerRegisterRequest.getCity(),
-                            customerRegisterRequest.getState(),
-                            customerRegisterRequest.getPostcode()
+                            customerRegisterArguments.getStreetAddress(),
+                            customerRegisterArguments.getCity(),
+                            customerRegisterArguments.getState(),
+                            customerRegisterArguments.getPostcode()
                     );
 
                     customerRepository.save(customerEntity);
