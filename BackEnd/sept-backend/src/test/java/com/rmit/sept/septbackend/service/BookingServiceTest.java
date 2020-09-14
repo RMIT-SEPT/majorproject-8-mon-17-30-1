@@ -52,7 +52,6 @@ public class BookingServiceTest {
 //                ))
 //    }
 
-
     @Test
     public void createBooking() {
         Mockito.when(customerRepository.getByUserUsername(Mockito.any()))
@@ -68,6 +67,9 @@ public class BookingServiceTest {
                                 , 180)
                                 , new WorkerEntity(
                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))));
+
+        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
+                .thenReturn(true);
 
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 15, 15, 30));
