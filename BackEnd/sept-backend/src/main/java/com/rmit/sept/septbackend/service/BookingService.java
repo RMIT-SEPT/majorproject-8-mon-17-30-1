@@ -62,6 +62,10 @@ public class BookingService {
             }
         }
 
+        if (!customerRepository.existsByUserUsername(bookingRequest.getCustomerUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer doesn't exist.");
+        }
+
         BookingEntity bookingEntity = new BookingEntity(
                 serviceWorkerEntity,
                 customerEntity,
