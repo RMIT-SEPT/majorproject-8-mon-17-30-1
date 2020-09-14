@@ -36,9 +36,7 @@ class Service {
     }
 
     getWorkersByServiceID(serviceID) {
-        return axios.get(WORKER_URL, {params: {serviceID}, headers: authHeader()}).then(response => {
-            return response.data;
-        });
+        return axios.get(WORKER_URL, {params: {"service-id": serviceID}, headers: authHeader()});
     }
 
 }

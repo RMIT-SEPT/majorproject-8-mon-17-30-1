@@ -4,6 +4,7 @@ import CheckButton from "react-validation/build/button";
 import DateList from "../component/datelist";
 import Service from "../service/service";
 import Select from "react-select";
+import Auth from "../service/auth"
 
 const required = value => {
     if (!value) {
@@ -57,13 +58,13 @@ export default class BookService extends Component {
 
     formatServices(services) {
         return services.map(service => {
-            return {value: service.serviceName, label: service.serviceName}
+            return {value: service.serviceId, label: service.serviceName}
         })
     }
 
     formatWorkers(workers) {
         return workers.map(worker => {
-            return {value: worker.workerId, label: worker.workerName}
+            return {value: worker.workerId, label: worker.firstName}
         })
     }
 
@@ -84,15 +85,11 @@ export default class BookService extends Component {
         this.setState({ workerID });
     }
 
-    async populateServiceList(businessID) {
-        await Service.getServicesByBusinessID(businessID).then(response => {
+    populateServiceList(businessID) {
+        Service.getServicesByBusinessID(businessID).then(response => {
             const serviceOptions = this.formatServices(response.data);
-            console.log(response.data);
             this.setState({serviceOptions});
-            console.log(serviceOptions);
         });
-
-
     }
 
     populateWorkerList(serviceID) {
@@ -116,7 +113,7 @@ export default class BookService extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime).then(
+            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime, Auth.getCurrentUser().username).then(
                 error => {
                     const resMessage =
                         (error.response &&
@@ -162,8 +159,8 @@ export default class BookService extends Component {
 
                             <div className="form-group">
                                 <h6>Please select a Service</h6>
-                                <Select name='service'
-                                        options={this.serviceOptions}
+                                <Select name="service"
+                                        options={this.state.serviceOptions}
                                         onChange={this.onChangeService}
                                         validations={[required]}
                                 />
@@ -171,8 +168,8 @@ export default class BookService extends Component {
 
                             <div className="form-group">
                                 <h6>Please select a Worker</h6>
-                                <Select name='worker'
-                                        options={this.workerOptions}
+                                <Select name="worker"
+                                        options={this.state.workerOptions}
                                         onChange={this.onChangeWorker}
                                         validations={[required]}
                                 />
