@@ -5,13 +5,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "booking")
 public class BookingEntity {
@@ -39,5 +39,20 @@ public class BookingEntity {
         this.status = Status.ACTIVE;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookingEntity that = (BookingEntity) o;
+        return bookingId == that.bookingId &&
+                Objects.equals(serviceWorker, that.serviceWorker) &&
+                Objects.equals(customer, that.customer) &&
+                Objects.equals(bookingTime, that.bookingTime) &&
+                status == that.status;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId, serviceWorker, customer, bookingTime, status);
+    }
 }
