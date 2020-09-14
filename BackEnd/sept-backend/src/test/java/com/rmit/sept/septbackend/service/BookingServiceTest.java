@@ -52,6 +52,54 @@ public class BookingServiceTest {
 //                ))
 //    }
 
+    @Test
+    public void cancelBooking() {
+        Mockito.when(bookingRepository.findById(Mockito.any())).thenReturn(
+
+            new BookingEntity(0, new ServiceWorkerEntity
+            (new ServiceEntity(
+                    new BusinessEntity(0,"Mojang")
+                    , "Minecraft"
+                    , 30)
+                    , new WorkerEntity(0,
+                    new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+            new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
+            "String streetAddress", "String city", State.TAS, "String postcode"),
+            LocalDateTime.of(2020, 10, 15, 15, 30),
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Status.ACTIVE)
+
+        );
+
+        BookingEntity expected = new BookingEntity(0, new ServiceWorkerEntity
+        (new ServiceEntity(
+                new BusinessEntity("Mojang")
+                , "Minecraft"
+                , 180
+                , new WorkerEntity(
+                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+        new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
+        "String streetAddress", "String city", State.TAS, "String postcode"),
+        LocalDateTime.of(2020, 10, 15, 15, 30),
+        LocalDateTime.now(),
+        LocalDateTime.now(),
+        Status.CANCELLED));
+
+        Mockito.verify(bookingRepository).save(ArgumentMatchers.argThat(actual -> {
+            Assertions.assertEquals(expected, actual);
+            return true;
+        }));
+    }
+
+    @Test
+    public void cancelBookingNotFound() {
+        Mockito.when(bookingRepository.findById(Mockito.any())).thenReturn(
+            Optional.empty()
+        );
+        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.cancelBooking(3));
+    }
+
 
     @Test
     public void createBooking() {
