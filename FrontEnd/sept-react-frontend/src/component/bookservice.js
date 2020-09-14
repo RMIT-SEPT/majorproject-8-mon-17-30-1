@@ -5,10 +5,6 @@ import DateList from "../component/datelist";
 import Service from "../service/service";
 import Select from "react-select";
 
-let businessOptions;
-let serviceOptions;
-let workerOptions;
-
 const required = value => {
     if (!value) {
         return (
@@ -29,9 +25,9 @@ export default class BookService extends Component {
         this.onChangeService = this.onChangeService.bind(this);
         this.onChangeWorker = this.onChangeWorker.bind(this);
 
-        this.populateBusinessList();
-
         this.handleBooking = this.handleBooking.bind(this);
+
+        this.formatJson = this.formatJson.bind(this);
 
         this.state = {
             businessID: "",
@@ -39,8 +35,25 @@ export default class BookService extends Component {
             workerID: "",
             dateTime: "",
             loading: false,
-            message: ""
+            message: "",
+            businessOptions: [],
+            serviceOptions: [],
+            workerOptions: []
         };
+    }
+
+    // Populate business list on mount
+    async componentDidMount() {
+        await Service.getBusinessesAll().then(response => {
+            const businessOptions = this.formatJson(response.data);
+            this.setState({businessOptions});
+        })
+    }
+
+    formatJson(businesses) {
+        return businesses.map(business => {
+            return {value: business.businessName, label: business.businessName}
+        })
     }
 
     onChangeBusiness = (businessID) => {
@@ -57,19 +70,18 @@ export default class BookService extends Component {
         this.setState({ workerID });
     }
 
-    populateBusinessList() {
-        // businessOptions = Service.getBusinessesAll();
-        console.log(Service.getBusinessesAll());
-    }
-
     populateServiceList(businessID) {
-        serviceOptions = Service.getServicesByBusinessID(businessID);
-        console.log(serviceOptions);
+        Service.getServicesByBusinessID(businessID).then(response => {
+            const serviceOptions = this.formatJson(response.data);
+            this.setState({serviceOptions});
+        });
     }
 
     populateWorkerList(serviceID) {
-        workerOptions = Service.getWorkersByServiceID(serviceID);
-        console.log(workerOptions);
+        Service.getWorkersByServiceID(serviceID).then(response => {
+            const workerOptions = this.formatJson(response.data);
+            this.setState({workerOptions});
+        });
     }
 
     handleBooking(e) {
@@ -123,8 +135,8 @@ export default class BookService extends Component {
 
                             <div className="form-group">
                                 <h6>Please select a Business</h6>
-                                <Select name='business'
-                                        options={businessOptions}
+                                <Select name='business-name'
+                                        options={this.state.businessOptions}
                                         onChange={this.onChangeBusiness}
                                         validations={[required]}
                                 />
@@ -133,7 +145,7 @@ export default class BookService extends Component {
                             <div className="form-group">
                                 <h6>Please select a Service</h6>
                                 <Select name='service'
-                                        options={serviceOptions}
+                                        options={this.serviceOptions}
                                         onChange={this.onChangeService}
                                         validations={[required]}
                                 />
@@ -142,7 +154,7 @@ export default class BookService extends Component {
                             <div className="form-group">
                                 <h6>Please select a Worker</h6>
                                 <Select name='worker'
-                                        options={workerOptions}
+                                        options={this.workerOptions}
                                         onChange={this.onChangeWorker}
                                         validations={[required]}
                                 />
