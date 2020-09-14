@@ -87,12 +87,12 @@ export default class Register extends Component {
 
     this.setState({
       message: "",
-      loading: true,
+      loading: true
     });
 
     this.form.validateAll();
 
-    if (this.checkBtn.context._errors.length === 0) {
+    // if (this.checkBtn.context._errors.length === 0) {
       console.log(this.state);
       Auth.register(
         this.state.username,
@@ -119,11 +119,11 @@ export default class Register extends Component {
           });
         }
       );
-    } else {
-      this.setState({
-        loading: false,
-      });
-    }
+    // } else {
+    //   this.setState({
+    //     loading: false,
+    //   });
+    // }
   }
 
   render() {
@@ -279,6 +279,7 @@ export default class Register extends Component {
               <button
                 className="btn btn-primary btn-block"
                 disabled={this.state.loading}
+                type="submit"
               >
                 {this.state.loading && (
                   <span className="spinner-border spinner-border-sm"></span>
