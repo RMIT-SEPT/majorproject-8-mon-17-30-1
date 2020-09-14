@@ -31,10 +31,8 @@ class Service {
         return await axios.get(BUSINESS_URL, {headers: authHeader()});
     }
 
-    getServicesByBusinessID(businessID) {
-        return axios.get(SERVICE_URL, {params: {businessID}, headers: authHeader()}).then(response => {
-            return response.data;
-        });
+    async getServicesByBusinessID(businessId) {
+        return await axios.get(SERVICE_URL, {params: {"business-id": businessId}, headers: authHeader()});
     }
 
     getWorkersByServiceID(serviceID) {

@@ -12,4 +12,5 @@ import lombok.*;
 @ToString
 public class BusinessResponse {
     private String businessName;
+    private int businessId;
 }

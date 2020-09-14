@@ -27,7 +27,6 @@ export default class BookService extends Component {
 
         this.handleBooking = this.handleBooking.bind(this);
 
-        this.formatJson = this.formatJson.bind(this);
 
         this.state = {
             businessID: "",
@@ -45,41 +44,60 @@ export default class BookService extends Component {
     // Populate business list on mount
     async componentDidMount() {
         await Service.getBusinessesAll().then(response => {
-            const businessOptions = this.formatJson(response.data);
+            const businessOptions = this.formatBusiness(response.data);
             this.setState({businessOptions});
         })
     }
 
-    formatJson(businesses) {
+    formatBusiness(businesses) {
         return businesses.map(business => {
-            return {value: business.businessName, label: business.businessName}
+            return {value: business.businessId, label: business.businessName}
         })
     }
 
-    onChangeBusiness = (businessID) => {
+    formatServices(services) {
+        return services.map(service => {
+            return {value: service.serviceName, label: service.serviceName}
+        })
+    }
+
+    formatWorkers(workers) {
+        return workers.map(worker => {
+            return {value: worker.workerId, label: worker.workerName}
+        })
+    }
+
+    onChangeBusiness(business) {
+        const businessID = business.value;
         this.setState({ businessID });
         this.populateServiceList(businessID);
     }
 
-    onChangeService = (serviceID) => {
+    onChangeService(service) {
+        const serviceID = service.value;
         this.setState({ serviceID });
         this.populateWorkerList(serviceID);
     }
 
-    onChangeWorker = (workerID) => {
+    onChangeWorker(worker) {
+        const workerID = worker.label;
         this.setState({ workerID });
     }
 
-    populateServiceList(businessID) {
-        Service.getServicesByBusinessID(businessID).then(response => {
-            const serviceOptions = this.formatJson(response.data);
+    async populateServiceList(businessID) {
+        await Service.getServicesByBusinessID(businessID).then(response => {
+            const serviceOptions = this.formatServices(response.data);
+            console.log(response.data);
             this.setState({serviceOptions});
+            console.log(serviceOptions);
         });
+
+
     }
 
     populateWorkerList(serviceID) {
         Service.getWorkersByServiceID(serviceID).then(response => {
-            const workerOptions = this.formatJson(response.data);
+            const workerOptions = this.formatWorkers(response.data);
             this.setState({workerOptions});
         });
     }
