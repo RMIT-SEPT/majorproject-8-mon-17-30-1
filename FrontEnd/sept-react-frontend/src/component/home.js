@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Book from "../component/bookservice"
+
 
 // import UserService from "../services/user.service";
 
@@ -36,7 +36,6 @@ export default class Home extends Component {
       <div className="container">
         <header className="jumbotron">
           <h3>Welcome dean</h3>
-          <Book />
         </header>
       </div>
     );
