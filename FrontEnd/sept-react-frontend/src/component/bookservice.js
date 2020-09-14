@@ -33,7 +33,7 @@ export default class BookService extends Component {
             businessID: "",
             serviceID: "",
             workerID: "",
-            dateTime: "",
+            dateTime: new Date(),
             loading: false,
             message: "",
             businessOptions: [],
@@ -113,7 +113,7 @@ export default class BookService extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime, Auth.getCurrentUser().username).then(
+            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime.toISOString(), Auth.getCurrentUser().username).then(
                 error => {
                     const resMessage =
                         (error.response &&

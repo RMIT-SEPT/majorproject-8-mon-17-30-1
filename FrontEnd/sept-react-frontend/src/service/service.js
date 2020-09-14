@@ -8,13 +8,14 @@ const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
 const WORKER_URL = "http://localhost:8080/api/v1/worker/";
 
 class Service {
-    bookService(serviceID, workerID, dateTime, username) {
+    bookService(serviceId, workerId, bookingTime, customerUsername) {
+        console.log(bookingTime);
         return axios
             .post(BOOKING_URL + "create", {
-                serviceID,
-                workerID,
-                dateTime,
-                username
+                serviceId,
+                workerId,
+                bookingTime,
+                customerUsername
             }, {headers: authHeader()}).then(response => {
                 return response.data;
             });

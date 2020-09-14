@@ -24,7 +24,7 @@ export default class DateList extends Component {
                 selected={this.state.startDate}
                 onChange={this.handleDateChange}
                 showTimeSelect
-                dateFormat="Pp"
+                dateFormat="d MMMM yyyy hh:mm"
             />
         );
     }
