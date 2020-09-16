@@ -54,12 +54,12 @@ public class ServiceService {
         }
     }
 
-    public List<ServiceResponse> getServicesForBusinessName(String businessName) {
-        if (!(businessRepository.existsByBusinessName(businessName))) {
+    public List<ServiceResponse> getServicesForBusinessId(Integer businessId) {
+        if (!(businessRepository.existsById(businessId))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Business does not exist");
         }
 
-        List<ServiceEntity> serviceEntities = serviceRepository.getAllByBusinessBusinessName(businessName);
+        List<ServiceEntity> serviceEntities = serviceRepository.getAllByBusinessBusinessId(businessId);
 
         return convertServiceEntityToServiceResponse(serviceEntities);
     }

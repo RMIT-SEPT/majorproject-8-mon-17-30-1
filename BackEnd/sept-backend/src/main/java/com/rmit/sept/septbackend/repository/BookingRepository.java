@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
     public interface BookingRepository extends CrudRepository<BookingEntity, Integer> {
     List<BookingEntity> getAllByCustomerUserUsernameAndStatus(String username, Status status);
-
+    BookingEntity getByBookingId(String bookingId);
 }
