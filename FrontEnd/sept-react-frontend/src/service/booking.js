@@ -9,6 +9,9 @@ class Booking {
             .get(API_URL, {
                 params: {
                     username: username
+                },
+                headers: {
+
                 }
             })
             .then(response => {

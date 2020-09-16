@@ -7,12 +7,19 @@ import BookingService from "../service/booking"
 export default class viewBookings extends Component {
     constructor(props) {
         super(props);
-     //   let data = BookingService.viewBooking("John_Smith");
-
+        //let data = BookingService.viewBooking("John_Smith");
+        this.state = {
+            bookings: []
+        }
     }
 
-
-
+    async componentDidMount() {
+        await BookingService.viewBooking("John_Smith").then(response => {
+            const bookings = response.data;
+            this.setState({bookings});
+            console.log(bookings);
+        })
+    }
 
     render() {
         const data = [{
