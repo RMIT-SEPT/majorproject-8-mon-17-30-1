@@ -39,7 +39,8 @@ public class BookingService {
             return new BookingResponse(
                     bookingEntity.getServiceWorker().getService().getServiceName(),
                     userEntity.getFirstName() + " " + userEntity.getLastName(),
-                    bookingEntity.getBookingTime()
+                    bookingEntity.getBookingTime(),
+                    bookingEntity.getBookingId()
             );
         }).collect(Collectors.toList()
         );
