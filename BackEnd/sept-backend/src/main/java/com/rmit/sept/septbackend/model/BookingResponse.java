@@ -12,11 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class BookingResponse {
     private String serviceName;
     private String workerFullName;
     private LocalDateTime date;
-
+    private int bookingId;
 
 }

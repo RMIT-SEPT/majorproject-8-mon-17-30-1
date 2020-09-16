@@ -29,9 +29,10 @@ public class BookingEntity {
     private LocalDateTime lastModifiedTime;
     private Status status;
 
-    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime) {
+    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime, int bookingId) {
         this.serviceWorker = serviceWorker;
         this.customer = customer;
         this.bookingTime = bookingTime;
+        this.bookingId = bookingId;
     }
 }
