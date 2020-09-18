@@ -41,4 +41,8 @@ public class BookingEntity {
     }
 
 
+    public BookingEntity(ServiceWorkerEntity serviceWorkerEntity, CustomerEntity customerEntity, LocalDateTime bookingTime) {
+
+
+    }
 }
