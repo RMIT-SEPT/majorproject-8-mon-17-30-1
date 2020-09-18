@@ -18,12 +18,32 @@ export default class viewBookings extends Component {
 	}
 
 	async componentDidMount() {
-		await BookingService.viewBooking("John_Smith").then(response => {
-			const bookings = response.data;
-			this.setState({bookings});
-			console.log(bookings);
+		await BookingService.viewBooking("John_Smith").then(data => {
+			this.handleResponse(data);
 		})
 	}
+
+	handleResponse(data) {
+		const bookings = this.formatBooking(data);
+		console.log(bookings);
+		this.setState({bookings})
+	}
+
+/*	mapData() {
+		this.state.bookings.map(booking => {
+			this.setState({service: booking.serviceName});
+			this.setState({worker: booking.workerFullName});
+			console.log(booking.workerFullName);
+			console.log(booking.date);
+		})
+	}*/
+
+	formatBooking(bookings) {
+		return bookings.map(booking => {
+			return {sName: booking.serviceName, wName: booking.workerFullName, date: new Date(booking.date).toString(), bookingId: booking.bookingId.toString()}
+		})
+	}
+
 
 
 
@@ -36,6 +56,7 @@ export default class viewBookings extends Component {
 			Service.cancelBooking(bookingId).then(
 				() => {
 					NotificationManager.info("Booking Cancelled");
+					console.log('Booking Cancelled')
 				},
 				error => {
 					NotificationManager.error("Failed to cancel");
@@ -59,31 +80,30 @@ export default class viewBookings extends Component {
 	};
 
 	render() {
-		const data = [
-			{
-				fName: "John",
-                lName: "Smith",
-                bookId: "1"
-			},
-			{
-				fName: "Lucas",
-                lName: "Mellor",
-                bookId: "2"
-			},
-		];
+		const data = this.state.bookings;
 		const columns = [
 			{
-				Header: "FirstName",
-				accessor: "fName",
+				Header: "Date",
+				accessor: "date",
 			},
 			{
-				Header: "LastName",
-				accessor: "lName",
+				Header: "Service Name",
+				accessor: "sName",
             },
             {
-                Header: "Booking ID",
-                accessor: "bookId"
-            }
+                Header: "Worker Name",
+                accessor: "wName"
+            },
+			{
+				Header: "",
+				accessor: "bookingId",
+				Cell: ({bookingId}) =>
+					(<div><button
+						className="btn btn-danger"
+						onClick={this.onClick(() => bookingId)}
+					>Cancel Booking</button>
+					</div>)
+			}
 		];
 
 		return (

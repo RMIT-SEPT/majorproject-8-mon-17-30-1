@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 // For local development, this is hardcoded in at the moment
 const API_URL = "http://localhost:8080/api/v1/booking/";
@@ -10,9 +11,7 @@ class Booking {
                 params: {
                     username: username
                 },
-                headers: {
-
-                }
+                headers: authHeader()
             })
             .then(response => {
                 return response.data;
