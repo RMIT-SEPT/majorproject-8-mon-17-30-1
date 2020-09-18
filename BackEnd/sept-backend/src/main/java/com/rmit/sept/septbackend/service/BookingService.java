@@ -52,13 +52,23 @@ public class BookingService {
 
         //validation
         //check if the serviceworker isn't booked for that time
-        List<BookingEntity> bookings = bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(bookingRequest.getWorkerId(), Status.ACTIVE);
-        for (BookingEntity be : bookings) {
+        List<BookingEntity> serviceBookings = bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(bookingRequest.getWorkerId(), Status.ACTIVE);
+        for (BookingEntity be : serviceBookings) {
             if (bookingRequest.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()).isBefore(be.getBookingTime())
                     || bookingRequest.getBookingTime().isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))) {
 
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service worker is busy");
+            }
+        }
+
+        List<BookingEntity> customerBookings = bookingRepository.getAllByCustomerUserUsernameAndStatus(bookingRequest.getCustomerUsername(), Status.ACTIVE);
+        for (BookingEntity be : customerBookings) {
+            if (bookingRequest.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()).isBefore(be.getBookingTime())
+                    || bookingRequest.getBookingTime().isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))) {
+
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer is busy");
             }
         }
 
