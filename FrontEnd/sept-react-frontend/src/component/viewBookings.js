@@ -29,29 +29,14 @@ export default class viewBookings extends Component {
 		this.setState({bookings})
 	}
 
-/*	mapData() {
-		this.state.bookings.map(booking => {
-			this.setState({service: booking.serviceName});
-			this.setState({worker: booking.workerFullName});
-			console.log(booking.workerFullName);
-			console.log(booking.date);
-		})
-	}*/
-
 	formatBooking(bookings) {
 		return bookings.map(booking => {
 			return {sName: booking.serviceName, wName: booking.workerFullName, date: new Date(booking.date).toString(), bookingId: booking.bookingId.toString()}
 		})
 	}
 
-
-
-
-	//onclick button has to be configured to enter selected booking id, must change
-
-	onClick = (bookingId) => {
+	handleCancel = (bookingId) => {
 		return () => {
-
 			var result = "";
 			Service.cancelBooking(bookingId).then(
 				() => {
@@ -62,20 +47,6 @@ export default class viewBookings extends Component {
 					NotificationManager.error("Failed to cancel");
 				}
 			);
-
-			// switch (result) {
-			// 	case "success":
-			// 		NotificationManager.info("Booking Cancelled");
-			// 		break;
-			// 	case "success1":
-			// 		NotificationManager.success("Success message", "Title here");
-			// 		break;
-			// 	case "error":
-			// 		NotificationManager.error("Didnt work", "Click me!", 5000, () => {
-			// 			alert("callback");
-			// 		});
-			// 		break;
-			// }
 		};
 	};
 
@@ -97,10 +68,10 @@ export default class viewBookings extends Component {
 			{
 				Header: "",
 				accessor: "bookingId",
-				Cell: ({bookingId}) =>
+				Cell: cell =>
 					(<div><button
 						className="btn btn-danger"
-						onClick={this.onClick(() => bookingId)}
+						onClick={this.handleCancel(cell.original.bookingId)}
 					>Cancel Booking</button>
 					</div>)
 			}
@@ -113,12 +84,6 @@ export default class viewBookings extends Component {
 				</header>
 				<ReactTable data={data} columns={columns} defaultPageSize={2} />
 				<div>
-					<button
-						className="btn btn-danger"
-						onClick={this.onClick("0")}
-					>
-						Cancel Booking
-					</button>
 					<hr />
 					<NotificationContainer />
 				</div>
