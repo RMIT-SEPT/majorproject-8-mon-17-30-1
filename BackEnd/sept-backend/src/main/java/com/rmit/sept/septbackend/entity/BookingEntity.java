@@ -27,6 +27,7 @@ public class BookingEntity {
     private LocalDateTime bookingTime;
     private LocalDateTime createdTime;
     private LocalDateTime lastModifiedTime;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime, int bookingId) {
@@ -34,5 +35,14 @@ public class BookingEntity {
         this.customer = customer;
         this.bookingTime = bookingTime;
         this.bookingId = bookingId;
+        this.createdTime = LocalDateTime.now();
+        this.lastModifiedTime = LocalDateTime.now();
+        this.status = Status.ACTIVE;
+    }
+
+
+    public BookingEntity(ServiceWorkerEntity serviceWorkerEntity, CustomerEntity customerEntity, LocalDateTime bookingTime) {
+
+
     }
 }

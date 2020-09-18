@@ -6,6 +6,8 @@ import com.rmit.sept.septbackend.model.Role;
 import com.rmit.sept.septbackend.model.State;
 import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.repository.BookingRepository;
+import com.rmit.sept.septbackend.repository.CustomerRepository;
+import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,11 +27,13 @@ public class BookingServiceTests {
 
     @Mock
     private BookingRepository bookingRepository;
+    private CustomerRepository customerRepository;
+    private ServiceWorkerRepository serviceWorkerRepository;
     private BookingService bookingService;
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        bookingService = new BookingService(bookingRepository);
+        bookingService = new BookingService(bookingRepository, customerRepository, serviceWorkerRepository);
     }
     @Test
     public void testViewBookings() {
