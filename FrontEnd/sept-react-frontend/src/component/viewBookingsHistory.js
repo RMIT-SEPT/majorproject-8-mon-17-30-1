@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 
-export default class BookingHistory extends Component {
+export default class ViewBookingsHistory extends Component {
     constructor(props) {
         super(props);
     }

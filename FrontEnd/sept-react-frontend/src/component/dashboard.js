@@ -34,8 +34,13 @@ export default class Dashboard extends Component {
 				<header className="jumbotron">
 					<h3>Dashboard</h3>
 					<button id="bookingsButton">
-						<Link to={"/bookings"} className="nav-link">
+						<Link to={{pathname: "/bookings", query: {whichBooking: "all"}}} className="nav-link">
 							Bookings
+						</Link>
+					</button>
+					<button id="bookingsButton">
+						<Link to={{pathname: "/bookings", query: {whichBooking: "history"}}} className="nav-link">
+							Booking History
 						</Link>
 					</button>
 				</header>
