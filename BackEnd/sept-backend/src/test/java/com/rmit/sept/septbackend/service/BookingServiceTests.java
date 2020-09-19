@@ -55,7 +55,7 @@ public class BookingServiceTests {
         List<BookingResponse> expected = Arrays.asList(
                 new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 1));
 
-        List<BookingResponse> actual = bookingService.viewBookings("Notch");
+        List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);
 
 
         Assertions.assertEquals(expected, actual);
@@ -68,7 +68,7 @@ public class BookingServiceTests {
 
         List<BookingResponse> expected = new ArrayList<>();
 
-        List<BookingResponse> actual = bookingService.viewBookings("Lucas");
+        List<BookingResponse> actual = bookingService.viewBookings("Lucas", Status.ACTIVE);
 
 
         Assertions.assertEquals(expected, actual);
@@ -135,7 +135,7 @@ public class BookingServiceTests {
         new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 1);
 
 
-        List<BookingResponse> actual = bookingService.viewBookings("Notch");
+        List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);
 
 
         Assertions.assertEquals(expected, actual);
