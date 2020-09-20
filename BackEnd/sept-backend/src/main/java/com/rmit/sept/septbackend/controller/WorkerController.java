@@ -1,5 +1,6 @@
 package com.rmit.sept.septbackend.controller;
 
+import com.rmit.sept.septbackend.entity.WorkerEntity;
 import com.rmit.sept.septbackend.model.BookingRequest;
 import com.rmit.sept.septbackend.model.NewWorkerRequest;
 import com.rmit.sept.septbackend.model.WorkerResponse;
@@ -19,7 +20,12 @@ public class WorkerController {
 
     private final WorkerService workerService;
 
-    @GetMapping
+    @GetMapping()
+    public List<WorkerResponse> getWorkers() {
+        return workerService.getWorkers();
+    }
+
+    @GetMapping("/by/service")
     public List<WorkerResponse> getAllWorkersByServiceId(@RequestParam(value = "service-id") Integer serviceId) {
         return workerService.getWorkersByServiceId(serviceId);
     }

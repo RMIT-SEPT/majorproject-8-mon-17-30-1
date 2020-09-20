@@ -4,6 +4,7 @@ import com.rmit.sept.septbackend.entity.*;
 import com.rmit.sept.septbackend.model.Role;
 import com.rmit.sept.septbackend.model.WorkerResponse;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
+import com.rmit.sept.septbackend.repository.UserRepository;
 import com.rmit.sept.septbackend.repository.WorkerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,13 +24,15 @@ public class WorkerServiceTests {
     private ServiceWorkerRepository serviceWorkerRepository;
     @Mock
     private WorkerRepository workerRepository;
+    @Mock
+    private UserRepository userRepository;
 
     private WorkerService workerService;
 
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        workerService = new WorkerService(serviceWorkerRepository, workerRepository);
+        workerService = new WorkerService(serviceWorkerRepository, workerRepository, userRepository);
     }
 
     @Test

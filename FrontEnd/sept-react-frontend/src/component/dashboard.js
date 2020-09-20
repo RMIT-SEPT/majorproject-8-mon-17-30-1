@@ -43,6 +43,11 @@ export default class Dashboard extends Component {
 							Booking History
 						</Link>
 					</button>
+					<button id="bookingsButton">
+						<Link to={{pathname: "/workers"}} className="nav-link">
+							Workers
+						</Link>
+					</button>
 				</header>
 				{currentUser ? (
 					<p>Logged in as {currentUser.role}</p>

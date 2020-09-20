@@ -12,6 +12,7 @@ import Dashboard from "./component/dashboard";
 import About from "./component/about";
 import Contact from "./component/contact";
 import viewBookings from "./component/viewBookings";
+import viewWorkers from "./component/viewWorkers";
 // import BoardUser from "./components/board-user.component";
 // import BoardModerator from "./components/board-moderator.component";
 // import BoardAdmin from "./components/board-admin.component";
@@ -141,6 +142,7 @@ class App extends Component {
               <Route exact path="/about" component={About} />
               <Route exact path="/contact" component={Contact} />
               <Route exact path="/bookings" component={viewBookings} />
+              <Route exact path="/workers" component={viewWorkers} />
               {/* <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} /> */}

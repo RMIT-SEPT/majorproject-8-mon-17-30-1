@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class WorkerResponse {
     private int workerId;
     private String firstName;
