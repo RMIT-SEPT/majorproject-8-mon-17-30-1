@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import BookService from "./bookservice";
 
 import AuthService from "../service/auth";
 export default class Dashboard extends Component {
@@ -48,6 +49,7 @@ export default class Dashboard extends Component {
 						</Link>
 					</button>
 				</header>
+				<BookService/>
 				{currentUser ? (
 					<p>Logged in as {currentUser.role}</p>
 				) : (
