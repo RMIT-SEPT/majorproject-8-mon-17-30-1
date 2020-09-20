@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 import AuthService from "../service/auth";
-import {Link} from "react-router-dom";
 
 export default class Dashboard extends Component {
 	constructor(props) {
@@ -26,6 +26,8 @@ export default class Dashboard extends Component {
 		}
 	}
 
+
+
 	render() {
 		const { currentUser } = this.state;
 
@@ -34,12 +36,12 @@ export default class Dashboard extends Component {
 				<header className="jumbotron">
 					<h3>Dashboard</h3>
 					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", query: {whichBooking: "all"}}} className="nav-link">
+						<Link to={{pathname: "/bookings", search: "?view=all"}} className="nav-link">
 							Bookings
 						</Link>
 					</button>
 					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", query: {whichBooking: "history"}}} className="nav-link">
+						<Link to={{pathname: "/bookings", search: "?view=history"}} className="nav-link">
 							Booking History
 						</Link>
 					</button>
