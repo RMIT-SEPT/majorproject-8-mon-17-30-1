@@ -1,17 +1,18 @@
 package com.rmit.sept.septbackend.service;
 
-import com.rmit.sept.septbackend.entity.*;
+import com.rmit.sept.septbackend.entity.BookingEntity;
+import com.rmit.sept.septbackend.entity.CustomerEntity;
+import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
+import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.model.BookingRequest;
 import com.rmit.sept.septbackend.model.BookingResponse;
 import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
-import com.rmit.sept.septbackend.repository.ServiceRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -53,14 +54,28 @@ public class BookingService {
 
         //validation
         //check if the serviceworker isn't booked for that time
-        List<BookingEntity> bookings = bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(bookingRequest.getWorkerId(), Status.ACTIVE);
-        for (BookingEntity be : bookings) {
+        List<BookingEntity> serviceBookings = bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(bookingRequest.getWorkerId(), Status.ACTIVE);
+        for (BookingEntity be : serviceBookings) {
             if (bookingRequest.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()).isBefore(be.getBookingTime())
                     || bookingRequest.getBookingTime().isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))) {
 
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service worker is busy");
             }
+        }
+
+        List<BookingEntity> customerBookings = bookingRepository.getAllByCustomerUserUsernameAndStatus(bookingRequest.getCustomerUsername(), Status.ACTIVE);
+        for (BookingEntity be : customerBookings) {
+            if (bookingRequest.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()).isBefore(be.getBookingTime())
+                    || bookingRequest.getBookingTime().isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))) {
+
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer is busy");
+            }
+        }
+
+        if (!customerRepository.existsByUserUsername(bookingRequest.getCustomerUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer doesn't exist.");
         }
 
         BookingEntity bookingEntity = new BookingEntity(

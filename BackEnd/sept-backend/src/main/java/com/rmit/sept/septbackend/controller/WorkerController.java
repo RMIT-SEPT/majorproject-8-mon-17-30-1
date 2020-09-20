@@ -1,7 +1,5 @@
 package com.rmit.sept.septbackend.controller;
 
-import com.rmit.sept.septbackend.entity.WorkerEntity;
-import com.rmit.sept.septbackend.model.BookingRequest;
 import com.rmit.sept.septbackend.model.EditWorkerRequest;
 import com.rmit.sept.septbackend.model.NewWorkerRequest;
 import com.rmit.sept.septbackend.model.WorkerResponse;
