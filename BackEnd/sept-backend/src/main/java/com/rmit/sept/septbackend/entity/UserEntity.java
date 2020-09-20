@@ -18,8 +18,8 @@ import javax.persistence.*;
 @Table(name = "user")
 public class UserEntity {
     // Id means that Hibernate knows which column is the primary key
-    @Id
     // This means that Hibernate generates the userId - it is not provided by users nor managed by the database
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int userId;

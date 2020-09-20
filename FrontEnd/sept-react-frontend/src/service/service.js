@@ -8,13 +8,14 @@ export const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
 export const WORKER_URL = "http://localhost:8080/api/v1/worker/";
 
 class Service {
-    bookService(serviceID, workerID, dateTime, username) {
+    bookService(serviceId, workerId, bookingTime, customerUsername) {
+        console.log(bookingTime);
         return axios
             .post(BOOKING_URL + "create", {
-                serviceID,
-                workerID,
-                dateTime,
-                username
+                serviceId,
+                workerId,
+                bookingTime,
+                customerUsername
             }, {headers: authHeader()}).then(response => {
                 return response.data;
             });
@@ -33,16 +34,12 @@ class Service {
         });
     }
 
-    getServicesByBusinessID(businessID) {
-        return axios.get(SERVICE_URL, {params: {businessID}, headers: authHeader()}).then(response => {
-            return response.data;
-        });
+    async getServicesByBusinessID(businessId) {
+        return await axios.get(SERVICE_URL, {params: {"business-id": businessId}, headers: authHeader()});
     }
 
     getWorkersByServiceID(serviceID) {
-        return axios.get(WORKER_URL, {params: {serviceID}, headers: authHeader()}).then(response => {
-            return response.data;
-        });
+        return axios.get(WORKER_URL, {params: {"service-id": serviceID}, headers: authHeader()});
     }
 
 }

@@ -13,4 +13,6 @@ public interface ServiceRepository extends CrudRepository<ServiceEntity, Integer
 
     List<ServiceEntity> getAllByBusinessBusinessId(Integer businessId);
 
+    ServiceEntity getByBusinessBusinessId(Integer businessId);
+
 }
