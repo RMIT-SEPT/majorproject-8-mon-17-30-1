@@ -21,7 +21,9 @@ describe('Auth.login', () => {
 
         axios.post.mockImplementationOnce(() => Promise.resolve(data));
 
-        await expect(Auth.login(username, password)).toEqual(data);
+        await Auth.login(username, password).then(response => {
+            expect(response).toEqual(data);
+        });
 
         expect(axios.post).toHaveBeenCalledWith(
             `${API_URL}/login`,

@@ -11,21 +11,24 @@ describe('Service.getBusinessesAll', () => {
                 businesses: [
                     {
                         businessId: '1',
-                        businessName: 'a'
+                        businessName: 'a',
                     },
                     {
                         businessId: '2',
-                        businessName: 'b'
-                    }
-                ]
-            }
-        }
+                        businessName: 'b',
+                    },
+                ],
+            },
+        };
 
-        axios.get.mockImplementationOnce(() => Promise.resolve(data));
+        axios.get.mockResolvedValue(data);
 
-        await Service.getBusinessesAll().then( response => {
-            expect(response).toEqual(data);
-        });
+        // await expect(Service.getBusinessesAll().then(response => {
+        //     return response;
+        // })).resolves.toEqual(data);
+
+        const result = await Service.getBusinessesAll();
+        expect(result).toEqual(data);
 
         expect(axios.get).toHaveBeenCalledWith(
             `${BUSINESS_URL}`,
