@@ -2,10 +2,10 @@ import axios from "axios";
 import authHeader from './auth-header';
 
 // For local development, this is hardcoded in at the moment
-const SERVICE_URL = "http://localhost:8080/api/v1/service/";
-const BOOKING_URL = "http://localhost:8080/api/v1/booking/";
-const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
-const WORKER_URL = "http://localhost:8080/api/v1/worker/";
+export const SERVICE_URL = "http://localhost:8080/api/v1/service/";
+export const BOOKING_URL = "http://localhost:8080/api/v1/booking/";
+export const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
+export const WORKER_URL = "http://localhost:8080/api/v1/worker/";
 
 class Service {
     bookService(serviceId, workerId, bookingTime, customerUsername) {
@@ -28,8 +28,10 @@ class Service {
     }
 
     // Probably an incorrect place to put this
-    async getBusinessesAll() {
-        return await axios.get(BUSINESS_URL, {headers: authHeader()});
+    getBusinessesAll = async () => {
+        return await axios.get(BUSINESS_URL, {headers: authHeader()}).then(response => {
+            return response.data;
+        });
     }
 
     async getServicesByBusinessID(businessId) {
