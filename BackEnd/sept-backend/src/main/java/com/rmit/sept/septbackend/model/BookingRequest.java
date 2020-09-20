@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode()
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class BookingRequest {
-    private int serviceWorkerId;
+    private int serviceId;
+    private int WorkerId;
     private String customerUsername;
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

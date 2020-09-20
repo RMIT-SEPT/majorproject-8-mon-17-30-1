@@ -5,13 +5,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "booking")
 public class BookingEntity {
@@ -30,19 +30,29 @@ public class BookingEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime, int bookingId) {
+    public BookingEntity(ServiceWorkerEntity serviceWorker, CustomerEntity customer, LocalDateTime bookingTime) {
         this.serviceWorker = serviceWorker;
         this.customer = customer;
         this.bookingTime = bookingTime;
-        this.bookingId = bookingId;
         this.createdTime = LocalDateTime.now();
         this.lastModifiedTime = LocalDateTime.now();
         this.status = Status.ACTIVE;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookingEntity that = (BookingEntity) o;
+        return bookingId == that.bookingId &&
+                Objects.equals(serviceWorker, that.serviceWorker) &&
+                Objects.equals(customer, that.customer) &&
+                Objects.equals(bookingTime, that.bookingTime) &&
+                status == that.status;
+    }
 
-    public BookingEntity(ServiceWorkerEntity serviceWorkerEntity, CustomerEntity customerEntity, LocalDateTime bookingTime) {
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId, serviceWorker, customer, bookingTime, status);
     }
 }

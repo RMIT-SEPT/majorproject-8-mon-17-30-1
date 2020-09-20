@@ -6,6 +6,7 @@ import com.rmit.sept.septbackend.model.BookingResponse;
 import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
+import com.rmit.sept.septbackend.repository.ServiceRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,20 @@ public class BookingService {
 
     public void createBooking(BookingRequest bookingRequest) {
         CustomerEntity customerEntity = customerRepository.getByUserUsername(bookingRequest.getCustomerUsername());
-        ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.findById(bookingRequest.getServiceWorkerId()).get();
+        ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(bookingRequest.getServiceId(), bookingRequest.getWorkerId());
+
+        //validation
+        //check if the serviceworker isn't booked for that time
+        List<BookingEntity> bookings = bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(bookingRequest.getWorkerId(), Status.ACTIVE);
+        for (BookingEntity be : bookings) {
+            if (bookingRequest.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()).isBefore(be.getBookingTime())
+                    || bookingRequest.getBookingTime().isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))) {
+
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service worker is busy");
+            }
+        }
+
         BookingEntity bookingEntity = new BookingEntity(
                 serviceWorkerEntity,
                 customerEntity,
@@ -56,6 +70,9 @@ public class BookingService {
         );
 
         bookingRepository.save(bookingEntity);
+
+        //check if the customer entity isn't booked for that time
+
     }
 
     public void cancelBooking(int bookingId) {

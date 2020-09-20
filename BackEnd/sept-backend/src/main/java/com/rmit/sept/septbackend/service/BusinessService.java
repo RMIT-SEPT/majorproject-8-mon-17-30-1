@@ -19,7 +19,7 @@ public class BusinessService {
     public List<BusinessResponse> getAllBusinesses() {
         return StreamSupport
                 .stream(businessRepository.findAll().spliterator(), false)
-                .map(businessEntity -> new BusinessResponse(businessEntity.getBusinessName()))
+                .map(businessEntity -> new BusinessResponse(businessEntity.getBusinessName(), businessEntity.getBusinessId()))
                 .collect(Collectors.toList());
     }
 }

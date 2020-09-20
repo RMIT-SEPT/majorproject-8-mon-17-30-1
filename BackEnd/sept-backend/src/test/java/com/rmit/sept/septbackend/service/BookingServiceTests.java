@@ -49,7 +49,7 @@ public class BookingServiceTests {
                                                         new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
         ,new CustomerEntity(
                 new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
+                "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30)
                 )));
 
         List<BookingResponse> expected = Arrays.asList(
@@ -88,7 +88,8 @@ public class BookingServiceTests {
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
                                         ,new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
+                                        "String streetAddress", "String city", State.TAS, "String postcode"),
+                                        LocalDateTime.of(2020, 10, 15, 15, 30)
                                 )));
 
         List<BookingResponse> expected = new ArrayList<>();
@@ -112,7 +113,7 @@ public class BookingServiceTests {
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
                                         ,new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
+                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30)
                                 )));
 
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
@@ -127,7 +128,7 @@ public class BookingServiceTests {
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
                                         ,new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 16, 15, 30), 1
+                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 16, 15, 30)
                                 )));
 
         List<BookingResponse> expected = Arrays.asList(
