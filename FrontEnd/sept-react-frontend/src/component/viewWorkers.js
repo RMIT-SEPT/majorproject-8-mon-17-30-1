@@ -40,20 +40,20 @@ export default class ViewWorkers extends Component {
         })
     }
 
-    // handleCancel = (bookingId) => {
-    //     return () => {
-    //         var result = "";
-    //         Service.cancelBooking(bookingId).then(
-    //             () => {
-    //                 NotificationManager.info("Booking Cancelled");
-    //                 console.log('Booking Cancelled')
-    //             },
-    //             error => {
-    //                 NotificationManager.error("Failed to cancel");
-    //             }
-    //         );
-    //     };
-    // };
+    handleDelete = (workerId) => {
+        return () => {
+            var result = "";
+            WorkerService.deleteWorker(workerId).then(
+                () => {
+                    NotificationManager.info("Booking Cancelled");
+                    console.log('Booking Cancelled')
+                },
+                error => {
+                    NotificationManager.error("Failed to cancel");
+                }
+            );
+        };
+    };
 
     render() {
         const data = this.state.workers;
@@ -71,14 +71,19 @@ export default class ViewWorkers extends Component {
                 accessor: "lName"
             },
             {
-                Header: "",
+                Header: "Edit",
                 accessor: "bookingId",
                 Cell: cell =>
                     (<div>
                         <button
-                            className="btn btn-danger"
+                            className="btn btn-primary"
                             // onClick={this.handleCancel(cell.original.bookingId)}
-                        >Cancel Booking
+                        >Edit
+                        </button>
+                        <button
+                            className="btn btn-danger"
+                            onClick={this.handleDelete(cell.original.id)}
+                        >Delete
                         </button>
                     </div>)
             }

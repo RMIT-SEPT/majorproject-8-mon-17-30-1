@@ -29,6 +29,12 @@ class Workers {
                     return response.data;
                 });
         }
+
+        deleteWorker(workerId) {
+            return axios.delete(API_URL + "delete/" + workerId, {headers: authHeader()}).then(response => {
+                return response.data;
+            });
+        }
 }
 
 export default new Workers();

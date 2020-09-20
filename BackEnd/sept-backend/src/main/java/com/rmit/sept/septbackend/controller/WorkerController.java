@@ -33,7 +33,6 @@ public class WorkerController {
 
     @PostMapping("/create")
     public void createWorker(@Valid @RequestBody NewWorkerRequest newWorkerRequest) {
-        System.out.println("new worker: " + newWorkerRequest.toString());
         workerService.createNewWorker(newWorkerRequest);
     }
 
@@ -42,8 +41,8 @@ public class WorkerController {
         workerService.editExistingWorker(editWorkerRequest);
     }
 
-    @PostMapping("/delete")
-    public void deleteWorker(@RequestParam(value = "worker-id") Integer workerId) {
+    @PostMapping("/delete/{workerId}")
+    public void deleteWorker(@Valid @PathVariable int workerId) {
         workerService.deleteWorker(workerId);
     }
 }
