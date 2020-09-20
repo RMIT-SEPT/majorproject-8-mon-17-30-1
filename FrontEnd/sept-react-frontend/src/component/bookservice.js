@@ -30,9 +30,9 @@ export default class BookService extends Component {
 
 
         this.state = {
-            businessID: "",
-            serviceID: "",
-            workerID: "",
+            businessID: 0,
+            serviceID: 0,
+            workerID: 0,
             dateTime: new Date(),
             loading: false,
             message: "",
@@ -81,7 +81,7 @@ export default class BookService extends Component {
     }
 
     onChangeWorker(worker) {
-        const workerID = worker.label;
+        const workerID = worker.value;
         this.setState({ workerID });
     }
 
