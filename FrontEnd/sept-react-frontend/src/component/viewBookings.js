@@ -8,6 +8,7 @@ import {
 import Service from "../service/service";
 
 import BookingService from "../service/booking"
+import NewWorker from "./newWorker";
 
 export default class viewBookings extends Component {
     constructor(props) {

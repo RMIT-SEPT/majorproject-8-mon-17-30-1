@@ -3,6 +3,7 @@ package com.rmit.sept.septbackend.service;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
 import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.entity.WorkerEntity;
+import com.rmit.sept.septbackend.model.EditWorkerRequest;
 import com.rmit.sept.septbackend.model.NewWorkerRequest;
 import com.rmit.sept.septbackend.model.Role;
 import com.rmit.sept.septbackend.model.WorkerResponse;
@@ -32,6 +33,7 @@ public class WorkerService {
         return serviceWorkers.stream().map(serviceWorkerEntity ->
                 new WorkerResponse(
                         serviceWorkerEntity.getWorker().getWorkerId(),
+                        serviceWorkerEntity.getWorker().getUser().getUsername(),
                         serviceWorkerEntity.getWorker().getUser().getFirstName(),
                         serviceWorkerEntity.getWorker().getUser().getLastName()
                 )
@@ -42,7 +44,7 @@ public class WorkerService {
         Iterable<WorkerEntity> workers = workerRepository.findAll();
         List<WorkerResponse> workerResponses = new ArrayList<>();
         for (WorkerEntity w : workers) {
-            workerResponses.add(new WorkerResponse(w.getWorkerId(), w.getUser().getFirstName(), w.getUser().getLastName()));
+            workerResponses.add(new WorkerResponse(w.getWorkerId(), w.getUser().getUsername(),w.getUser().getFirstName(), w.getUser().getLastName()));
         }
         return workerResponses;
     }
@@ -50,7 +52,8 @@ public class WorkerService {
     public void createNewWorker(NewWorkerRequest newWorkerRequest) {
         UserEntity newUser = new UserEntity(
                 newWorkerRequest.getUsername(),
-                newWorkerRequest.getPassword(),
+//                newWorkerRequest.getPassword(),
+                "temppw",
                 newWorkerRequest.getFirstName(),
                 newWorkerRequest.getLastName(),
                 Role.WORKER);
@@ -60,5 +63,17 @@ public class WorkerService {
         WorkerEntity workerEntity = new WorkerEntity(newUser);
 
         workerRepository.save(workerEntity);
+    }
+
+    public void editExistingWorker(EditWorkerRequest editWorkerRequest) {
+        WorkerEntity worker = workerRepository.getByWorkerId(editWorkerRequest.getWorkerId());
+        worker.getUser().setFirstName(editWorkerRequest.getFirstName());
+        worker.getUser().setLastName(editWorkerRequest.getLastName());
+        worker.getUser().setUsername(editWorkerRequest.getUsername());
+        workerRepository.save(worker);
+    }
+
+    public void deleteWorker(int workerId) {
+        workerRepository.delete(workerRepository.getByWorkerId(workerId));
     }
 }

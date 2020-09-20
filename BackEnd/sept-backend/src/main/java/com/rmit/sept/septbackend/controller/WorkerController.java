@@ -2,6 +2,7 @@ package com.rmit.sept.septbackend.controller;
 
 import com.rmit.sept.septbackend.entity.WorkerEntity;
 import com.rmit.sept.septbackend.model.BookingRequest;
+import com.rmit.sept.septbackend.model.EditWorkerRequest;
 import com.rmit.sept.septbackend.model.NewWorkerRequest;
 import com.rmit.sept.septbackend.model.WorkerResponse;
 import com.rmit.sept.septbackend.service.WorkerService;
@@ -32,6 +33,17 @@ public class WorkerController {
 
     @PostMapping("/create")
     public void createWorker(@Valid @RequestBody NewWorkerRequest newWorkerRequest) {
+        System.out.println("new worker: " + newWorkerRequest.toString());
         workerService.createNewWorker(newWorkerRequest);
+    }
+
+    @PostMapping("/edit")
+    public void editWorker(@Valid @RequestBody EditWorkerRequest editWorkerRequest) {
+        workerService.editExistingWorker(editWorkerRequest);
+    }
+
+    @PostMapping("/delete")
+    public void deleteWorker(@RequestParam(value = "worker-id") Integer workerId) {
+        workerService.deleteWorker(workerId);
     }
 }

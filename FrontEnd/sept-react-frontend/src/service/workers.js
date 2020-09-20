@@ -17,6 +17,18 @@ class Workers {
                 console.log(error);
             });
     }
+
+    newWorker(username, firstName, lastName) {
+        console.log(username, firstName, lastName);
+            return axios
+                .post(API_URL + "create", {
+                    username,
+                    firstName,
+                    lastName
+                }, {headers: authHeader()}).then(response => {
+                    return response.data;
+                });
+        }
 }
 
 export default new Workers();

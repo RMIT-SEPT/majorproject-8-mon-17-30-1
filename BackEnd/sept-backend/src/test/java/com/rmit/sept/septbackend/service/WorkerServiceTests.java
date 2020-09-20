@@ -49,8 +49,8 @@ public class WorkerServiceTests {
                 );
 
         List<WorkerResponse> expected = Arrays.asList(
-                new WorkerResponse(0, "testFirstName", "testLastName"),
-                new WorkerResponse(1, "anotherTestFirstName", "anotherTestLastName")
+                new WorkerResponse(0, "testUserName" ,"testFirstName", "testLastName"),
+                new WorkerResponse(1, "testUserName" ,"anotherTestFirstName", "anotherTestLastName")
         );
 
         List<WorkerResponse> actual = workerService.getWorkersByServiceId(0);

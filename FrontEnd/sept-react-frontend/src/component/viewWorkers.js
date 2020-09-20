@@ -8,6 +8,7 @@ import {
 import Service from "../service/service";
 
 import WorkerService from "../service/workers"
+import NewWorker from "./newWorker";
 
 export default class ViewWorkers extends Component {
     constructor(props) {
@@ -87,6 +88,7 @@ export default class ViewWorkers extends Component {
             <div className="container">
                 <header className="jumbotron">
                     <h3>Workers</h3>
+                    <NewWorker></NewWorker>
                 </header>
                 <ReactTable data={data} columns={columns} defaultPageSize={2}/>
                 <div>

@@ -12,12 +12,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class NewWorkerRequest {
     @NotNull
     private String username;
-    @NotNull
-    private String password;
     @NotNull
     private String firstName;
     @NotNull
