@@ -14,9 +14,16 @@ export default class viewBookings extends Component {
         super(props);
         this.state = {
             bookings: [],
-            whichBooking: this.props.location.query.whichBooking
+            whichBooking: this.getQueryString('view')
         }
     }
+
+    getQueryString( field, url ) {
+        let href = url ? url : window.location.href;
+        let reg = new RegExp('[?&]' + field + '=([^&#]*)', 'i');
+        let string = reg.exec(href);
+        return string ? string[1] : null;
+    };
 
     async componentDidMount() {
         console.log(this.state.whichBooking);
