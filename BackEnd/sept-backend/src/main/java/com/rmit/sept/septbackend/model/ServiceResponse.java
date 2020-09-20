@@ -10,8 +10,8 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class ServiceResponse {
+    private int serviceId;
     private String businessName;
     private String serviceName;
     private int durationMinutes;

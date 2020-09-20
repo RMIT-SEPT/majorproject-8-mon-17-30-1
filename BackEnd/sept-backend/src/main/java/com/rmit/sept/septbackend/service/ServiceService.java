@@ -80,6 +80,7 @@ public class ServiceService {
                 .stream()
                 .map(serviceEntity ->
                         new ServiceResponse(
+                                serviceEntity.getServiceId(),
                                 serviceEntity.getBusiness().getBusinessName(),
                                 serviceEntity.getServiceName(),
                                 serviceEntity.getDurationMinutes()

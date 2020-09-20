@@ -32,14 +32,14 @@ public class BusinessServiceTests {
     public void testGetAllBusinesses() {
         Mockito.when(businessRepository.findAll()).thenReturn(
                 Arrays.asList(
-                        new BusinessEntity("testBusiness"),
-                        new BusinessEntity("anotherTestBusiness")
+                        new BusinessEntity(0, "testBusiness"),
+                        new BusinessEntity(1, "anotherTestBusiness")
                 )
         );
 
         List<BusinessResponse> expected = Arrays.asList(
-                new BusinessResponse("testBusiness"),
-                new BusinessResponse("anotherTestBusiness")
+                new BusinessResponse("testBusiness", 0),
+                new BusinessResponse("anotherTestBusiness", 1)
         );
 
         List<BusinessResponse> actual = businessService.getAllBusinesses();

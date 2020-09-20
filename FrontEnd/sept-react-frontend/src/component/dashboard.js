@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Book from "../component/bookservice";
 
 import AuthService from "../service/auth";
 export default class Dashboard extends Component {
@@ -31,6 +32,7 @@ export default class Dashboard extends Component {
 			<div className="container">
 				<header className="jumbotron">
 					<h3>Dashboard</h3>
+					<Book />
 				</header>
 				{currentUser ? (
 					<p>Logged in as {currentUser.role}</p>
