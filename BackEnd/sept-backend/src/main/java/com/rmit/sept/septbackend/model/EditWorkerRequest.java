@@ -4,15 +4,24 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-@NoArgsConstructor
+import javax.validation.constraints.NotNull;
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-public class WorkerResponse {
+@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+public class EditWorkerRequest {
+    @NotNull
     private int workerId;
-    private String userName;
+    @NotNull
+    private String username;
+    @NotNull
+    private String password;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
 }

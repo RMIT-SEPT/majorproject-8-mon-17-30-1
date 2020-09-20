@@ -31,8 +31,8 @@ public class BookingService {
         this.serviceWorkerRepository = serviceWorkerRepository;
     }
 
-    public List<BookingResponse> viewBookings(String username) {
-        List<BookingEntity> bookingEntities = bookingRepository.getAllByCustomerUserUsernameAndStatus(username, Status.ACTIVE);
+    public List<BookingResponse> viewBookings(String username, Status status) {
+        List<BookingEntity> bookingEntities = bookingRepository.getAllByCustomerUserUsernameAndStatus(username, status);
 
         return bookingEntities.stream().map(bookingEntity -> {
             UserEntity userEntity = bookingEntity.getServiceWorker().getWorker().getUser();
@@ -40,7 +40,8 @@ public class BookingService {
             return new BookingResponse(
                     bookingEntity.getServiceWorker().getService().getServiceName(),
                     userEntity.getFirstName() + " " + userEntity.getLastName(),
-                    bookingEntity.getBookingTime()
+                    bookingEntity.getBookingTime(),
+                    bookingEntity.getBookingId()
             );
         }).collect(Collectors.toList()
         );
