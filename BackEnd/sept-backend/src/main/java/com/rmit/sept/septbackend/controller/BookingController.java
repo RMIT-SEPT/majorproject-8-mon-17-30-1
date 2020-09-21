@@ -28,6 +28,11 @@ public class BookingController {
         return bookingService.viewBookings(username, Status.CANCELLED);
     }
 
+    @GetMapping("/viewAllHistory")
+    public List<BookingResponse> viewAllBookingHistory() {
+        return bookingService.viewAllPastBookings();
+    }
+
     @PostMapping("/create")
     public void createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         bookingService.createBooking(bookingRequest);
