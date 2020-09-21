@@ -4,7 +4,7 @@ import authHeader from './auth-header';
 // For local development, this is hardcoded in at the moment
 export const SERVICE_URL = "http://localhost:8080/api/v1/service/";
 export const BOOKING_URL = "http://localhost:8080/api/v1/booking/";
-export const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
+export const BUSINESS_URL = "http://localhost:8080/api/v1/business";
 export const WORKER_URL = "http://localhost:8080/api/v1/worker/";
 
 class Service {
@@ -34,6 +34,10 @@ class Service {
 
     async getServicesByBusinessID(businessId) {
         return await axios.get(SERVICE_URL, {params: {"business-id": businessId}, headers: authHeader()});
+    }
+
+    getBusinessByAdminUsername(username) {
+        return axios.get(BUSINESS_URL + "/admin", {params: {"username": username}, headers: authHeader()});
     }
 
     getWorkersByServiceID(serviceID) {
