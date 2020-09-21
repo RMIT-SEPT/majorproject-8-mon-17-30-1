@@ -102,7 +102,7 @@ export default class NewWorker extends Component {
                 {this.state.loading && (
                   <span className="spinner-border spinner-border-sm" />
                 )}
-                <span>Book Service</span>
+                <span>Create new worker</span>
               </button>
             </div>
 
