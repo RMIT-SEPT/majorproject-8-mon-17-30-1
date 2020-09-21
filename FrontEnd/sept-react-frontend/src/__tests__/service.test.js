@@ -23,15 +23,12 @@ describe('Service.getBusinessesAll', () => {
 
         axios.get.mockResolvedValue(data);
 
-        // await expect(Service.getBusinessesAll().then(response => {
-        //     return response;
-        // })).resolves.toEqual(data);
-
-        const result = await Service.getBusinessesAll();
-        expect(result).toEqual(data);
+        await Service.getBusinessesAll().then( response => {
+            expect(response).toEqual(data);
+        });
 
         expect(axios.get).toHaveBeenCalledWith(
-            `${BUSINESS_URL}`,
+            `${BUSINESS_URL}`, {"headers": {}}
         );
     });
 
@@ -67,10 +64,14 @@ describe('Service.getServicesByBusinessID', () => {
 
         expect(axios.get).toHaveBeenCalledWith(
             `${SERVICE_URL}`,
+            {"headers": {},
+                "params": {
+                    "business-id": 1,
+                }},
         );
     });
 
-    it('erroneously calls the API for services', async () => {
+    it('erroneously calls API', async () => {
         const errorMessage = 'Network Error';
 
         const businessId = 1;

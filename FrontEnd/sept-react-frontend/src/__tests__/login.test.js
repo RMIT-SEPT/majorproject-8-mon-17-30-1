@@ -12,32 +12,22 @@ describe('Auth.login', () => {
         const data = {
             data: {
                 user: {
+                    type: 'Bearer',
                     token: '1',
-                    userName: 'John',
-                    role: 'user'
-                }
-            }
+                    username: 'John',
+                    role: 'user',
+                },
+            },
         };
 
         axios.post.mockImplementationOnce(() => Promise.resolve(data));
 
-        await Auth.login(username, password).then(response => {
-            expect(response).toEqual(data);
-        });
+        // expect(await Auth.login(username, password)).toEqual({"user": {"role": "user", "token": "1", "type": "Bearer", "username": "John"}});
+
+        expect(await Auth.login(username, password)).toEqual(data.data);
 
         expect(axios.post).toHaveBeenCalledWith(
-            `${API_URL}/login`,
+            `${API_URL}/login`, {"password": password, "username": username},
         );
-    });
-
-    it('fails to call API for lack of input', async () => {
-        const username = "";
-        const password = "";
-
-        const errorMessage = "Invalid Input";
-
-        axios.post.mockImplementationOnce(() => Promise.reject(errorMessage));
-
-        await expect(Auth.login(username, password)).rejects.toThrow(errorMessage);
     });
 });
