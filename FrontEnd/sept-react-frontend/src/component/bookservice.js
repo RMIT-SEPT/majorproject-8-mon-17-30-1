@@ -64,7 +64,7 @@ export default class BookService extends Component {
 
     formatWorkers(workers) {
         return workers.map(worker => {
-            return {value: worker.workerId, label: worker.firstName}
+            return {value: worker.workerId, label: (worker.firstName + " " + worker.lastName)}
         })
     }
 
