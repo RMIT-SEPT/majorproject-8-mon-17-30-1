@@ -44,6 +44,20 @@ class Service {
         return axios.get(WORKER_URL, {params: {"service-id": serviceID}, headers: authHeader()});
     }
 
+    createService(businessId, serviceName, durationMinutes) {
+        return axios.post(
+            SERVICE_URL,
+            {
+                businessId,
+                serviceName,
+                durationMinutes
+            },
+            {
+                headers: authHeader()
+            }
+        );
+    }
+
 }
 
 export default new Service();

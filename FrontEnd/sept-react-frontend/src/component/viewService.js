@@ -6,7 +6,7 @@ import {
   NotificationManager,
 } from "react-notifications";
 import Service from "../service/service";
-
+import NewService from "./newService";
 import AuthService from "../service/auth";
 
 export default class ViewService extends Component {
@@ -88,16 +88,18 @@ export default class ViewService extends Component {
       {
         Header: "Service Name",
         accessor: "serviceName",
+        Cell: row => <div style={{ textAlign: "center" }}>{row.value}</div>
       },
       {
         Header: "Duration",
         accessor: "duration",
+        Cell: row => <div style={{ textAlign: "center" }}>{row.value}</div>
       },
       {
         Header: "",
         accessor: "serviceId",
         Cell: (cell) => (
-          <div>
+          <div style={{ textAlign: "center" }}>
             <button
               className="btn btn-primary"
               onClick={this.handleEdit(cell.original.serviceId)}
@@ -121,8 +123,12 @@ export default class ViewService extends Component {
       if (this.state.business) {
         viewToShow = (
           <div>
+            <div>
+              <h3>Create a new service</h3>
+              <NewService businessId={this.state.business.businessId}/>
+            </div>
             <header>
-              <h4>Viewing services for {this.state.business.businessName}</h4>
+              <h3>Viewing services for {this.state.business.businessName}</h3>
             </header>
             <ReactTable data={data} columns={columns} defaultPageSize={5} />
             <div>
