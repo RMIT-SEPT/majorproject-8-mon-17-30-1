@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +36,27 @@ public class BookingService {
 
     public List<BookingResponse> viewBookings(String username, Status status) {
         List<BookingEntity> bookingEntities = bookingRepository.getAllByCustomerUserUsernameAndStatus(username, status);
+
+        return bookingEntities.stream().map(bookingEntity -> {
+            UserEntity userEntity = bookingEntity.getServiceWorker().getWorker().getUser();
+
+            return new BookingResponse(
+                    bookingEntity.getServiceWorker().getService().getServiceName(),
+                    userEntity.getFirstName() + " " + userEntity.getLastName(),
+                    bookingEntity.getBookingTime(),
+                    bookingEntity.getBookingId()
+            );
+        }).collect(Collectors.toList()
+        );
+    }
+
+    public List<BookingResponse> viewAllPastBookings() {
+
+        List<BookingEntity> bookingEntities = new ArrayList<>();
+        for (BookingEntity bookingEntity : bookingRepository.findAll()) {
+            if (bookingEntity.getBookingTime().isBefore(LocalDateTime.now()))
+                bookingEntities.add(bookingEntity);
+        }
 
         return bookingEntities.stream().map(bookingEntity -> {
             UserEntity userEntity = bookingEntity.getServiceWorker().getWorker().getUser();

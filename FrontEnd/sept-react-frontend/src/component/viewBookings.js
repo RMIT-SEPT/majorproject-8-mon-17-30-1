@@ -46,6 +46,14 @@ export default class viewBookings extends Component {
                     whichBookingMessage: "Previous and cancelled bookings"
                 });
                 break;
+            case "allhistory":
+                await BookingService.viewAllBookingHistory().then(data => {
+                    this.handleResponse(data);
+                });
+                this.setState({
+                    whichBookingMessage: "Full booking history"
+                });
+                break;
         }
 
     }
