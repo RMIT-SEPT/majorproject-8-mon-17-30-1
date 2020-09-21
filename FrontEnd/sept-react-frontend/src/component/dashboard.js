@@ -54,8 +54,12 @@ export default class Dashboard extends Component {
 						<Link to={{pathname: "/workers"}} className="btn btn-primary btn-lg active">
 							Workers
 						</Link>
-					</button>
-					}
+					</button>}
+					{currentUser && currentUser.role === "ADMIN" && <button>
+						<Link to={{pathname: "/services"}} className="btn btn-primary btn-lg active">
+							Services
+						</Link>
+					</button>}
 				</header>
 				<BookService/>
 				{currentUser ? (

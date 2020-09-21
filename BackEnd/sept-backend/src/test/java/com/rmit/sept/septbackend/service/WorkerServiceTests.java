@@ -26,13 +26,15 @@ public class WorkerServiceTests {
     private WorkerRepository workerRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private AuthenticationService authenticationService;
 
     private WorkerService workerService;
 
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        workerService = new WorkerService(serviceWorkerRepository, workerRepository, userRepository);
+        workerService = new WorkerService(serviceWorkerRepository, workerRepository, userRepository, authenticationService);
     }
 
     @Test
@@ -49,8 +51,8 @@ public class WorkerServiceTests {
                 );
 
         List<WorkerResponse> expected = Arrays.asList(
-                new WorkerResponse(0, "testUserName" ,"testFirstName", "testLastName"),
-                new WorkerResponse(1, "testUserName" ,"anotherTestFirstName", "anotherTestLastName")
+                new WorkerResponse(0, "testUsername" ,"testFirstName", "testLastName"),
+                new WorkerResponse(1, "anotherTestUsername" ,"anotherTestFirstName", "anotherTestLastName")
         );
 
         List<WorkerResponse> actual = workerService.getWorkersByServiceId(0);
