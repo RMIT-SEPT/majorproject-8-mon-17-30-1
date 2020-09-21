@@ -27,11 +27,13 @@ describe('Service.getBusinessesAll', () => {
         //     return response;
         // })).resolves.toEqual(data);
 
-        const result = await Service.getBusinessesAll();
-        expect(result).toEqual(data);
+        await Service.getBusinessesAll().then( response => {
+            expect(response).toEqual(data);
+        });
+
 
         expect(axios.get).toHaveBeenCalledWith(
-            `${BUSINESS_URL}`,
+            `${BUSINESS_URL}`, {"headers": {}}
         );
     });
 
@@ -68,17 +70,5 @@ describe('Service.getServicesByBusinessID', () => {
         expect(axios.get).toHaveBeenCalledWith(
             `${SERVICE_URL}`,
         );
-    });
-
-    it('erroneously calls the API for services', async () => {
-        const errorMessage = 'Network Error';
-
-        const businessId = 1;
-
-        axios.get.mockImplementationOnce(() =>
-            Promise.reject(new Error(errorMessage)),
-        );
-
-        await expect(Service.getServicesByBusinessID(businessId)).rejects.toThrow(errorMessage);
     });
 });
