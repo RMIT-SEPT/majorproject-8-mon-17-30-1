@@ -39,6 +39,21 @@ class Booking {
             });
 
     }
+
+    viewAllBookingHistory(username) {
+        console.log(API_URL + "viewAllHistory");
+        return axios
+            .get(API_URL + "viewAllHistory", {
+                headers: authHeader()
+            })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }
 }
 
 export default new Booking();

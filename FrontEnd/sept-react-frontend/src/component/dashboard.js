@@ -44,6 +44,11 @@ export default class Dashboard extends Component {
 						</Link>
 					</button>
 					<button id="bookingsButton">
+						<Link to={{pathname: "/bookings", search: "?view=allhistory"}} className="nav-link">
+							Admin Booking History
+						</Link>
+					</button>
+					<button id="bookingsButton">
 						<Link to={{pathname: "/workers"}} className="nav-link">
 							Workers
 						</Link>
