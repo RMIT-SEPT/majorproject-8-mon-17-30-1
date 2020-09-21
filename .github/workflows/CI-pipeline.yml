@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: 11
       - run: mvn -B package --file BackEnd/sept-backend/pom.xml
-      - run: mkdir staging && cp target/*.jar staging
+      - run: mkdir staging && cp BackEnd/sept-backend/target/*.jar staging
       - uses: actions/upload-artifact@v2
         with:
           name: Package
