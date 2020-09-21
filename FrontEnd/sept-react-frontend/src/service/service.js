@@ -28,10 +28,8 @@ class Service {
     }
 
     // Probably an incorrect place to put this
-    getBusinessesAll = async () => {
-        return await axios.get(BUSINESS_URL, {headers: authHeader()}).then(response => {
-            return response.data;
-        });
+    getBusinessesAll() {
+        return axios.get(BUSINESS_URL, {headers: authHeader()});
     }
 
     async getServicesByBusinessID(businessId) {
