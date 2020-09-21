@@ -8,10 +8,7 @@ import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -23,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BookingServiceTest {
 
     @Mock
@@ -36,13 +32,13 @@ public class BookingServiceTest {
 
     List<BookingEntity> getAllByCustomer;
 
-    @BeforeAll
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         bookingService = new BookingService(bookingRepository, customerRepository, serviceWorkerRepository);
     }
 
-    @BeforeAll
+    @BeforeEach
     public void setMocks() {
         Mockito.when(customerRepository.getByUserUsername(Mockito.any()))
                 .thenReturn(new CustomerEntity(
@@ -78,6 +74,7 @@ public class BookingServiceTest {
 
     @Test
     public void cancelBooking() {
+        LocalDateTime testTime = LocalDateTime.now();
         Mockito.when(bookingRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new BookingEntity(0, new ServiceWorkerEntity
                 (new ServiceEntity(
                         new BusinessEntity(0, "Mojang")
@@ -88,8 +85,8 @@ public class BookingServiceTest {
                 new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                 "String streetAddress", "String city", State.TAS, "String postcode"),
                 LocalDateTime.of(2020, 10, 15, 15, 30),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
+                testTime,
+                testTime,
                 Status.ACTIVE)));
 
         BookingEntity expected = new BookingEntity(0, new ServiceWorkerEntity
@@ -102,10 +99,11 @@ public class BookingServiceTest {
                 new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                 "String streetAddress", "String city", State.TAS, "String postcode"),
                 LocalDateTime.of(2020, 10, 15, 15, 30),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                Status.ACTIVE);
+                testTime,
+                testTime,
+                Status.CANCELLED);
 
+        bookingService.cancelBooking(0);
         Mockito.verify(bookingRepository).save(ArgumentMatchers.argThat(actual -> {
             Assertions.assertEquals(expected, actual);
             return true;

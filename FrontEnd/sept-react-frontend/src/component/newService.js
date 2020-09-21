@@ -1,42 +1,52 @@
 import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
-import Workers from "../service/workers";
+import Service from "../service/service";
+import TimePicker from "react-time-picker";
 
-export default class NewWorker extends Component {
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
+
+export default class NewService extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.handleDuration = this.handleDuration.bind(this);
+    this.handleServiceName = this.handleServiceName.bind(this);
+    
     this.state = {
-      username: "",
-      fName: "",
-      lName: "",
+      serviceName: "",
+      duration: undefined,
     };
   }
 
-  onChangeUsername = (event) => {
-    this.setState({ username: event.target.value });
+  handleServiceName(event) {
+    this.setState({ serviceName: event.target.value });
   };
 
-  onChangeFirstName = (event) => {
-    this.setState({ fName: event.target.value });
-  };
-
-  onChangeLastName = (event) => {
-    this.setState({ lName: event.target.value });
-  };
+  handleDuration(event) {
+    this.setState({ duration: event });
+  }
 
   handleSubmit(e) {
     e.preventDefault();
 
-    // this.form.validateAll();
+    this.form.validateAll();
 
     if (this.checkBtn.context._errors.length === 0) {
-      Workers.newWorker(
-        this.state.username,
-        this.state.fName,
-        this.state.lName
+        var time = this.state.duration.split(':');
+        var minutes = (+time[0]) * 60 + (+time[1]);
+        Service.createService(
+        this.props.businessId,
+        this.state.serviceName,
+        minutes
       ).then((error) => {
         const resMessage =
           (error.response &&
@@ -68,29 +78,24 @@ export default class NewWorker extends Component {
             }}
           >
             <div className="formGroup">
-              <h6>Username</h6>
+              <h6>Service name</h6>
               <input
                 type="text"
-                onChange={this.onChangeUsername}
+                onChange={this.handleServiceName}
                 name="username"
+                validations={[required]}
               />
             </div>
 
             <div className="formGroup">
-              <h6>First Name</h6>
-              <input
-                type="text"
-                onChange={this.onChangeFirstName}
-                name="fName"
-              />
-            </div>
-
-            <div className="formGroup">
-              <h6>Last Name</h6>
-              <input
-                type="text"
-                onChange={this.onChangeLastName}
-                name="lName"
+              <h6>Duration</h6>
+              <TimePicker
+                onChange={this.handleDuration}
+                value={this.state.duration}
+                validations={[required]}
+                disableClock={true}
+                hourPlaceholder={"hh"}
+                minutePlaceholder={"mm"}
               />
             </div>
 
@@ -102,7 +107,7 @@ export default class NewWorker extends Component {
                 {this.state.loading && (
                   <span className="spinner-border spinner-border-sm" />
                 )}
-                <span>Create new worker</span>
+                <span>Create service</span>
               </button>
             </div>
 

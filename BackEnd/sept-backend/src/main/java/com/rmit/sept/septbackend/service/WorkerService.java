@@ -3,10 +3,7 @@ package com.rmit.sept.septbackend.service;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
 import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.entity.WorkerEntity;
-import com.rmit.sept.septbackend.model.EditWorkerRequest;
-import com.rmit.sept.septbackend.model.NewWorkerRequest;
-import com.rmit.sept.septbackend.model.Role;
-import com.rmit.sept.septbackend.model.WorkerResponse;
+import com.rmit.sept.septbackend.model.*;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import com.rmit.sept.septbackend.repository.UserRepository;
 import com.rmit.sept.septbackend.repository.WorkerRepository;
@@ -25,6 +22,7 @@ public class WorkerService {
     private final ServiceWorkerRepository serviceWorkerRepository;
     private final WorkerRepository workerRepository;
     private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     public List<WorkerResponse> getWorkersByServiceId(int serviceId) {
         List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceId(serviceId);
@@ -43,25 +41,21 @@ public class WorkerService {
         Iterable<WorkerEntity> workers = workerRepository.findAll();
         List<WorkerResponse> workerResponses = new ArrayList<>();
         for (WorkerEntity w : workers) {
-            workerResponses.add(new WorkerResponse(w.getWorkerId(), w.getUser().getUsername(),w.getUser().getFirstName(), w.getUser().getLastName()));
+            workerResponses.add(new WorkerResponse(w.getWorkerId(), w.getUser().getUsername(), w.getUser().getFirstName(), w.getUser().getLastName()));
         }
         return workerResponses;
     }
 
     public void createNewWorker(NewWorkerRequest newWorkerRequest) {
-        UserEntity newUser = new UserEntity(
-                newWorkerRequest.getUsername(),
-//                newWorkerRequest.getPassword(),
-                "temppw",
-                newWorkerRequest.getFirstName(),
-                newWorkerRequest.getLastName(),
-                Role.WORKER);
-
-        userRepository.save(newUser);
-
-        WorkerEntity workerEntity = new WorkerEntity(newUser);
-
-        workerRepository.save(workerEntity);
+        UserEntity newUser = authenticationService.createUser(
+                new RegisterRequest(
+                        newWorkerRequest.getUsername(),
+                        "temppw",
+                        newWorkerRequest.getFirstName(),
+                        newWorkerRequest.getLastName(),
+                        new WorkerRegisterArguments()
+                )
+        );
     }
 
     public void editExistingWorker(EditWorkerRequest editWorkerRequest) {

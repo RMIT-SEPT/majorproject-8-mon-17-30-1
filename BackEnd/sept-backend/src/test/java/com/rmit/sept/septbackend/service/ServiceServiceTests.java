@@ -46,8 +46,8 @@ public class ServiceServiceTests {
         Mockito.when(serviceRepository.getAllByBusinessBusinessId(Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
-                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "testService", 60),
-                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "anotherTestService", 124235)
+                                new ServiceEntity(0, new BusinessEntity(0, "testBusiness"), "testService", 60),
+                                new ServiceEntity(1, new BusinessEntity(0, "testBusiness"), "anotherTestService", 124235)
                         )
                 );
 

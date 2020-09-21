@@ -111,7 +111,7 @@ export default class ViewWorkers extends Component {
               <h3>Create a new worker</h3>
               <NewWorker />
             </div>
-            <ReactTable data={data} columns={columns} defaultPageSize={2} />
+            <ReactTable data={data} columns={columns} defaultPageSize={5} />
             <div>
               <hr />
               <NotificationContainer />

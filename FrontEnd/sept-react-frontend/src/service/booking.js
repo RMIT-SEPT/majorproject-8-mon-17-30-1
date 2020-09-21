@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 // For local development, this is hardcoded in at the moment
-const API_URL = "http://localhost:8080/api/v1/booking/";
+const API_URL = "http://sept-backend-env.eba-zmub6gjh.us-east-1.elasticbeanstalk.com:80/api/v1/booking/";
 
 class Booking {
     viewBooking(username) {
@@ -29,6 +29,21 @@ class Booking {
                 params: {
                     username: username
                 },
+                headers: authHeader()
+            })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }
+
+    viewAllBookingHistory() {
+        console.log(API_URL + "viewAllHistory");
+        return axios
+            .get(API_URL + "viewAllHistory", {
                 headers: authHeader()
             })
             .then(response => {

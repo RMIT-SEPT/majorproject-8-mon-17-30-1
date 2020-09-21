@@ -46,6 +46,14 @@ export default class viewBookings extends Component {
                     whichBookingMessage: "Previous and cancelled bookings"
                 });
                 break;
+            case "allhistory":
+                await BookingService.viewAllBookingHistory().then(data => {
+                    this.handleResponse(data);
+                });
+                this.setState({
+                    whichBookingMessage: "Full booking history"
+                });
+                break;
         }
 
     }
@@ -119,7 +127,7 @@ export default class viewBookings extends Component {
                 <header>
                     <h4>{this.state.whichBookingMessage}</h4>
                 </header>
-                <ReactTable data={data} columns={columns} defaultPageSize={2}/>
+                <ReactTable data={data} columns={columns} defaultPageSize={5}/>
                 <div>
                     <hr/>
                     <NotificationContainer/>
