@@ -59,44 +59,30 @@ class App extends Component {
               AGME
             </Link>
             <div className="navbar-nav mr-auto">
-              {/* {showModeratorBoard && (
-                <li className="nav-item">
-                  <Link to={"/mod"} className="nav-link">
-                    Moderator Board
-                  </Link>
-                </li>
-              )} */}
+              <li className="nav-item">
+                <Link to={"/about"} className="nav-link">
+                  About us
+                </Link>
+              </li>
 
-              {/* {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
-                    Admin Board
-                  </Link>
-                </li>
-              )} */}
-
-                <li className="nav-item">
-                  <Link to={"/about"} className="nav-link">
-                    About us
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to={"/contact"} className="nav-link">
-                    Contact us
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to={"/bookings"} className="nav-link">
-                    Bookings
-                  </Link>
-                </li>
+              <li className="nav-item">
+                <Link to={"/contact"} className="nav-link">
+                  Contact us
+                </Link>
+              </li>
 
               {currentUser && (
                 <li className="nav-item">
                   <Link to={"/dashboard"} className="nav-link">
                     Dashboard
+                  </Link>
+                </li>
+              )}
+
+              {currentUser && currentUser.role === "CUSTOMER" && (
+                <li className="nav-item">
+                  <Link to={"/bookings"} className="nav-link">
+                    Bookings
                   </Link>
                 </li>
               )}
