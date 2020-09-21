@@ -15,7 +15,8 @@ export default class viewBookings extends Component {
         super(props);
         this.state = {
             bookings: [],
-            whichBooking: this.getQueryString('view')
+            whichBooking: this.getQueryString('view'),
+            whichBookingMessage: ""
         }
     }
 
@@ -33,10 +34,16 @@ export default class viewBookings extends Component {
                 await BookingService.viewBooking("John_Smith").then(data => {
                     this.handleResponse(data);
                 });
+                this.setState({
+                    whichBookingMessage: "All upcoming bookings"
+                });
                 break;
             case "history":
                 await BookingService.viewBookingHistory("John_Smith").then(data => {
                     this.handleResponse(data);
+                });
+                this.setState({
+                    whichBookingMessage: "Previous and cancelled bookings"
                 });
                 break;
         }
@@ -94,7 +101,7 @@ export default class viewBookings extends Component {
                 Header: "",
                 accessor: "bookingId",
                 Cell: cell =>
-                    (<div>
+                    this.state.whichBooking === "all" && (<div>
                         <button
                             className="btn btn-danger"
                             onClick={this.handleCancel(cell.original.bookingId)}
@@ -108,6 +115,9 @@ export default class viewBookings extends Component {
             <div className="container">
                 <header className="jumbotron">
                     <h3>Bookings</h3>
+                </header>
+                <header>
+                    <h4>{this.state.whichBookingMessage}</h4>
                 </header>
                 <ReactTable data={data} columns={columns} defaultPageSize={2}/>
                 <div>
