@@ -12,10 +12,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class CreateServiceRequest {
     @NotNull
-    private String businessName;
+    private int businessId;
     @NotNull
     private String serviceName;
     @NotNull

@@ -69,56 +69,61 @@ public class AuthenticationService {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is already taken");
         } else {
-
-            // Create new user's account
-            UserEntity user = new UserEntity(
-                    registerRequest.getUsername(),
-                    encoder.encode(registerRequest.getPassword()),
-                    registerRequest.getFirstName(),
-                    registerRequest.getLastName(),
-                    registerRequest.getRoleArgs().getRole()
-            );
-
-            userRepository.save(user);
-
-            switch (registerRequest.getRoleArgs().getRole()) {
-                case ADMIN:
-                    AdminRegisterArguments adminRegisterArguments = (AdminRegisterArguments) registerRequest.getRoleArgs();
-
-                    AdminEntity adminEntity = new AdminEntity();
-                    adminEntity.setUser(user);
-                    adminEntity.setBusiness(new BusinessEntity(adminRegisterArguments.getBusinessName()));
-
-                    adminRepository.save(adminEntity);
-                    break;
-
-                case WORKER:
-                    // Worker doesn't currently have extra info
-                    // WorkerRegisterArguments workerRegisterArguments = (WorkerRegisterArguments) registerRequest.getRoleArgs();
-
-                    WorkerEntity workerEntity = new WorkerEntity(user);
-                    workerRepository.save(workerEntity);
-                    break;
-
-                case CUSTOMER:
-                    CustomerRegisterArguments customerRegisterArguments = (CustomerRegisterArguments) registerRequest.getRoleArgs();
-
-
-                    CustomerEntity customerEntity = new CustomerEntity(
-                            user,
-                            customerRegisterArguments.getStreetAddress(),
-                            customerRegisterArguments.getCity(),
-                            customerRegisterArguments.getState(),
-                            customerRegisterArguments.getPostcode()
-                    );
-
-                    customerRepository.save(customerEntity);
-                    break;
-            }
+            createUser(registerRequest);
 
             response = authenticateUser(new LoginRequest(registerRequest.getUsername(), registerRequest.getPassword()));
         }
 
         return response;
+    }
+
+    UserEntity createUser(RegisterRequest registerRequest) {
+        // Create new user's account
+        UserEntity user = new UserEntity(
+                registerRequest.getUsername(),
+                encoder.encode(registerRequest.getPassword()),
+                registerRequest.getFirstName(),
+                registerRequest.getLastName(),
+                registerRequest.getRoleArgs().getRole()
+        );
+
+        userRepository.save(user);
+
+        switch (registerRequest.getRoleArgs().getRole()) {
+            case ADMIN:
+                AdminRegisterArguments adminRegisterArguments = (AdminRegisterArguments) registerRequest.getRoleArgs();
+
+                AdminEntity adminEntity = new AdminEntity();
+                adminEntity.setUser(user);
+                adminEntity.setBusiness(new BusinessEntity(adminRegisterArguments.getBusinessName()));
+
+                adminRepository.save(adminEntity);
+                break;
+
+            case WORKER:
+                // Worker doesn't currently have extra info
+                // WorkerRegisterArguments workerRegisterArguments = (WorkerRegisterArguments) registerRequest.getRoleArgs();
+
+                WorkerEntity workerEntity = new WorkerEntity(user);
+                workerRepository.save(workerEntity);
+                break;
+
+            case CUSTOMER:
+                CustomerRegisterArguments customerRegisterArguments = (CustomerRegisterArguments) registerRequest.getRoleArgs();
+
+
+                CustomerEntity customerEntity = new CustomerEntity(
+                        user,
+                        customerRegisterArguments.getStreetAddress(),
+                        customerRegisterArguments.getCity(),
+                        customerRegisterArguments.getState(),
+                        customerRegisterArguments.getPostcode()
+                );
+
+                customerRepository.save(customerEntity);
+                break;
+        }
+
+        return user;
     }
 }
