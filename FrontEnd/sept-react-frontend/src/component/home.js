@@ -10,7 +10,7 @@ export default class Home extends Component {
       <div className="container">
         <header className="jumbotron">
           <h3>Welcome to AGME</h3>
-          <p>Please sign in to view the Dashboard</p>
+          <p>[cool stock photo]</p>
         </header>
       </div>
     );
