@@ -5,9 +5,9 @@ name: Backend CI Pipeline
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ feature/ci_test ]
   pull_request:
-    branches: [ develop ]
+    branches: [ feature/ci_test ]
 
 jobs:
   build:
@@ -19,9 +19,9 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B package --file BackEnd/sept-backend/pom.xml
-      run: mkdir staging && cp target/*.jar staging
-      uses: actions/upload-artifact@v2
+    - run: mvn -B package --file BackEnd/sept-backend/pom.xml
+    - run: mkdir staging && cp target/*.jar staging
+    - uses: actions/upload-artifact@v2
       with:
         name: Package
         path: staging
