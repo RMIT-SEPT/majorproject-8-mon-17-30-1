@@ -40,7 +40,7 @@ class Booking {
 
     }
 
-    viewAllBookingHistory(username) {
+    viewAllBookingHistory() {
         console.log(API_URL + "viewAllHistory");
         return axios
             .get(API_URL + "viewAllHistory", {
