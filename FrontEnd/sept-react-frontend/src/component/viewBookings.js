@@ -119,7 +119,7 @@ export default class viewBookings extends Component {
                 <header>
                     <h4>{this.state.whichBookingMessage}</h4>
                 </header>
-                <ReactTable data={data} columns={columns} defaultPageSize={2}/>
+                <ReactTable data={data} columns={columns} defaultPageSize={5}/>
                 <div>
                     <hr/>
                     <NotificationContainer/>
