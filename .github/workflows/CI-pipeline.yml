@@ -11,9 +11,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -22,8 +20,8 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -B package --file BackEnd/sept-backend/pom.xml
-    - name: Upload artifact
+      run: mkdir staging && cp target/*.jar staging
       uses: actions/upload-artifact@v2
       with:
-        name: backend-jar
-        path: Backend/sept-backend/target/sept-backend-0.0.1-SNAPSHOT.jar
+        name: Package
+        path: staging
