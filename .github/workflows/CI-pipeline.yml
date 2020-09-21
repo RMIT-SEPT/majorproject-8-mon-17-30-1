@@ -5,9 +5,9 @@ name: Backend CI Pipeline
 
 on:
   push:
-    branches: [ feature/ci_test ]
+    branches: [ develop ]
   pull_request:
-    branches: [ feature/ci_test ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -21,6 +21,6 @@ jobs:
       - run: mkdir staging && cp BackEnd/sept-backend/target/*.jar staging
       - uses: actions/upload-artifact@v2
         with:
-          name: Package
+          name: backend_package
           path: staging
 
