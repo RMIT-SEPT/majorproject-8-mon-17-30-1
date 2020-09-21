@@ -44,7 +44,7 @@ export default class BookService extends Component {
 
     // Populate business list on mount
     async componentDidMount() {
-        await Service.getBusinessesAll().then(response => {
+        Service.getBusinessesAll().then(response => {
             const businessOptions = this.formatBusiness(response.data);
             this.setState({businessOptions});
         })
@@ -64,7 +64,7 @@ export default class BookService extends Component {
 
     formatWorkers(workers) {
         return workers.map(worker => {
-            return {value: worker.workerId, label: worker.firstName}
+            return {value: worker.workerId, label: (worker.firstName + " " + worker.lastName)}
         })
     }
 
@@ -107,13 +107,15 @@ export default class BookService extends Component {
         this.setState({
             message: "",
             loading: true,
-            dateTime: dateList.state.selected
+            dateTime: dateList.state.startDate
         });
 
         this.form.validateAll();
 
+        const local = new Date(dateList.state.startDate.getTime() - (dateList.state.startDate.getTimezoneOffset() * 60000)).toISOString();
+
         if (this.checkBtn.context._errors.length === 0) {
-            Service.bookService(this.state.serviceID, this.state.workerID, this.state.dateTime.toISOString(), Auth.getCurrentUser().username).then(
+            Service.bookService(this.state.serviceID, this.state.workerID, local, Auth.getCurrentUser().username).then(
                 error => {
                     const resMessage =
                         (error.response &&

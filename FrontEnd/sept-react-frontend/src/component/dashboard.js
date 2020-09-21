@@ -34,12 +34,12 @@ export default class Dashboard extends Component {
 				<header className="jumbotron">
 					<h3>Dashboard</h3>
 					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", search: "?view=all"}} className="nav-link">
+						<Link to={{pathname: "/bookings", search: "?view=all"}} className="btn btn-primary btn-lg active">
 							Bookings
 						</Link>
 					</button>
 					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", search: "?view=history"}} className="nav-link">
+						<Link to={{pathname: "/bookings", search: "?view=history"}} className="btn btn-primary btn-lg active">
 							Booking History
 						</Link>
 					</button>
@@ -49,10 +49,11 @@ export default class Dashboard extends Component {
 						</Link>
 					</button>
 					<button id="bookingsButton">
-						<Link to={{pathname: "/workers"}} className="nav-link">
+					{currentUser && currentUser.role === "ADMIN" && <button id="bookingsButton">
+						<Link to={{pathname: "/workers"}} className="btn btn-primary btn-lg active">
 							Workers
 						</Link>
-					</button>
+					</button>}
 				</header>
 				<BookService/>
 				{currentUser ? (
