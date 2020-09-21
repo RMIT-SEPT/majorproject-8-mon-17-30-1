@@ -13,4 +13,6 @@ public interface ServiceWorkerRepository extends CrudRepository<ServiceWorkerEnt
 
     List<ServiceWorkerEntity> getAllByServiceServiceId(int serviceId);
 
+    ServiceWorkerEntity getByServiceServiceIdAndWorkerWorkerId(int serviceId, int workerId);
+
 }

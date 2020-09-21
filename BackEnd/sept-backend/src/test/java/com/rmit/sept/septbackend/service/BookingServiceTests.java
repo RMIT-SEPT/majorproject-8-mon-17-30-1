@@ -27,36 +27,67 @@ public class BookingServiceTests {
 
     @Mock
     private BookingRepository bookingRepository;
+    @Mock
     private CustomerRepository customerRepository;
+    @Mock
     private ServiceWorkerRepository serviceWorkerRepository;
     private BookingService bookingService;
+
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
         bookingService = new BookingService(bookingRepository, customerRepository, serviceWorkerRepository);
     }
+
     @Test
     public void testViewBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
                 .thenReturn(Arrays.asList(
-                        new BookingEntity
-                                (new ServiceWorkerEntity
-                                        (new ServiceEntity(
-                                                new BusinessEntity("Mojang")
-                                                , "Minecraft"
-                                                , 180)
-                                                , new WorkerEntity(
-                                                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
-        ,new CustomerEntity(
-                new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
-                )));
+                        new BookingEntity(
+                                new ServiceWorkerEntity(
+                                        new ServiceEntity(
+                                                new BusinessEntity("Mojang"),
+                                                "Minecraft",
+                                                180
+                                        ),
+                                        new WorkerEntity(
+                                                new UserEntity(
+                                                        "Notch",
+                                                        "Cool",
+                                                        "Marcus",
+                                                        "Pearson",
+                                                        Role.WORKER
+                                                )
+                                        )
+                                ),
+                                new CustomerEntity(
+                                        new UserEntity(
+                                                "Lachlan",
+                                                "bort",
+                                                "Lachlan",
+                                                "Lachlan",
+                                                Role.CUSTOMER
+                                        ),
+                                        "String streetAddress",
+                                        "String city",
+                                        State.TAS,
+                                        "String postcode"
+                                ),
+                                LocalDateTime.of(2020, 10, 15, 15, 30)
+                        )
+                        )
+                );
 
         List<BookingResponse> expected = Arrays.asList(
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 1));
+                new BookingResponse(
+                        "Minecraft",
+                        "Marcus Pearson",
+                        LocalDateTime.of(2020, 10, 15, 15, 30),
+                        0
+                )
+        );
 
-        List<BookingResponse> actual = bookingService.viewBookings("Notch");
-
+        List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -68,7 +99,7 @@ public class BookingServiceTests {
 
         List<BookingResponse> expected = new ArrayList<>();
 
-        List<BookingResponse> actual = bookingService.viewBookings("Lucas");
+        List<BookingResponse> actual = bookingService.viewBookings("Lucas", Status.ACTIVE);
 
 
         Assertions.assertEquals(expected, actual);
@@ -86,9 +117,10 @@ public class BookingServiceTests {
                                                 , 180)
                                                 , new WorkerEntity(
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
-                                        ,new CustomerEntity(
+                                        , new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
+                                        "String streetAddress", "String city", State.TAS, "String postcode"),
+                                        LocalDateTime.of(2020, 10, 15, 15, 30)
                                 )));
 
         List<BookingResponse> expected = new ArrayList<>();
@@ -110,13 +142,10 @@ public class BookingServiceTests {
                                                 , 180)
                                                 , new WorkerEntity(
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
-                                        ,new CustomerEntity(
+                                        , new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30), 1
-                                )));
-
-        Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
-                .thenReturn(Arrays.asList(
+                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 15, 15, 30)
+                                ),
                         new BookingEntity
                                 (new ServiceWorkerEntity
                                         (new ServiceEntity(
@@ -125,20 +154,19 @@ public class BookingServiceTests {
                                                 , 90)
                                                 , new WorkerEntity(
                                                 new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER)))
-                                        ,new CustomerEntity(
+                                        , new CustomerEntity(
                                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 16, 15, 30), 1
+                                        "String streetAddress", "String city", State.TAS, "String postcode"), LocalDateTime.of(2020, 10, 16, 15, 30)
                                 )));
 
         List<BookingResponse> expected = Arrays.asList(
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 1));
-        new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 1);
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 0),
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 0));
 
 
-        List<BookingResponse> actual = bookingService.viewBookings("Notch");
+        List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);
 
 
         Assertions.assertEquals(expected, actual);
     }
-
 }

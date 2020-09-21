@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,11 +34,11 @@ public class ServiceService {
     }
 
     public void createService(CreateServiceRequest createServiceRequest) {
-        BusinessEntity businessEntity = businessRepository.getByBusinessName(createServiceRequest.getBusinessName());
-        if (businessEntity != null) {
+        Optional<BusinessEntity> businessEntity = businessRepository.findById(createServiceRequest.getBusinessId());
+        if (businessEntity.isPresent()) {
 
             ServiceEntity serviceEntity = new ServiceEntity(
-                    businessEntity,
+                    businessEntity.get(),
                     createServiceRequest.getServiceName(),
                     createServiceRequest.getDurationMinutes()
             );
@@ -47,8 +48,8 @@ public class ServiceService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format(
-                            "Provided business name does not exist! [businessName=%s]",
-                            createServiceRequest.getBusinessName()
+                            "Provided business name does not exist! [businessId=%s]",
+                            createServiceRequest.getBusinessId()
                     )
             );
         }
@@ -80,6 +81,7 @@ public class ServiceService {
                 .stream()
                 .map(serviceEntity ->
                         new ServiceResponse(
+                                serviceEntity.getServiceId(),
                                 serviceEntity.getBusiness().getBusinessName(),
                                 serviceEntity.getServiceName(),
                                 serviceEntity.getDurationMinutes()

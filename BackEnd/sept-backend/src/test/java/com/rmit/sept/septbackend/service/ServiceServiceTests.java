@@ -46,14 +46,14 @@ public class ServiceServiceTests {
         Mockito.when(serviceRepository.getAllByBusinessBusinessId(Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
-                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "testService", 60),
-                                new ServiceEntity(new BusinessEntity(0, "testBusiness"), "anotherTestService", 124235)
+                                new ServiceEntity(0, new BusinessEntity(0, "testBusiness"), "testService", 60),
+                                new ServiceEntity(1, new BusinessEntity(0, "testBusiness"), "anotherTestService", 124235)
                         )
                 );
 
         List<ServiceResponse> expected = Arrays.asList(
-                new ServiceResponse("testBusiness", "testService", 60),
-                new ServiceResponse("testBusiness", "anotherTestService", 124235)
+                new ServiceResponse(0, "testBusiness", "testService", 60),
+                new ServiceResponse(1, "testBusiness", "anotherTestService", 124235)
         );
 
         List<ServiceResponse> actual = serviceService.getServicesForBusinessId(0);
@@ -70,17 +70,17 @@ public class ServiceServiceTests {
                 .thenReturn(
                         Arrays.asList(
                                 new ServiceWorkerEntity(
-                                        new ServiceEntity(new BusinessEntity("testBusiness"), "testService", 60),
+                                        new ServiceEntity(0,new BusinessEntity("testBusiness"), "testService", 60),
                                         new WorkerEntity(new UserEntity("testUsername", "testPassword", "testFirst", "testLast", Role.WORKER))),
                                 new ServiceWorkerEntity(
-                                        new ServiceEntity(new BusinessEntity("testBusiness"), "anotherTestService", 124235),
+                                        new ServiceEntity(1,new BusinessEntity("testBusiness"), "anotherTestService", 124235),
                                         new WorkerEntity(new UserEntity("testUsername", "testPassword", "testFirst", "testLast", Role.WORKER)))
                         )
                 );
 
         List<ServiceResponse> expected = Arrays.asList(
-                new ServiceResponse("testBusiness", "testService", 60),
-                new ServiceResponse("testBusiness", "anotherTestService", 124235)
+                new ServiceResponse(0, "testBusiness", "testService", 60),
+                new ServiceResponse(1,"testBusiness", "anotherTestService", 124235)
         );
 
         List<ServiceResponse> actual = serviceService.getServicesForUsername("testUsername");

@@ -6,13 +6,22 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
 @JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
-public class WorkerRegisterArguments extends AbstractRegisterArguments {
-    public WorkerRegisterArguments() {
-        super(Role.WORKER);
-    }
+public class EditWorkerRequest {
+    @NotNull
+    private int workerId;
+    @NotNull
+    private String username;
+    @NotNull
+    private String password;
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
 }

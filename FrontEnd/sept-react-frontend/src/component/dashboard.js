@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import BookService from "./bookservice";
 
 import AuthService from "../service/auth";
-import {Link} from "react-router-dom";
-
 export default class Dashboard extends Component {
 	constructor(props) {
 		super(props);
@@ -34,11 +34,34 @@ export default class Dashboard extends Component {
 				<header className="jumbotron">
 					<h3>Dashboard</h3>
 					<button id="bookingsButton">
-						<Link to={"/bookings"} className="nav-link">
+						<Link to={{pathname: "/bookings", search: "?view=all"}} className="btn btn-primary btn-lg active">
 							Bookings
 						</Link>
 					</button>
+					<button id="bookingsButton">
+						<Link to={{pathname: "/bookings", search: "?view=history"}} className="btn btn-primary btn-lg active">
+							Booking History
+						</Link>
+					</button>
+					{currentUser && currentUser.role === "ADMIN" && <button id="bookingsButton">
+						<Link to={{pathname: "/bookings", search: "?view=allhistory"}}
+							  className="btn btn-primary btn-lg active">
+							Admin Booking History
+						</Link>
+					</button>
+					}
+					{currentUser && currentUser.role === "ADMIN" && <button id="bookingsButton">
+						<Link to={{pathname: "/workers"}} className="btn btn-primary btn-lg active">
+							Workers
+						</Link>
+					</button>}
+					{currentUser && currentUser.role === "ADMIN" && <button>
+						<Link to={{pathname: "/services"}} className="btn btn-primary btn-lg active">
+							Services
+						</Link>
+					</button>}
 				</header>
+				<BookService/>
 				{currentUser ? (
 					<p>Logged in as {currentUser.role}</p>
 				) : (
