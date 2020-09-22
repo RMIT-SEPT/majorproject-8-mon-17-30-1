@@ -80,7 +80,18 @@ export default class ViewService extends Component {
     // };
   };
 
-  handleDelete(serviceId) {}
+  handleDelete = (serviceId) => {
+    return () => {
+      Service.deleteService(serviceId).then(
+          () => {
+            NotificationManager.info("Service Deleted");
+          },
+          error => {
+            NotificationManager.error("Failed to delete");
+          }
+      );
+    };
+  };
 
   render() {
     const data = this.state.services;

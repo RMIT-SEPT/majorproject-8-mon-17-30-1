@@ -1,10 +1,12 @@
 package com.rmit.sept.septbackend.service;
 
+import com.rmit.sept.septbackend.entity.BookingEntity;
 import com.rmit.sept.septbackend.entity.BusinessEntity;
 import com.rmit.sept.septbackend.entity.ServiceEntity;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
 import com.rmit.sept.septbackend.model.CreateServiceRequest;
 import com.rmit.sept.septbackend.model.ServiceResponse;
+import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.repository.BusinessRepository;
 import com.rmit.sept.septbackend.repository.ServiceRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
@@ -88,5 +90,15 @@ public class ServiceService {
                         )
                 )
                 .collect(Collectors.toList());
+    }
+
+    public void deleteService(int serviceId) {
+        Optional<ServiceEntity> entity = serviceRepository.findById(serviceId);
+        if (entity.isPresent()) {
+            ServiceEntity serviceEntity = entity.get();
+            serviceRepository.delete(serviceEntity);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service not found");
+        }
     }
 }
