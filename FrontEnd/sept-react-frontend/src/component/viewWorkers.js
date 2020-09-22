@@ -58,11 +58,11 @@ export default class ViewWorkers extends Component {
       var result = "";
       WorkerService.deleteWorker(workerId).then(
         () => {
-          NotificationManager.info("Booking Cancelled");
+          NotificationManager.info("Worker Deleted");
           this.updateWorkerList()
         },
         (error) => {
-          NotificationManager.error("Failed to cancel");
+          NotificationManager.error("Failed to delete");
         }
       );
     };
