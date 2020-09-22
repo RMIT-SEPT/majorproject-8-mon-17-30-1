@@ -42,7 +42,7 @@ public class WorkerService {
     }
 
     public List<WorkerResponse> getWorkers() {
-        Iterable<WorkerEntity> workers = workerRepository.findAll();
+        Iterable<WorkerEntity> workers = workerRepository.findAllByStatus(Status.ACTIVE);
         List<WorkerResponse> workerResponses = new ArrayList<>();
         for (WorkerEntity w : workers) {
             workerResponses.add(new WorkerResponse(w.getWorkerId(), w.getUser().getUsername(), w.getUser().getFirstName(), w.getUser().getLastName()));
