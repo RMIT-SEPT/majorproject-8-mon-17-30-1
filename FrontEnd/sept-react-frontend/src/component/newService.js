@@ -24,6 +24,7 @@ export default class NewService extends Component {
     this.state = {
       serviceName: "",
       duration: undefined,
+      last: true
     };
   }
 
@@ -35,7 +36,7 @@ export default class NewService extends Component {
     this.setState({ duration: event });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
 
     this.form.validateAll();
@@ -43,7 +44,7 @@ export default class NewService extends Component {
     if (this.checkBtn.context._errors.length === 0) {
         var time = this.state.duration.split(':');
         var minutes = (+time[0]) * 60 + (+time[1]);
-        Service.createService(
+        await Service.createService(
         this.props.businessId,
         this.state.serviceName,
         minutes
@@ -60,6 +61,9 @@ export default class NewService extends Component {
           message: resMessage,
         });
       });
+
+      this.props.callback(this.state.last);
+
     } else {
       this.setState({
         loading: false,
@@ -92,10 +96,11 @@ export default class NewService extends Component {
               <TimePicker
                 onChange={this.handleDuration}
                 value={this.state.duration}
-                validations={[required]}
+                // validations={[required]}
                 disableClock={true}
                 hourPlaceholder={"hh"}
                 minutePlaceholder={"mm"}
+                format="hh:m"
               />
             </div>
 
@@ -111,13 +116,13 @@ export default class NewService extends Component {
               </button>
             </div>
 
-            {this.state.message && (
+            {/* {this.state.message && (
               <div className="form-group">
                 <div className="alert alert-danger" role="alert">
                   {this.state.message}
                 </div>
               </div>
-            )}
+            )} */}
             <CheckButton
               style={{ display: "none" }}
               ref={(c) => {

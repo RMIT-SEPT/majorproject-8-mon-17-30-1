@@ -19,6 +19,7 @@ export default class ViewService extends Component {
       currentUser: undefined,
       business: undefined,
       services: [],
+      rerender: true
     };
   }
 
@@ -36,14 +37,19 @@ export default class ViewService extends Component {
             business: response.data,
           });
 
-          Service.getServicesByBusinessID(this.state.business.businessId).then(
-            (response) => {
-              this.handleResponse(response.data);
-            }
-          );
+          this.updateServices();
         });
       }
     }
+  }
+
+  async updateServices() {
+
+    await Service.getServicesByBusinessID(this.state.business.businessId).then(
+        (response) => {
+          this.handleResponse(response.data);
+        }
+      );
   }
 
   handleResponse(data) {
@@ -80,7 +86,20 @@ export default class ViewService extends Component {
     // };
   };
 
-  handleDelete(serviceId) {}
+  handleDelete = (serviceId) => {
+    return () => {
+      Service.deleteService(serviceId).then(
+          () => {
+            NotificationManager.info("Service Deleted");
+            this.updateServices();
+          },
+          error => {
+            NotificationManager.error("Failed to delete");
+          }
+      );
+      
+    };
+  };
 
   render() {
     const data = this.state.services;
@@ -100,12 +119,12 @@ export default class ViewService extends Component {
         accessor: "serviceId",
         Cell: (cell) => (
           <div style={{ textAlign: "center" }}>
-            <button
+            {/* <button
               className="btn btn-primary"
               onClick={this.handleEdit(cell.original.serviceId)}
             >
               Edit
-            </button>
+            </button> */}
             <button
               className="btn btn-danger"
               onClick={this.handleDelete(cell.original.serviceId)}
@@ -125,7 +144,7 @@ export default class ViewService extends Component {
           <div>
             <div>
               <h3>Create a new service</h3>
-              <NewService businessId={this.state.business.businessId}/>
+              <NewService businessId={this.state.business.businessId} callback={i => this.updateServices() && console.log(i)}/>
             </div>
             <header>
               <h3>Viewing services for {this.state.business.businessName}</h3>

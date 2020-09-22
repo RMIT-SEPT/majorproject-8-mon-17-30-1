@@ -47,6 +47,12 @@ public class ServiceController {
         return serviceResponses;
     }
 
+    @DeleteMapping("/delete/{serviceId}")
+    public void cancelBooking(@Valid @PathVariable int serviceId) {
+        serviceService.deleteService(serviceId);
+    }
+
+
     @PutMapping("/{service-id}")
     public void editService(@PathVariable("service-id") int serviceId, @RequestBody CreateServiceRequest createServiceRequest) {
         serviceService.editService(serviceId, createServiceRequest);

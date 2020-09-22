@@ -28,7 +28,7 @@ public class WorkerService {
     private final AuthenticationService authenticationService;
 
     public List<WorkerResponse> getWorkersByServiceId(int serviceId) {
-        List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceId(serviceId);
+        List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceIdAndServiceStatusAndWorkerStatus(serviceId, Status.ACTIVE, Status.ACTIVE);
 
         return serviceWorkers.stream().map(serviceWorkerEntity ->
                 new WorkerResponse(
@@ -72,7 +72,7 @@ public class WorkerService {
     public void deleteWorker(int workerId) {
         Optional<WorkerEntity> optionalWorkerEntity = workerRepository.findById(workerId);
 
-        if (optionalWorkerEntity.isPresent()) {
+        if (optionalWorkerEntity.isPresent() && !optionalWorkerEntity.get().getStatus().equals(Status.CANCELLED)) {
             WorkerEntity workerEntity = optionalWorkerEntity.get();
 
             UserEntity userEntity = workerEntity.getUser();
@@ -82,8 +82,6 @@ public class WorkerService {
             workerEntity.setStatus(Status.CANCELLED);
 
             workerRepository.save(workerEntity);
-
-
             userRepository.delete(userEntity);
 
         } else {

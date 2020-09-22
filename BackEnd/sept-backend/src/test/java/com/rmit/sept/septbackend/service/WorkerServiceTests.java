@@ -43,7 +43,7 @@ public class WorkerServiceTests {
         ServiceEntity firstService = new ServiceEntity(0, new BusinessEntity("testBusiness"), "testService", 123, Status.ACTIVE);
         WorkerEntity firstWorker = new WorkerEntity(0, new UserEntity("testUsername", "testPassword", "testFirstName", "testLastName", Role.WORKER), Status.ACTIVE);
         WorkerEntity secondWorker = new WorkerEntity(1, new UserEntity("anotherTestUsername", "anotherTestPassword", "anotherTestFirstName", "anotherTestLastName", Role.WORKER), Status.ACTIVE);
-        Mockito.when(serviceWorkerRepository.getAllByServiceServiceId(Mockito.anyInt()))
+        Mockito.when(serviceWorkerRepository.getAllByServiceServiceIdAndServiceStatusAndWorkerStatus(Mockito.anyInt(), Mockito.any(), Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
                                 new ServiceWorkerEntity(firstService, firstWorker),

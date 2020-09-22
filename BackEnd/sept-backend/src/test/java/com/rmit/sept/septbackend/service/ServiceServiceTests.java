@@ -47,7 +47,7 @@ public class ServiceServiceTests {
     public void testGetServicesForBusinessId() {
         Mockito.when(businessRepository.existsById(Mockito.any()))
                 .thenReturn(true);
-        Mockito.when(serviceRepository.getAllByBusinessBusinessId(Mockito.any()))
+        Mockito.when(serviceRepository.getAllByBusinessBusinessIdAndStatus(Mockito.any(), Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
                                 new ServiceEntity(0, new BusinessEntity(0, "testBusiness"), "testService", 60, Status.ACTIVE),
@@ -70,7 +70,7 @@ public class ServiceServiceTests {
     public void testGetServicesForUsername() {
         Mockito.when(workerRepository.existsByUserUsername(Mockito.any()))
                 .thenReturn(true);
-        Mockito.when(serviceWorkerRepository.getAllByWorkerUserUsername(Mockito.any()))
+        Mockito.when(serviceWorkerRepository.getAllByWorkerUserUsernameAndServiceStatusAndWorkerStatus(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(
                         Arrays.asList(
                                 new ServiceWorkerEntity(
