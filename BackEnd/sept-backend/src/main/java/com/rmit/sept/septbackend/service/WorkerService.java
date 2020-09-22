@@ -29,7 +29,7 @@ public class WorkerService {
     private final AuthenticationService authenticationService;
 
     public List<WorkerResponse> getWorkersByServiceId(int serviceId) {
-        List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceId(serviceId);
+        List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceIdAndServiceStatusAndWorkerStatus(serviceId, Status.ACTIVE, Status.ACTIVE);
 
         return serviceWorkers.stream().map(serviceWorkerEntity ->
                 new WorkerResponse(
@@ -71,12 +71,22 @@ public class WorkerService {
     }
 
     public void deleteWorker(int workerId) {
-        Optional<WorkerEntity> entity = workerRepository.findById(workerId);
-        if (entity.isPresent()) {
-            WorkerEntity workerEntity = entity.get();
-            workerRepository.delete(workerEntity);
+        Optional<WorkerEntity> optionalWorkerEntity = workerRepository.findById(workerId);
+
+        if (optionalWorkerEntity.isPresent() && !optionalWorkerEntity.get().getStatus().equals(Status.CANCELLED)) {
+            WorkerEntity workerEntity = optionalWorkerEntity.get();
+
+            UserEntity userEntity = workerEntity.getUser();
+
+            // Keep the worker but delete the user
+            workerEntity.setUser(null);
+            workerEntity.setStatus(Status.CANCELLED);
+
+            workerRepository.save(workerEntity);
+            userRepository.delete(userEntity);
+
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not exist");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.rmit.sept.septbackend.entity;
 
+import com.rmit.sept.septbackend.model.Status;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,9 +21,12 @@ public class WorkerEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserEntity user;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public WorkerEntity(UserEntity user) {
         this.user = user;
+        this.status = Status.ACTIVE;
     }
 }
 

@@ -23,12 +23,12 @@ insert into customer (customer_id, user_id, street_address, city, state, postcod
     (1, 3, 'London Pad', 'Melbourne', 'VIC', '3000')
 ;
 
-insert into worker (worker_id, user_id) values
-    (0, 1)
+insert into worker (worker_id, user_id, status) values
+    (0, 1, 'ACTIVE')
 ;
 
-insert into service (service_id, business_id, service_name, duration_minutes) values
-    (0, 0, 'Preparation H', 30)
+insert into service (service_id, business_id, service_name, duration_minutes, status) values
+    (0, 0, 'Preparation H', 30, 'ACTIVE')
 ;
 
 insert into service_worker values

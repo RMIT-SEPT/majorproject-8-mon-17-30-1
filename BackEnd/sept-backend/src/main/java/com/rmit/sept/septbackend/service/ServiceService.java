@@ -1,6 +1,5 @@
 package com.rmit.sept.septbackend.service;
 
-import com.rmit.sept.septbackend.entity.BookingEntity;
 import com.rmit.sept.septbackend.entity.BusinessEntity;
 import com.rmit.sept.septbackend.entity.ServiceEntity;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
@@ -11,7 +10,6 @@ import com.rmit.sept.septbackend.repository.BusinessRepository;
 import com.rmit.sept.septbackend.repository.ServiceRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import com.rmit.sept.septbackend.repository.WorkerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -62,7 +60,7 @@ public class ServiceService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Business does not exist");
         }
 
-        List<ServiceEntity> serviceEntities = serviceRepository.getAllByBusinessBusinessId(businessId);
+        List<ServiceEntity> serviceEntities = serviceRepository.getAllByBusinessBusinessIdAndStatus(businessId, Status.ACTIVE);
 
         return convertServiceEntityToServiceResponse(serviceEntities);
     }
@@ -72,10 +70,26 @@ public class ServiceService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
         }
 
-        List<ServiceWorkerEntity> serviceWorkerEntities = serviceWorkerRepository.getAllByWorkerUserUsername(username);
+        List<ServiceWorkerEntity> serviceWorkerEntities = serviceWorkerRepository.getAllByWorkerUserUsernameAndServiceStatusAndWorkerStatus(username, Status.ACTIVE, Status.ACTIVE);
         List<ServiceEntity> serviceEntities = serviceWorkerEntities.stream().map(ServiceWorkerEntity::getService).collect(Collectors.toList());
 
         return convertServiceEntityToServiceResponse(serviceEntities);
+    }
+
+    public void editService(int serviceId, CreateServiceRequest createServiceRequest) {
+        Optional<ServiceEntity> optionalServiceEntity = serviceRepository.findById(serviceId);
+
+        if (optionalServiceEntity.isPresent()) {
+            ServiceEntity serviceEntity = optionalServiceEntity.get();
+
+            serviceEntity.setServiceName(createServiceRequest.getServiceName());
+            serviceEntity.setDurationMinutes(createServiceRequest.getDurationMinutes());
+
+            serviceRepository.save(serviceEntity);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service does not exist");
+        }
     }
 
     private List<ServiceResponse> convertServiceEntityToServiceResponse(List<ServiceEntity> serviceEntities) {
@@ -92,11 +106,21 @@ public class ServiceService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Effectively delete a service given a service-id.
+     * Note: this does not delete the row from the database as services are referenced elsewhere (ie. serviceWorker).
+     * As such, this only changes the status.
+     * @param serviceId
+     */
     public void deleteService(int serviceId) {
         Optional<ServiceEntity> entity = serviceRepository.findById(serviceId);
-        if (entity.isPresent()) {
+        if (entity.isPresent() && !entity.get().getStatus().equals(Status.CANCELLED)) {
             ServiceEntity serviceEntity = entity.get();
-            serviceRepository.delete(serviceEntity);
+
+            serviceEntity.setStatus(Status.CANCELLED);
+
+            serviceRepository.save(serviceEntity);
+
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service not found");
         }

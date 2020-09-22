@@ -19,6 +19,7 @@ export default class ViewService extends Component {
       currentUser: undefined,
       business: undefined,
       services: [],
+      rerender: true
     };
   }
 
@@ -31,23 +32,24 @@ export default class ViewService extends Component {
       });
 
       if (user.role === "ADMIN") {
-        this.updateServiceList(user);
+        Service.getBusinessByAdminUsername(user.username).then((response) => {
+          this.setState({
+            business: response.data,
+          });
+
+          this.updateServices();
+        });
       }
     }
   }
 
-  updateServiceList(user) {
-    Service.getBusinessByAdminUsername(user.username).then((response) => {
-      this.setState({
-        business: response.data,
-      });
+  async updateServices() {
 
-      Service.getServicesByBusinessID(this.state.business.businessId).then(
-          (response) => {
-            this.handleResponse(response.data);
-          }
+    await Service.getServicesByBusinessID(this.state.business.businessId).then(
+        (response) => {
+          this.handleResponse(response.data);
+        }
       );
-    });
   }
 
   handleResponse(data) {
@@ -88,14 +90,14 @@ export default class ViewService extends Component {
     return () => {
       Service.deleteService(serviceId).then(
           () => {
-            const user = AuthService.getCurrentUser();
             NotificationManager.info("Service Deleted");
-            this.updateServiceList(user)
+            this.updateServices();
           },
           error => {
             NotificationManager.error("Failed to delete");
           }
       );
+      
     };
   };
 
@@ -117,12 +119,12 @@ export default class ViewService extends Component {
         accessor: "serviceId",
         Cell: (cell) => (
           <div style={{ textAlign: "center" }}>
-            <button
+            {/* <button
               className="btn btn-primary"
               onClick={this.handleEdit(cell.original.serviceId)}
             >
               Edit
-            </button>
+            </button> */}
             <button
               className="btn btn-danger"
               onClick={this.handleDelete(cell.original.serviceId)}
@@ -142,12 +144,12 @@ export default class ViewService extends Component {
           <div>
             <div>
               <h3>Create a new service</h3>
-              <NewService businessId={this.state.business.businessId}/>
+              <NewService businessId={this.state.business.businessId} callback={i => this.updateServices() && console.log(i)}/>
             </div>
             <header>
               <h3>Viewing services for {this.state.business.businessName}</h3>
             </header>
-            <ReactTable data={this.state.services} columns={columns} defaultPageSize={5} />
+            <ReactTable data={data} columns={columns} defaultPageSize={5} />
             <div>
               <hr />
               <NotificationContainer />

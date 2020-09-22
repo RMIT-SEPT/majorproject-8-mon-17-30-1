@@ -53,4 +53,9 @@ public class ServiceController {
     }
 
 
+    @PutMapping("/{service-id}")
+    public void editService(@PathVariable("service-id") int serviceId, @RequestBody CreateServiceRequest createServiceRequest) {
+        serviceService.editService(serviceId, createServiceRequest);
+    }
+
 }
