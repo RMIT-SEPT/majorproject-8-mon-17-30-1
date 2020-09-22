@@ -60,7 +60,7 @@ public class BookingServiceTest {
                                 , "Minecraft"
                                 , 30)
                                 , new WorkerEntity(0,
-                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
                         new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                         "String streetAddress", "String city", State.TAS, "String postcode"),
                         LocalDateTime.of(2020, 10, 15, 15, 30),
@@ -81,7 +81,7 @@ public class BookingServiceTest {
                         , "Minecraft"
                         , 30)
                         , new WorkerEntity(0,
-                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
                 new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                 "String streetAddress", "String city", State.TAS, "String postcode"),
                 LocalDateTime.of(2020, 10, 15, 15, 30),
@@ -95,7 +95,7 @@ public class BookingServiceTest {
                         , "Minecraft"
                         , 30)
                         , new WorkerEntity(0,
-                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
                 new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                 "String streetAddress", "String city", State.TAS, "String postcode"),
                 LocalDateTime.of(2020, 10, 15, 15, 30),
@@ -160,7 +160,7 @@ public class BookingServiceTest {
                                 , "Minecraft"
                                 , 30)
                                 , new WorkerEntity(0,
-                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
+                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
                         new UserEntity("Jerry", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
                         "String streetAddress", "String city", State.TAS, "String postcode"),
                         LocalDateTime.of(2020, 10, 15, 15, 30),

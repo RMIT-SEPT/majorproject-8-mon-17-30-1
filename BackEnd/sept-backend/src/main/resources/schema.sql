@@ -36,7 +36,8 @@ create table customer (
 drop table if exists worker;
 create table worker (
     worker_id int not null auto_increment,
-    user_id int not null,
+    user_id int null,
+    status varchar(10) not null,
     constraint worker_pk primary key (worker_id),
     constraint worker_unique_user_id unique (user_id)
 );
@@ -55,6 +56,7 @@ create table service (
     business_id int not null,
     service_name varchar(255) not null,
     duration_minutes int not null,
+    status varchar(10) not null,
     constraint service_pk primary key (service_id)
 );
 

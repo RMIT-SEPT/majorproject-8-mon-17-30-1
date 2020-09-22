@@ -1,5 +1,6 @@
 package com.rmit.sept.septbackend.entity;
 
+import com.rmit.sept.septbackend.model.Status;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,11 +23,14 @@ public class ServiceEntity {
     private BusinessEntity business;
     private String serviceName;
     private int durationMinutes;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public ServiceEntity(BusinessEntity business, String serviceName, int durationMinutes) {
         this.business = business;
         this.serviceName = serviceName;
         this.durationMinutes = durationMinutes;
+        this.status = Status.ACTIVE;
     }
 }
 

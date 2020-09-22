@@ -76,6 +76,22 @@ public class ServiceService {
         return convertServiceEntityToServiceResponse(serviceEntities);
     }
 
+    public void editService(int serviceId, CreateServiceRequest createServiceRequest) {
+        Optional<ServiceEntity> optionalServiceEntity = serviceRepository.findById(serviceId);
+
+        if (optionalServiceEntity.isPresent()) {
+            ServiceEntity serviceEntity = optionalServiceEntity.get();
+
+            serviceEntity.setServiceName(createServiceRequest.getServiceName());
+            serviceEntity.setDurationMinutes(createServiceRequest.getDurationMinutes());
+
+            serviceRepository.save(serviceEntity);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service does not exist");
+        }
+    }
+
     private List<ServiceResponse> convertServiceEntityToServiceResponse(List<ServiceEntity> serviceEntities) {
         return serviceEntities
                 .stream()

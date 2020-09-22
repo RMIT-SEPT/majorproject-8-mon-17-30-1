@@ -2,6 +2,7 @@ package com.rmit.sept.septbackend.service;
 
 import com.rmit.sept.septbackend.entity.*;
 import com.rmit.sept.septbackend.model.Role;
+import com.rmit.sept.septbackend.model.Status;
 import com.rmit.sept.septbackend.model.WorkerResponse;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import com.rmit.sept.septbackend.repository.UserRepository;
@@ -39,9 +40,9 @@ public class WorkerServiceTests {
 
     @Test
     public void testGetWorkersByServiceId() {
-        ServiceEntity firstService = new ServiceEntity(0, new BusinessEntity("testBusiness"), "testService", 123);
-        WorkerEntity firstWorker = new WorkerEntity(0, new UserEntity("testUsername", "testPassword", "testFirstName", "testLastName", Role.WORKER));
-        WorkerEntity secondWorker = new WorkerEntity(1, new UserEntity("anotherTestUsername", "anotherTestPassword", "anotherTestFirstName", "anotherTestLastName", Role.WORKER));
+        ServiceEntity firstService = new ServiceEntity(0, new BusinessEntity("testBusiness"), "testService", 123, Status.ACTIVE);
+        WorkerEntity firstWorker = new WorkerEntity(0, new UserEntity("testUsername", "testPassword", "testFirstName", "testLastName", Role.WORKER), Status.ACTIVE);
+        WorkerEntity secondWorker = new WorkerEntity(1, new UserEntity("anotherTestUsername", "anotherTestPassword", "anotherTestFirstName", "anotherTestLastName", Role.WORKER), Status.ACTIVE);
         Mockito.when(serviceWorkerRepository.getAllByServiceServiceId(Mockito.anyInt()))
                 .thenReturn(
                         Arrays.asList(
@@ -58,5 +59,10 @@ public class WorkerServiceTests {
         List<WorkerResponse> actual = workerService.getWorkersByServiceId(0);
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testDeleteWorker() {
+
     }
 }

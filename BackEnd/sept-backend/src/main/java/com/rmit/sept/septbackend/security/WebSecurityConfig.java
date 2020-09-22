@@ -57,11 +57,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> {
-            CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-            corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-            corsConfiguration.addAllowedOrigin("*");
-            corsConfiguration.setAllowCredentials(true);
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+                corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+                corsConfiguration.addAllowedOrigin("*");
+                corsConfiguration.setAllowCredentials(true);
             return corsConfiguration;
         }).and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -70,6 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/service").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/api/v1/service").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.PUT, "/api/v1/service").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.GET, "/api/v1/service").fullyAuthenticated()
                 .antMatchers(HttpMethod.GET, "/api/v1/booking").hasAuthority(Role.CUSTOMER.name())
                 .antMatchers(HttpMethod.POST, "/api/v1/booking").hasAuthority(Role.CUSTOMER.name())

@@ -9,10 +9,13 @@ import com.rmit.sept.septbackend.repository.UserRepository;
 import com.rmit.sept.septbackend.repository.WorkerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -67,6 +70,24 @@ public class WorkerService {
     }
 
     public void deleteWorker(int workerId) {
-        workerRepository.delete(workerRepository.getByWorkerId(workerId));
+        Optional<WorkerEntity> optionalWorkerEntity = workerRepository.findById(workerId);
+
+        if (optionalWorkerEntity.isPresent()) {
+            WorkerEntity workerEntity = optionalWorkerEntity.get();
+
+            UserEntity userEntity = workerEntity.getUser();
+
+            // Keep the worker but delete the user
+            workerEntity.setUser(null);
+            workerEntity.setStatus(Status.CANCELLED);
+
+            workerRepository.save(workerEntity);
+
+
+            userRepository.delete(userEntity);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not exist");
+        }
     }
 }
