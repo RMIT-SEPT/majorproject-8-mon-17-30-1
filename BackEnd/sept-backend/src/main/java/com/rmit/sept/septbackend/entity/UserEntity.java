@@ -1,7 +1,8 @@
 package com.rmit.sept.septbackend.entity;
 
-import com.rmit.sept.septbackend.model.State;
+import com.rmit.sept.septbackend.model.Role;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
@@ -13,26 +14,31 @@ import javax.persistence.*;
 @ToString(exclude = "password")
 @EqualsAndHashCode(exclude = "password")
 // Name maps to the table in the database
-@Entity(name = "user")
+@Entity
+@Table(name = "user")
 public class UserEntity {
     // Id means that Hibernate knows which column is the primary key
-    @Id
     // This means that Hibernate generates the userId - it is not provided by users nor managed by the database
-    @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int userId;
     // The @Column annotation isn't strictly necessary, unless providing extra information about a column, such as here
+    @NaturalId
     @Column(unique = true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
-    private String streetAddress;
-    private String city;
     @Enumerated(EnumType.STRING)
-    private State state;
-    private String postcode;
-    // This joins to the 'Role' table so that the role can be seen
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private RoleEntity role;
+    private Role role;
+
+    public UserEntity(String username, String password, String firstName, String lastName, Role role) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
+
 }

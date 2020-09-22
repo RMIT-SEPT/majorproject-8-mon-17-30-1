@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
 import AuthService from "./service/auth";
 
 import Login from "./component/login";
@@ -12,6 +11,9 @@ import Profile from "./component/profile";
 import Dashboard from "./component/dashboard";
 import About from "./component/about";
 import Contact from "./component/contact";
+import viewBookings from "./component/viewBookings";
+import viewWorkers from "./component/viewWorkers";
+import ViewService from "./component/viewService";
 // import BoardUser from "./components/board-user.component";
 // import BoardModerator from "./components/board-moderator.component";
 // import BoardAdmin from "./components/board-admin.component";
@@ -58,38 +60,30 @@ class App extends Component {
               AGME
             </Link>
             <div className="navbar-nav mr-auto">
-              {/* {showModeratorBoard && (
-                <li className="nav-item">
-                  <Link to={"/mod"} className="nav-link">
-                    Moderator Board
-                  </Link>
-                </li>
-              )} */}
+              <li className="nav-item">
+                <Link to={"/about"} className="nav-link">
+                  About us
+                </Link>
+              </li>
 
-              {/* {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
-                    Admin Board
-                  </Link>
-                </li>
-              )} */}
-
-                <li className="nav-item">
-                  <Link to={"/about"} className="nav-link">
-                    About us
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to={"/contact"} className="nav-link">
-                    Contact us
-                  </Link>
-                </li>
+              <li className="nav-item">
+                <Link to={"/contact"} className="nav-link">
+                  Contact us
+                </Link>
+              </li>
 
               {currentUser && (
                 <li className="nav-item">
                   <Link to={"/dashboard"} className="nav-link">
                     Dashboard
+                  </Link>
+                </li>
+              )}
+
+              {currentUser && currentUser.role === "CUSTOMER" && (
+                <li className="nav-item">
+                  <Link to={"/bookings"} className="nav-link">
+                    Bookings
                   </Link>
                 </li>
               )}
@@ -134,6 +128,9 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route exact path="/about" component={About} />
               <Route exact path="/contact" component={Contact} />
+              <Route exact path="/bookings" component={viewBookings} />
+              <Route exact path="/workers" component={viewWorkers} />
+              <Route exact path="/services" component={ViewService} />
               {/* <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} /> */}
