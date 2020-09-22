@@ -31,19 +31,23 @@ export default class ViewService extends Component {
       });
 
       if (user.role === "ADMIN") {
-        Service.getBusinessByAdminUsername(user.username).then((response) => {
-          this.setState({
-            business: response.data,
-          });
-
-          Service.getServicesByBusinessID(this.state.business.businessId).then(
-            (response) => {
-              this.handleResponse(response.data);
-            }
-          );
-        });
+        this.updateServiceList(user);
       }
     }
+  }
+
+  updateServiceList(user) {
+    Service.getBusinessByAdminUsername(user.username).then((response) => {
+      this.setState({
+        business: response.data,
+      });
+
+      Service.getServicesByBusinessID(this.state.business.businessId).then(
+          (response) => {
+            this.handleResponse(response.data);
+          }
+      );
+    });
   }
 
   handleResponse(data) {
@@ -84,7 +88,9 @@ export default class ViewService extends Component {
     return () => {
       Service.deleteService(serviceId).then(
           () => {
+            const user = AuthService.getCurrentUser();
             NotificationManager.info("Service Deleted");
+            this.updateServiceList(user)
           },
           error => {
             NotificationManager.error("Failed to delete");
@@ -141,7 +147,7 @@ export default class ViewService extends Component {
             <header>
               <h3>Viewing services for {this.state.business.businessName}</h3>
             </header>
-            <ReactTable data={data} columns={columns} defaultPageSize={5} />
+            <ReactTable data={this.state.services} columns={columns} defaultPageSize={5} />
             <div>
               <hr />
               <NotificationContainer />
