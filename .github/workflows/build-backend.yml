@@ -25,7 +25,9 @@ jobs:
           name: backend_package
           path: build
 
-
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Download Backend Artifact
