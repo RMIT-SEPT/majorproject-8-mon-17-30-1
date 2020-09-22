@@ -28,7 +28,11 @@ export default class viewBookings extends Component {
     };
 
     async componentDidMount() {
-        console.log(this.state.whichBooking);
+        await this.updateBookingList()
+
+    }
+
+    async updateBookingList() {
         switch (this.state.whichBooking) {
             case "all":
                 await BookingService.viewBooking("John_Smith").then(data => {
@@ -55,7 +59,6 @@ export default class viewBookings extends Component {
                 });
                 break;
         }
-
     }
 
     handleResponse(data) {
@@ -80,6 +83,8 @@ export default class viewBookings extends Component {
             Service.cancelBooking(bookingId).then(
                 () => {
                     NotificationManager.info("Booking Cancelled");
+                    this.updateBookingList()
+//                  window.location.reload(false);
                 },
                 error => {
                     NotificationManager.error("Failed to cancel");

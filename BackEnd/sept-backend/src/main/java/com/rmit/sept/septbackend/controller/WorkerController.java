@@ -39,7 +39,7 @@ public class WorkerController {
         workerService.editExistingWorker(editWorkerRequest);
     }
 
-    @PostMapping("/delete/{workerId}")
+    @DeleteMapping("/delete/{workerId}")
     public void deleteWorker(@Valid @PathVariable int workerId) {
         workerService.deleteWorker(workerId);
     }
