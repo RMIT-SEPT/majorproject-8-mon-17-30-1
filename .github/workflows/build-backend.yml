@@ -36,4 +36,4 @@ jobs:
           --recursive \
           --acl public-read \
           --region us-east-1 \
-          ./build s3://sept-backend-jars
+          ./backend_package s3://sept-backend-jars
