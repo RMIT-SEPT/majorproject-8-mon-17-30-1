@@ -77,11 +77,9 @@ export default class viewBookings extends Component {
 
     handleCancel = (bookingId) => {
         return () => {
-            var result = "";
             Service.cancelBooking(bookingId).then(
                 () => {
                     NotificationManager.info("Booking Cancelled");
-                    console.log('Booking Cancelled')
                 },
                 error => {
                     NotificationManager.error("Failed to cancel");
