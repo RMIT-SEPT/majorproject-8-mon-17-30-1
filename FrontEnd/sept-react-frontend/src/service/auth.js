@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // For local development, this is hardcoded in at the moment
-export const API_URL = "http://sept-backend-env.eba-zmub6gjh.us-east-1.elasticbeanstalk.com:80/api/v1/auth";
+export const API_URL = "http://localhost:8080/api/v1/auth";
 
 const kebabcaseKeys = require('kebabcase-keys');
 
