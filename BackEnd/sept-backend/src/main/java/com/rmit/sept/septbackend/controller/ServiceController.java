@@ -47,4 +47,10 @@ public class ServiceController {
         return serviceResponses;
     }
 
+    @DeleteMapping("/delete/{serviceId}")
+    public void cancelBooking(@Valid @PathVariable int serviceId) {
+        serviceService.deleteService(serviceId);
+    }
+
+
 }
