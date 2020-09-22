@@ -26,11 +26,15 @@ export default class ViewWorkers extends Component {
       this.setState({
         currentUser: user,
       });
+      await this.updateWorkerList()
 
-      await WorkerService.viewWorkers().then((data) => {
-        this.handleResponse(data);
-      });
     }
+  }
+
+  async updateWorkerList() {
+    await WorkerService.viewWorkers().then((data) => {
+      this.handleResponse(data);
+    });
   }
 
   handleResponse(data) {
@@ -54,11 +58,11 @@ export default class ViewWorkers extends Component {
       var result = "";
       WorkerService.deleteWorker(workerId).then(
         () => {
-          NotificationManager.info("Booking Cancelled");
-          console.log("Booking Cancelled");
+          NotificationManager.info("Worker Deleted");
+          this.updateWorkerList()
         },
         (error) => {
-          NotificationManager.error("Failed to cancel");
+          NotificationManager.error("Failed to delete");
         }
       );
     };

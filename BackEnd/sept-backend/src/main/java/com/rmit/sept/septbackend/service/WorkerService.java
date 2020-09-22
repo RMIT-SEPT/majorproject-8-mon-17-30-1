@@ -1,5 +1,6 @@
 package com.rmit.sept.septbackend.service;
 
+import com.rmit.sept.septbackend.entity.ServiceEntity;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
 import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.entity.WorkerEntity;
