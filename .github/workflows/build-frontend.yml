@@ -30,6 +30,6 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: frontend_package
-        path: Frontend/sept-react-frontend/build/
+        path: ./Frontend/sept-react-frontend/build/
       env:
         CI: true
