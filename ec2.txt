@@ -1,0 +1,19 @@
+sudo yum update -y
+sudo yum install nodejs
+sudo yum install -y git
+cd /opt
+sudo wget --no-cookies --no-check-certificate --header "Cookie: %3A%2F%2Fwww.oracle.com%2F; -securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.tar.gz
+sudo tar xzf jdk-8u151-linux-x64.tar.gz
+cd jdk1.8.0_151/
+sudo alternatives --install /usr/bin/java java /opt/jdk1.8.0_151/bin/java 2
+sudo alternatives --config java
+
+java -version
+cd /tmp
+wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+sudo tar xf apache-maven-3.6.3-bin.tar.gz -C /opt
+sudo ln -s /opt/apache-maven-3.6.3 /opt/maven
+sudo nano /etc/profile.d/maven.sh
+sudo chmod +x /etc/profile.d/maven.sh
+source /etc/profile.d/maven.sh
+mvn -version

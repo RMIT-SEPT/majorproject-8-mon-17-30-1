@@ -1,0 +1,36 @@
+name: Build Frontend
+
+on:
+  push:
+    branches: [ feature/ci_implementation ]
+  pull_request:
+    branches: [ feature/ci_implementation ]
+
+jobs:
+  build:
+    name: Build Frontend
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+      working-directory: Frontend/sept-react-frontend
+    - run: npm run build --if-present
+      working-directory: Frontend/sept-react-frontend
+    - run: npm test
+      working-directory: Frontend/sept-react-frontend
+    - uses: actions/upload-artifact@v2
+      with:
+        name: frontend_package
+        path: Frontend/sept-react-frontend/build
+      env:
+        CI: true
