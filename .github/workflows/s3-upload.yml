@@ -2,9 +2,9 @@ name: Upload S3
 
 on:
   push:
-    branches: [ feature/ci_implementation ]
+    branches: [ develop ]
   pull_request:
-    branches: [ feature/ci_implementation ]
+    branches: [ develop ]
 
 jobs:
   deploy:
@@ -15,13 +15,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ASIA37EK4XUYYYNETY7T
-        aws-secret-access-key: BM6F5zhOQU/Sl+KN/2HN1WQWcD8/9xxyr5OdLqCQ
-        aws-region: us-east-1
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ASIA37EK4XUYYYNETY7T
+    #     aws-secret-access-key: BM6F5zhOQU/Sl+KN/2HN1WQWcD8/9xxyr5OdLqCQ
+    #     aws-region: us-east-1
 
-    - name: Copy files to the frontend s3 bucket
-      run: |
-        aws s3 cp ./FrontEnd/sept-react-frontend/src/service/ s3://test-s3-sept
+    # - name: Copy files to the frontend s3 bucket
+    #   run: |
+    #     aws s3 cp ./FrontEnd/sept-react-frontend/src/service/ s3://test-s3-sept

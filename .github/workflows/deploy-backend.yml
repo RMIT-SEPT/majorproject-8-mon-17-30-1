@@ -2,14 +2,14 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [ feature/ci_implementation ]
+    branches: [ develop ]
   pull_request:
-    branches: [ feature/ci_implementation ]
+    branches: [ develop ]
 
 jobs:
   build:
     name: Deploy Backend
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
