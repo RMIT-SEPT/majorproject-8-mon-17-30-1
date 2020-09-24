@@ -1,3 +1,19 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ feature/ci_implementation ]
+  pull_request:
+    branches: [ feature/ci_implementation ]
+
+jobs:
+  build:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
 # name: Deploy
 
 # on:
