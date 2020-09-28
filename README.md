@@ -23,6 +23,8 @@
 
 [Quick Start](/docs/README.md) in `docs` folder
 
+Backend documentation can be found [here](/BackEnd/sept-backend/README.md)
+
 Our deployed application can be found at:
 http://sept-frontend.s3-website-us-east-1.amazonaws.com/
 
