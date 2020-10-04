@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface ServiceWorkerAvailabilityRepository extends CrudRepository<ServiceWorkerAvailabilityEntity, Integer> {
 
-    List<ServiceWorkerAvailabilityEntity> getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateBeforeAndEffectiveEndDateAfter(int serviceWorkerId, LocalDate effectiveStartDate, LocalDate effectiveEndDate);
-
+    List<ServiceWorkerAvailabilityEntity> getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateLessThanEqualAndEffectiveEndDateGreaterThanEqual(int serviceWorkerId, LocalDate effectiveStartDate, LocalDate effectiveEndDate);
 }

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +92,7 @@ public class BookingService {
 
         // Check if the worker has allocated availability for the service
         // TODO - only caters for bookings/services that are within a single day (ie. that don't extend over more than one day)
-        List<ServiceWorkerAvailabilityEntity> serviceWorkerAvailabilityEntities = serviceWorkerAvailabilityRepository.getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateBeforeAndEffectiveEndDateAfter(
+        List<ServiceWorkerAvailabilityEntity> serviceWorkerAvailabilityEntities = serviceWorkerAvailabilityRepository.getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateLessThanEqualAndEffectiveEndDateGreaterThanEqual(
                 serviceWorkerEntity.getServiceWorkerId(),
                 bookingStartTime.toLocalDate(),
                 bookingEndTime.toLocalDate()
@@ -104,19 +103,18 @@ public class BookingService {
         };
         serviceWorkerAvailabilityEntities
                 .stream()
-                .filter(entity -> !bookingStartTime.toLocalDate().isAfter(entity.getEffectiveStartDate()) && !bookingStartTime.toLocalDate().isBefore(entity.getEffectiveEndDate()))
                 .map(ServiceWorkerAvailabilityEntity::getAvailability)
                 .filter(availabilityEntity -> availabilityEntity.getDay().equals(day))
                 .takeWhile(availabilityEntity -> !ref.valid)
                 .forEach(availability -> {
-                    if (bookingStartTime.toLocalTime().isAfter(availability.getStartTime())
-                            && bookingStartTime.toLocalTime().isBefore(availability.getEndTime())) {
+                    if (!bookingStartTime.toLocalTime().isBefore(availability.getStartTime())
+                            && bookingEndTime.toLocalTime().isBefore(availability.getEndTime())) {
                         ref.valid = true;
                     }
                 });
 
         if (!ref.valid) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not have availability");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested booking time does not fit within worker's availability schedule");
         }
 
 
