@@ -68,6 +68,21 @@ create table service_worker (
     constraint service_worker_pk primary key (service_worker_id)
 );
 
+create table availability (
+    availability_id int not null auto_increment,
+    day varchar(9) not null,
+    start_time time not null,
+    end_time time not null
+);
+
+create table service_worker_availability (
+    service_worker_availability_id int not null auto_increment,
+    service_worker_id int not null,
+    availability_id int not null,
+    effective_start_date date not null,
+    effective_end_date date not null
+);
+
 drop table if exists booking;
 create table booking (
     booking_id int not null auto_increment,
@@ -76,10 +91,9 @@ create table booking (
     booking_time timestamp not null,
     created_time timestamp not null,
     last_modified_time timestamp not null,
-    status varchar(10) not null, -- 0=ACTIVE,1=CANCELLED
+    status varchar(10) not null,
     constraint booking_pk primary key (booking_id)
 );
-
 
 -- Constraints
 alter table admin add constraint admin_foreign_user_id foreign key (user_id) references user(user_id);
@@ -93,6 +107,9 @@ alter table service add constraint service_foreign_business_id foreign key (busi
 
 alter table service_worker add constraint service_worker_foreign_service_id foreign key (service_id) references service(service_id);
 alter table service_worker add constraint service_worker_foreign_worker_id foreign key (worker_id) references worker(worker_id);
+
+alter table service_worker_availability add constraint service_worker_availability_foreign_service_worker_id foreign key (service_worker_id) references service_worker(service_worker_id);
+alter table service_worker_availability add constraint service_worker_availability_foreign_availability_id foreign key (availability_id) references availability(availability_id);
 
 alter table booking add constraint booking_foreign_service_id foreign key (service_worker_id) references service_worker(service_worker_id);
 alter table booking add constraint booking_foreign_customer_id foreign key (customer_id) references customer(customer_id);
