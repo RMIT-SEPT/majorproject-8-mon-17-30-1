@@ -232,6 +232,10 @@ public class BookingServiceTest {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 22, 15, 30));
 
+        Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
+                Mockito.anyInt(), Mockito.any(), Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
         Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
     }
 
