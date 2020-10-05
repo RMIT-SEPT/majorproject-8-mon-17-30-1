@@ -92,7 +92,7 @@ public class BookingService {
 
         // Check if the worker has allocated availability for the service
         // TODO - only caters for bookings/services that are within a single day (ie. that don't extend over more than one day)
-        List<ServiceWorkerAvailabilityEntity> serviceWorkerAvailabilityEntities = serviceWorkerAvailabilityRepository.getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateLessThanEqualAndEffectiveEndDateGreaterThanEqual(
+        List<ServiceWorkerAvailabilityEntity> serviceWorkerAvailabilityEntities = serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
                 serviceWorkerEntity.getServiceWorkerId(),
                 bookingStartTime.toLocalDate(),
                 bookingEndTime.toLocalDate()

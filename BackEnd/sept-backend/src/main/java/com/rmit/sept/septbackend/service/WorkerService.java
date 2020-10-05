@@ -1,10 +1,11 @@
 package com.rmit.sept.septbackend.service;
 
-import com.rmit.sept.septbackend.entity.ServiceEntity;
+import com.rmit.sept.septbackend.entity.ServiceWorkerAvailabilityEntity;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
 import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.entity.WorkerEntity;
 import com.rmit.sept.septbackend.model.*;
+import com.rmit.sept.septbackend.repository.ServiceWorkerAvailabilityRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import com.rmit.sept.septbackend.repository.UserRepository;
 import com.rmit.sept.septbackend.repository.WorkerRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,7 @@ public class WorkerService {
     private final WorkerRepository workerRepository;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
 
     public List<WorkerResponse> getWorkersByServiceId(int serviceId) {
         List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceIdAndServiceStatusAndWorkerStatus(serviceId, Status.ACTIVE, Status.ACTIVE);
@@ -88,5 +91,76 @@ public class WorkerService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not exist");
         }
+    }
+
+    /**
+     * Works by showing any of the workers availability within the given period.
+     * <p>For example, given {@code S} start date and {@code E} end date, the following are applicable availabilities:</p>
+     * <pre>
+     *        S       E
+     * A1   ╞¦═ ═ ═ ═ ═¦═ ╡ | A
+     * A2 ╞ ═¦═ ═ ╡    ¦    | A
+     * A3    ¦  ╞ ═ ═ ═¦╡   | A
+     * A4 ╞ ╡¦         ¦    | N/A
+     * A5    ¦         ¦╞ ╡ | N/A
+     * A6    ¦  ╞ ═ ╡  ¦    | A
+     * </pre>
+     *
+     * @param workerId
+     * @param serviceId
+     * @param effectiveStartDate
+     * @param effectiveEndDate
+     * @return
+     */
+    public AvailabilityResponse viewAvailability(int workerId, Integer serviceId, LocalDate effectiveStartDate, LocalDate effectiveEndDate) {
+        // Conveniences when no dates are passed in
+        // Start defaults to today, end defaults to 7 days from start
+        if (effectiveStartDate == null) {
+            effectiveStartDate = LocalDate.now();
+        }
+
+        if (effectiveEndDate == null) {
+            effectiveEndDate = effectiveStartDate.plusDays(7);
+        }
+
+        // The applicable availability magic is done inside the below queries
+        List<ServiceWorkerAvailabilityEntity> availabilityEntities;
+        if (serviceId != null) {
+            availabilityEntities = serviceWorkerAvailabilityRepository.getAllByWorkerIdServiceId(
+                    workerId,
+                    serviceId,
+                    effectiveStartDate,
+                    effectiveEndDate
+            );
+        } else {
+            availabilityEntities = serviceWorkerAvailabilityRepository.getAllByWorkerId(
+                    workerId,
+                    effectiveStartDate,
+                    effectiveEndDate
+            );
+        }
+
+        return new AvailabilityResponse(
+                workerId,
+                effectiveStartDate,
+                effectiveEndDate,
+                availabilityEntities
+                        .stream()
+                        .map(availabilityEntity ->
+                                new InnerAvailabilityResponse(
+                                        availabilityEntity.getServiceWorker().getService().getServiceName(),
+                                        availabilityEntity.getAvailability().getDay(),
+                                        availabilityEntity.getAvailability().getStartTime(),
+                                        availabilityEntity.getAvailability().getEndTime(),
+                                        availabilityEntity.getEffectiveStartDate(),
+                                        availabilityEntity.getEffectiveEndDate()
+                                )
+                        )
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public void addAvailability(AvailabilityRequest availabilityRequest) {
+
     }
 }

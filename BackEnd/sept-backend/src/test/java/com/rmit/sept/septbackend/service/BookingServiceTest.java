@@ -114,7 +114,7 @@ public class BookingServiceTest {
         Mockito.when(serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(testServiceWorkerEntity);
 
-        Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerServiceWorkerIdAndEffectiveStartDateLessThanEqualAndEffectiveEndDateGreaterThanEqual(
+        Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
                 Mockito.anyInt(), Mockito.any(), Mockito.any()))
                 .thenReturn(
                         Collections.singletonList(
