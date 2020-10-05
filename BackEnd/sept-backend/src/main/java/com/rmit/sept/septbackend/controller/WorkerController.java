@@ -55,6 +55,11 @@ public class WorkerController {
         return workerService.viewAvailability(workerId, serviceId, effectiveStartDate, effectiveEndDate);
     }
 
+    @DeleteMapping("/availability/{serviceWorkerAvailabilityId}")
+    public void deleteAvailability(@Valid @PathVariable int serviceWorkerAvailabilityId) {
+        workerService.deleteAvailability(serviceWorkerAvailabilityId);
+    }
+
     @DeleteMapping("/delete/{workerId}")
     public void deleteWorker(@Valid @PathVariable int workerId) {
         workerService.deleteWorker(workerId);

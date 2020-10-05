@@ -33,4 +33,11 @@ public class ServiceWorkerAvailabilityEntity {
      * Inclusive effective end date
      */
     private LocalDate effectiveEndDate;
+
+    public ServiceWorkerAvailabilityEntity(ServiceWorkerEntity serviceWorker, AvailabilityEntity availability, LocalDate effectiveStartDate, LocalDate effectiveEndDate) {
+        this.serviceWorker = serviceWorker;
+        this.availability = availability;
+        this.effectiveStartDate = effectiveStartDate;
+        this.effectiveEndDate = effectiveEndDate;
+    }
 }

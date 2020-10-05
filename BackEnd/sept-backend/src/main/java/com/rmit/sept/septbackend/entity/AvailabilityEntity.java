@@ -23,4 +23,10 @@ public class AvailabilityEntity {
     private DayOfWeek day;
     private LocalTime startTime;
     private LocalTime endTime;
+
+    public AvailabilityEntity(DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

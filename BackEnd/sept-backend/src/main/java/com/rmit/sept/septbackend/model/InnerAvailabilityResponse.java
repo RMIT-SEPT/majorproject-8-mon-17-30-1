@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 @ToString
 public class InnerAvailabilityResponse {
+    private int serviceWorkerAvailabilityId;
     private String serviceName;
     private DayOfWeek day;
     private LocalTime startTime;

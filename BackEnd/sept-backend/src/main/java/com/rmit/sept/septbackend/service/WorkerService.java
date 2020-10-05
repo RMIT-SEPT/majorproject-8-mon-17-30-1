@@ -1,14 +1,8 @@
 package com.rmit.sept.septbackend.service;
 
-import com.rmit.sept.septbackend.entity.ServiceWorkerAvailabilityEntity;
-import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
-import com.rmit.sept.septbackend.entity.UserEntity;
-import com.rmit.sept.septbackend.entity.WorkerEntity;
+import com.rmit.sept.septbackend.entity.*;
 import com.rmit.sept.septbackend.model.*;
-import com.rmit.sept.septbackend.repository.ServiceWorkerAvailabilityRepository;
-import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import com.rmit.sept.septbackend.repository.UserRepository;
-import com.rmit.sept.septbackend.repository.WorkerRepository;
+import com.rmit.sept.septbackend.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +24,7 @@ public class WorkerService {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
     private final ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
+    private final AvailabilityRepository availabilityRepository;
 
     public List<WorkerResponse> getWorkersByServiceId(int serviceId) {
         List<ServiceWorkerEntity> serviceWorkers = serviceWorkerRepository.getAllByServiceServiceIdAndServiceStatusAndWorkerStatus(serviceId, Status.ACTIVE, Status.ACTIVE);
@@ -148,6 +143,7 @@ public class WorkerService {
                         .stream()
                         .map(availabilityEntity ->
                                 new InnerAvailabilityResponse(
+                                        availabilityEntity.getServiceWorkerAvailabilityId(),
                                         availabilityEntity.getServiceWorker().getService().getServiceName(),
                                         availabilityEntity.getAvailability().getDay(),
                                         availabilityEntity.getAvailability().getStartTime(),
@@ -161,6 +157,51 @@ public class WorkerService {
     }
 
     public void addAvailability(AvailabilityRequest availabilityRequest) {
+        ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(
+                availabilityRequest.getServiceId(),
+                availabilityRequest.getWorkerId()
+        );
+
+        if (serviceWorkerEntity == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find service/worker relationship");
+        }
+
+        LocalDate effectiveStartDate = availabilityRequest.getEffectiveStartDate();
+        LocalDate effectiveEndDate = availabilityRequest.getEffectiveEndDate();
+        if (effectiveStartDate == null) {
+            effectiveStartDate = LocalDate.now();
+        }
+        if (effectiveEndDate == null) {
+            effectiveEndDate = effectiveStartDate.plusDays(7);
+        }
+
+        AvailabilityEntity availabilityEntity = new AvailabilityEntity(
+                availabilityRequest.getDay(),
+                availabilityRequest.getStartTime(),
+                availabilityRequest.getEndTime()
+        );
+
+        ServiceWorkerAvailabilityEntity workerAvailabilityEntity = new ServiceWorkerAvailabilityEntity(
+                serviceWorkerEntity,
+                availabilityEntity,
+                effectiveStartDate,
+                effectiveEndDate
+        );
+
+        availabilityRepository.save(availabilityEntity);
+        serviceWorkerAvailabilityRepository.save(workerAvailabilityEntity);
+    }
+
+    public void deleteAvailability(int serviceWorkerAvailabilityId) {
+        Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(serviceWorkerAvailabilityId);
+
+        if (entity.isPresent()) {
+            serviceWorkerAvailabilityRepository.delete(entity.get());
+
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find availability entry for given id");
+        }
 
     }
 }
