@@ -198,10 +198,27 @@ public class WorkerService {
         if (entity.isPresent()) {
             serviceWorkerAvailabilityRepository.delete(entity.get());
 
-
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find availability entry for given id");
         }
+    }
 
+    /*
+    Todo: Maybe an alternate way of "editing" would be to just use add availability method and ignore the id of the one being edited in the validation.
+    Might do later
+     */
+    public void editAvailability(int availabilityId, LocalDate effectiveStartDate, LocalDate effectiveEndDate) {
+        Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(availabilityId);
+
+        if (entity.isPresent()) {
+            ServiceWorkerAvailabilityEntity availabilityEntity = entity.get();
+
+            availabilityEntity.setEffectiveStartDate(effectiveStartDate);
+            availabilityEntity.setEffectiveEndDate(effectiveEndDate);
+
+            serviceWorkerAvailabilityRepository.save(availabilityEntity);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find availability entry for given id");
+        }
     }
 }

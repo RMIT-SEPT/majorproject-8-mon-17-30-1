@@ -64,4 +64,13 @@ public class WorkerController {
     public void deleteWorker(@Valid @PathVariable int workerId) {
         workerService.deleteWorker(workerId);
     }
+
+    @PostMapping("/availability/edit/{availabilityId}")
+    public void editAvailability(@Valid @PathVariable int availabilityId,
+                                 @RequestParam(required = false)
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveStartDate,
+                                 @RequestParam(required = false)
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveEndDate) {
+        workerService.editAvailability(availabilityId, effectiveStartDate, effectiveEndDate);
+    }
 }
