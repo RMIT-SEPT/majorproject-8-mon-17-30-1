@@ -67,10 +67,7 @@ public class WorkerController {
 
     @PostMapping("/availability/edit/{availabilityId}")
     public void editAvailability(@Valid @PathVariable int availabilityId,
-                                 @RequestParam(required = false)
-                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveStartDate,
-                                 @RequestParam(required = false)
-                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveEndDate) {
-        workerService.editAvailability(availabilityId, effectiveStartDate, effectiveEndDate);
+                                 @RequestBody AvailabilityRequest availabilityRequest) {
+        workerService.editAvailability(availabilityId, availabilityRequest);
     }
 }
