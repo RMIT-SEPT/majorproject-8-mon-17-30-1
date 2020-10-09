@@ -137,7 +137,6 @@ public class WorkerService {
         }
 
         return new AvailabilityResponse(
-                workerId,
                 effectiveStartDate,
                 effectiveEndDate,
                 availabilityEntities
@@ -145,6 +144,7 @@ public class WorkerService {
                         .map(availabilityEntity ->
                                 new InnerAvailabilityResponse(
                                         availabilityEntity.getServiceWorkerAvailabilityId(),
+                                        availabilityEntity.getServiceWorker().getWorker().getWorkerId(),
                                         availabilityEntity.getServiceWorker().getService().getServiceName(),
                                         availabilityEntity.getAvailability().getDay(),
                                         availabilityEntity.getAvailability().getStartTime(),
@@ -205,14 +205,14 @@ public class WorkerService {
         }
     }
 
-    public void editAvailability(int availabilityId, AvailabilityRequest availabilityRequest) {
+    public void editAvailability(int serviceWorkerAvailabilityId, AvailabilityRequest availabilityRequest) {
 
         //grab the entity from the db
         //change the effective end date of the entity to end now so it wont collide with the new times in the edit
         //attempt to add the availability
         //if unsuccessful, change the effective end date back
 
-        Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(availabilityId);
+        Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(serviceWorkerAvailabilityId);
         LocalDate endDate = entity.get().getEffectiveEndDate();
         entity.get().setEffectiveEndDate(LocalDate.now().minusDays(1));
 

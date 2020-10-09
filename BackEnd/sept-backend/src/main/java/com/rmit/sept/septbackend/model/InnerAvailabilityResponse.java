@@ -14,6 +14,7 @@ import java.time.LocalTime;
 @ToString
 public class InnerAvailabilityResponse {
     private int serviceWorkerAvailabilityId;
+    private int workerId;
     private String serviceName;
     private DayOfWeek day;
     private LocalTime startTime;

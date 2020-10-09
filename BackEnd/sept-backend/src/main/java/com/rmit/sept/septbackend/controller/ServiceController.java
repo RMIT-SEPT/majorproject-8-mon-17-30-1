@@ -1,13 +1,16 @@
 package com.rmit.sept.septbackend.controller;
 
+import com.rmit.sept.septbackend.model.AvailabilityResponse;
 import com.rmit.sept.septbackend.model.CreateServiceRequest;
 import com.rmit.sept.septbackend.model.ServiceResponse;
 import com.rmit.sept.septbackend.service.ServiceService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,10 +55,17 @@ public class ServiceController {
         serviceService.deleteService(serviceId);
     }
 
-
     @PutMapping("/{service-id}")
     public void editService(@PathVariable("service-id") int serviceId, @RequestBody CreateServiceRequest createServiceRequest) {
         serviceService.editService(serviceId, createServiceRequest);
     }
 
+    @GetMapping("/availability/{serviceId}")
+    public AvailabilityResponse viewAvailability(@Valid @PathVariable int serviceId,
+                                                 @RequestParam(required = false)
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveStartDate,
+                                                 @RequestParam(required = false)
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveEndDate) {
+        return serviceService.viewServiceAvailability(serviceId, effectiveStartDate, effectiveEndDate);
+    }
 }

@@ -2,18 +2,15 @@ package com.rmit.sept.septbackend.service;
 
 import com.rmit.sept.septbackend.entity.BusinessEntity;
 import com.rmit.sept.septbackend.entity.ServiceEntity;
+import com.rmit.sept.septbackend.entity.ServiceWorkerAvailabilityEntity;
 import com.rmit.sept.septbackend.entity.ServiceWorkerEntity;
-import com.rmit.sept.septbackend.model.CreateServiceRequest;
-import com.rmit.sept.septbackend.model.ServiceResponse;
-import com.rmit.sept.septbackend.model.Status;
-import com.rmit.sept.septbackend.repository.BusinessRepository;
-import com.rmit.sept.septbackend.repository.ServiceRepository;
-import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import com.rmit.sept.septbackend.repository.WorkerRepository;
+import com.rmit.sept.septbackend.model.*;
+import com.rmit.sept.septbackend.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,12 +22,16 @@ public class ServiceService {
     private final BusinessRepository businessRepository;
     private final ServiceWorkerRepository serviceWorkerRepository;
     private final WorkerRepository workerRepository;
+    private final ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
+    private final AvailabilityRepository availabilityRepository;
 
-    public ServiceService(ServiceRepository serviceRepository, BusinessRepository businessRepository, ServiceWorkerRepository serviceWorkerRepository, WorkerRepository workerRepository) {
+    public ServiceService(ServiceRepository serviceRepository, BusinessRepository businessRepository, ServiceWorkerRepository serviceWorkerRepository, WorkerRepository workerRepository, ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository, AvailabilityRepository availabilityRepository) {
         this.serviceRepository = serviceRepository;
         this.businessRepository = businessRepository;
         this.serviceWorkerRepository = serviceWorkerRepository;
         this.workerRepository = workerRepository;
+        this.serviceWorkerAvailabilityRepository = serviceWorkerAvailabilityRepository;
+        this.availabilityRepository = availabilityRepository;
     }
 
     public void createService(CreateServiceRequest createServiceRequest) {
@@ -110,6 +111,7 @@ public class ServiceService {
      * Effectively delete a service given a service-id.
      * Note: this does not delete the row from the database as services are referenced elsewhere (ie. serviceWorker).
      * As such, this only changes the status.
+     *
      * @param serviceId
      */
     public void deleteService(int serviceId) {
@@ -124,5 +126,67 @@ public class ServiceService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service not found");
         }
+    }
+
+    /**
+     * Works by showing any of the workers availability within the given period.
+     * <p>For example, given {@code S} start date and {@code E} end date, the following are applicable availabilities:</p>
+     * <pre>
+     *        S       E
+     * A1   ╞¦═ ═ ═ ═ ═¦═ ╡ | A
+     * A2 ╞ ═¦═ ═ ╡    ¦    | A
+     * A3    ¦  ╞ ═ ═ ═¦╡   | A
+     * A4 ╞ ╡¦         ¦    | N/A
+     * A5    ¦         ¦╞ ╡ | N/A
+     * A6    ¦  ╞ ═ ╡  ¦    | A
+     * </pre>
+     *
+     * @param serviceId
+     * @param effectiveStartDate
+     * @param effectiveEndDate
+     * @return
+     */
+    public AvailabilityResponse viewServiceAvailability(Integer serviceId, LocalDate effectiveStartDate, LocalDate effectiveEndDate) {
+        // Conveniences when no dates are passed in
+        // Start defaults to today, end defaults to 7 days from start
+        if (effectiveStartDate == null) {
+            effectiveStartDate = LocalDate.now();
+        }
+
+        if (effectiveEndDate == null) {
+            effectiveEndDate = effectiveStartDate.plusDays(7);
+        }
+
+        // The applicable availability magic is done inside the below queries
+        List<ServiceWorkerAvailabilityEntity> availabilityEntities;
+        if (serviceId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service does not exist");
+        }
+
+        availabilityEntities = serviceWorkerAvailabilityRepository.getAllByServiceId(
+                serviceId,
+                effectiveStartDate,
+                effectiveEndDate
+        );
+
+        return new AvailabilityResponse(
+                effectiveStartDate,
+                effectiveEndDate,
+                availabilityEntities
+                        .stream()
+                        .map(availabilityEntity ->
+                                new InnerAvailabilityResponse(
+                                        availabilityEntity.getServiceWorkerAvailabilityId(),
+                                        availabilityEntity.getServiceWorker().getWorker().getWorkerId(),
+                                        availabilityEntity.getServiceWorker().getService().getServiceName(),
+                                        availabilityEntity.getAvailability().getDay(),
+                                        availabilityEntity.getAvailability().getStartTime(),
+                                        availabilityEntity.getAvailability().getEndTime(),
+                                        availabilityEntity.getEffectiveStartDate(),
+                                        availabilityEntity.getEffectiveEndDate()
+                                )
+                        )
+                        .collect(Collectors.toList())
+        );
     }
 }
