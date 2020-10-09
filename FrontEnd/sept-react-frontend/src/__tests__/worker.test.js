@@ -26,7 +26,7 @@ describe('Workers.viewWorkers', () => {
         axios.get.mockImplementationOnce(() => Promise.resolve(data));
 
         await Workers.viewWorkers().then( response => {
-            expect(response).toEqual(data);
+            expect(response).toEqual(data.data);
         });
 
         expect(axios.get).toHaveBeenCalledWith(
@@ -57,7 +57,7 @@ describe('Workers.newWorker', () => {
         axios.post.mockImplementationOnce(() => Promise.resolve(data));
 
         await Workers.newWorker(username, firstName, lastName).then( response => {
-            expect(response).toEqual(data);
+            expect(response.data).toEqual();
         });
 
         expect(axios.post).toHaveBeenCalledWith(
@@ -93,7 +93,7 @@ describe('Workers.deleteWorker', () => {
         axios.delete.mockImplementationOnce(() => Promise.resolve(data));
 
         await Workers.deleteWorker(workerId).then( response => {
-            expect(response).toEqual(data);
+            expect(response.data).toEqual();
         });
 
         expect(axios.delete).toHaveBeenCalledWith(

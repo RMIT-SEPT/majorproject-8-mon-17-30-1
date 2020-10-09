@@ -15,8 +15,7 @@ class Booking {
             })
             .then(response => {
                 return response.data;
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.log(error);
             });
     }
@@ -31,11 +30,9 @@ class Booking {
             })
             .then(response => {
                 return response.data;
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.log(error);
             });
-
     }
 
     viewAllBookingHistory() {
@@ -45,11 +42,9 @@ class Booking {
             })
             .then(response => {
                 return response.data;
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.log(error);
             });
-
     }
 }
 

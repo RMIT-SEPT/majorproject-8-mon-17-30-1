@@ -12,9 +12,6 @@ class Workers {
             })
             .then(response => {
                 return response.data;
-            })
-            .catch(error => {
-                console.log(error);
             });
     }
 
@@ -24,7 +21,8 @@ class Workers {
                 username,
                 firstName,
                 lastName
-            }, {headers: authHeader()}).then(response => {
+            }, {headers: authHeader()})
+            .then(response => {
                 return response.data;
             });
     }

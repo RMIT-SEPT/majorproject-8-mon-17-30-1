@@ -19,8 +19,8 @@ describe('Booking.viewBooking', () => {
 
         axios.get.mockImplementationOnce(() => Promise.resolve(data));
 
-        await Booking.viewBooking(username).then( response => {
-            expect(response).toEqual(data);
+        await Booking.viewBooking(username).then(response => {
+            expect(response).toEqual(data.data);
         });
 
         expect(axios.get).toHaveBeenCalledWith(
@@ -49,7 +49,7 @@ describe('Booking.viewBookingHistory', () => {
         axios.get.mockImplementationOnce(() => Promise.resolve(data));
 
         await Booking.viewBookingHistory(username).then( response => {
-            expect(response).toEqual(data);
+            expect(response).toEqual(data.data);
         });
 
         expect(axios.get).toHaveBeenCalledWith(
@@ -77,7 +77,7 @@ describe('Booking.viewAllBookingHistory', () => {
         axios.get.mockImplementationOnce(() => Promise.resolve(data));
 
         await Booking.viewAllBookingHistory().then( response => {
-            expect(response).toEqual(data);
+            expect(response).toEqual(data.data);
         });
 
         expect(axios.get).toHaveBeenCalledWith(
