@@ -70,9 +70,10 @@ create table service_worker (
 
 create table availability (
     availability_id int not null auto_increment,
-    day varchar(9) not null,
+    `day` varchar(9) not null,
     start_time time not null,
-    end_time time not null
+    end_time time not null,
+    constraint availability_pk primary key (availability_id)
 );
 
 create table service_worker_availability (
@@ -80,7 +81,8 @@ create table service_worker_availability (
     service_worker_id int not null,
     availability_id int not null,
     effective_start_date date not null,
-    effective_end_date date not null
+    effective_end_date date not null,
+    constraint service_worker_availability primary key (service_worker_availability_id)
 );
 
 drop table if exists booking;
