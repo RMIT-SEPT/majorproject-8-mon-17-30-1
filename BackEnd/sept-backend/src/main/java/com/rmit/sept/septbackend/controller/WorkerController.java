@@ -65,7 +65,7 @@ public class WorkerController {
         workerService.deleteWorker(workerId);
     }
 
-    @PostMapping("/availability/edit/{availabilityId}")
+    @PutMapping("/availability/{availabilityId}")
     public void editAvailability(@Valid @PathVariable int availabilityId,
                                  @RequestBody AvailabilityRequest availabilityRequest) {
         workerService.editAvailability(availabilityId, availabilityRequest);
