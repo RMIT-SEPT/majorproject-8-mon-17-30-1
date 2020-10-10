@@ -115,11 +115,11 @@ public class WorkerServiceTests {
                 .thenReturn(Arrays.asList(first, second));
 
         AvailabilityResponse expected = new AvailabilityResponse(
-                0,
                 LocalDate.of(2020, 10, 5),
                 LocalDate.of(2020, 10, 6),
                 Arrays.asList(
                         new InnerAvailabilityResponse(
+                                0,
                                 0,
                                 "testService",
                                 DayOfWeek.MONDAY,
@@ -130,6 +130,7 @@ public class WorkerServiceTests {
                         ),
                         new InnerAvailabilityResponse(
                                 1,
+                                0,
                                 "anotherTestService",
                                 DayOfWeek.TUESDAY,
                                 LocalTime.of(9, 0),
@@ -176,11 +177,11 @@ public class WorkerServiceTests {
                 .thenReturn(Collections.singletonList(first));
 
         AvailabilityResponse expected = new AvailabilityResponse(
-                0,
                 LocalDate.of(2020, 10, 5),
                 LocalDate.of(2020, 10, 6),
                 Collections.singletonList(
                         new InnerAvailabilityResponse(
+                                0,
                                 0,
                                 "testService",
                                 DayOfWeek.MONDAY,

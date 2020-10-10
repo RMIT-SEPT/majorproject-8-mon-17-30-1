@@ -25,6 +25,13 @@ public interface ServiceWorkerAvailabilityRepository extends CrudRepository<Serv
     List<ServiceWorkerAvailabilityEntity> getAllByWorkerId(int workerId, LocalDate effectiveStartDate, LocalDate effectiveEndDate);
 
     @Query("from ServiceWorkerAvailabilityEntity " +
+            "where serviceWorker.service.serviceId = ?1 " +
+            "and ((effectiveStartDate <= ?2 and effectiveEndDate >= ?2) " +
+            "or (effectiveStartDate <= ?3 and effectiveEndDate >= ?3) " +
+            "or (effectiveStartDate >= ?2 and effectiveEndDate <= ?3)) ")
+    List<ServiceWorkerAvailabilityEntity> getAllByServiceId(int serviceId, LocalDate effectiveStartDate, LocalDate effectiveEndDate);
+
+    @Query("from ServiceWorkerAvailabilityEntity " +
             "where serviceWorker.worker.workerId = ?1 " +
             "and serviceWorker.service.serviceId = ?2 " +
             "and ((effectiveStartDate <= ?3 and effectiveEndDate >= ?3) " +

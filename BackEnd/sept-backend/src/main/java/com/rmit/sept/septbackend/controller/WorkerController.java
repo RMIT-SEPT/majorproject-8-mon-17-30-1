@@ -64,4 +64,10 @@ public class WorkerController {
     public void deleteWorker(@Valid @PathVariable int workerId) {
         workerService.deleteWorker(workerId);
     }
+
+    @PutMapping("/availability/{availabilityId}")
+    public void editAvailability(@Valid @PathVariable int availabilityId,
+                                 @RequestBody AvailabilityRequest availabilityRequest) {
+        workerService.editAvailability(availabilityId, availabilityRequest);
+    }
 }

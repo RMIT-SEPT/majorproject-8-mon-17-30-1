@@ -5,10 +5,7 @@ import com.rmit.sept.septbackend.model.CreateServiceRequest;
 import com.rmit.sept.septbackend.model.Role;
 import com.rmit.sept.septbackend.model.ServiceResponse;
 import com.rmit.sept.septbackend.model.Status;
-import com.rmit.sept.septbackend.repository.BusinessRepository;
-import com.rmit.sept.septbackend.repository.ServiceRepository;
-import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import com.rmit.sept.septbackend.repository.WorkerRepository;
+import com.rmit.sept.septbackend.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,13 +31,17 @@ public class ServiceServiceTests {
     private ServiceWorkerRepository serviceWorkerRepository;
     @Mock
     private WorkerRepository workerRepository;
+    @Mock
+    private ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
+    @Mock
+    private AvailabilityRepository availabilityRepository;
 
     private ServiceService serviceService;
 
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        serviceService = new ServiceService(serviceRepository, businessRepository, serviceWorkerRepository, workerRepository);
+        serviceService = new ServiceService(serviceRepository, businessRepository, serviceWorkerRepository, workerRepository, serviceWorkerAvailabilityRepository, availabilityRepository);
     }
 
     @Test
