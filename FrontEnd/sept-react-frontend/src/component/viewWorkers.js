@@ -17,7 +17,7 @@ export default class ViewWorkers extends Component {
         this.state = {
             workers: [],
             currentUser: undefined,
-            workerViewDateData: {},
+            workerViewDateData: undefined,
         };
     }
 
@@ -27,9 +27,7 @@ export default class ViewWorkers extends Component {
             this.setState({
                 currentUser: user,
             });
-            await this.updateWorkerList()
-            await this.handleView(0);
-            console.log(this.state.workerViewDateData);
+            await this.updateWorkerList();
         }
     }
 
@@ -45,16 +43,23 @@ export default class ViewWorkers extends Component {
         this.setState({workers});
     }
 
-    async handleView(workerId) {
+    async updateWorkerView(workerId) {
+        console.log(workerId);
         await WorkerService.viewWorkerDateData(workerId).then( response => {
             console.log(response);
             console.log(response.availability);
             const workerViewDateData = this.formatDateData(response.availability);
             this.setState({workerViewDateData});
             console.log(this.state.workerViewDateData);
-            console.log(workerViewDateData);
         });
     }
+
+    handleView = (workerId) => {
+        return () => {
+            this.updateWorkerView(workerId);
+        }
+    }
+
 
     formatDateData(workerDateData) {
         return workerDateData.map((date) => {
@@ -121,7 +126,7 @@ export default class ViewWorkers extends Component {
                         </button>
                         <button
                             className="btn btn-primary"
-                            // onClick={this.handleView(cell.original.id)}
+                            onClick={this.handleView(cell.original.id)}
                         >
                             View
                         </button>
@@ -143,19 +148,19 @@ export default class ViewWorkers extends Component {
                 accessor: "day",
             },
             {
-                Header: "Worker Availability",
+                Header: "Start Time",
                 accessor: "startTime",
             },
             {
-                Header: "Worker Availability",
+                Header: "End Time",
                 accessor: "endTime",
             },
             {
-                Header: "Worker Availability",
+                Header: "Start Date",
                 accessor: "startDate",
             },
             {
-                Header: "Worker Availability",
+                Header: "End State",
                 accessor: "endDate",
             },
         ]
