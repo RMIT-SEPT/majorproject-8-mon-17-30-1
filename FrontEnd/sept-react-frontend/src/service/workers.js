@@ -51,6 +51,16 @@ class Workers {
                 return response.data;
             });
     }
+
+    viewWorkerDateData(workerId) {
+        return axios
+            .get(API_URL + "availability/" + workerId, {
+                headers: authHeader()
+            })
+            .then(response => {
+                return response.data;
+            });
+    }
 }
 
 export default new Workers();
