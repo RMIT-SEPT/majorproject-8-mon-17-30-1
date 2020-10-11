@@ -27,6 +27,21 @@ class Workers {
             });
     }
 
+    newAvailability(workerId, serviceId, day, startTime, endTime, effectiveEndDate) {
+        return axios
+            .post(API_URL + "availability", {
+                workerId,
+                serviceId,
+                day,
+                startTime,
+                endTime,
+                effectiveEndDate
+            }, {headers: authHeader()})
+            .then(response => {
+                return response.data;
+            });
+    }
+
     deleteWorker(workerId) {
         return axios
             .delete(API_URL + "delete/" + workerId, {

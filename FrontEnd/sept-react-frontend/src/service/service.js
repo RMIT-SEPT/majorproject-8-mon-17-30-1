@@ -55,6 +55,14 @@ class Service {
             });
     }
 
+    getServicesByWorkerId(workerId) {
+        return axios
+            .get(SERVICE_URL + "service", { params:
+                {"worker-id": workerId},
+                headers: authHeader()
+            });
+    }
+
     getBusinessByAdminUsername(username) {
         return axios
             .get(BUSINESS_URL + "admin", {params:

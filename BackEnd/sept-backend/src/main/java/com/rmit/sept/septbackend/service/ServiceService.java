@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,6 +55,22 @@ public class ServiceService {
                     )
             );
         }
+    }
+
+    public List<ServiceResponse> getServicesByWorkerId(Integer workerId) {
+        if (!(workerRepository.existsById(workerId))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not exist");
+        }
+
+        List<ServiceWorkerEntity> serviceEntities = serviceWorkerRepository.getAllByWorkerWorkerId(workerId);
+        List<ServiceEntity> services = new ArrayList<>();
+        for (ServiceWorkerEntity swe : serviceEntities
+             ) {
+            if (!services.contains(swe.getService()))
+            services.add(swe.getService());
+        }
+
+        return convertServiceEntityToServiceResponse(services);
     }
 
     public List<ServiceResponse> getServicesForBusinessId(Integer businessId) {

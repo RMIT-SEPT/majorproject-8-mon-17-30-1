@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,11 @@ public class ServiceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only specify one parameter");
         }
         return serviceResponses;
+    }
+
+    @GetMapping("/service")
+    public List<ServiceResponse> getServicesByWorker(@Valid @RequestParam(name = "worker-id") int workerId) {
+        return serviceService.getServicesByWorkerId(workerId);
     }
 
     @DeleteMapping("/delete/{serviceId}")

@@ -9,7 +9,9 @@ import Service from "../service/service";
 
 import WorkerService from "../service/workers";
 import NewWorker from "./newWorker";
+import NewWorkerAvailability from "./newAvailability";
 import AuthService from "../service/auth";
+import {Link} from "react-router-dom";
 
 export default class ViewWorkers extends Component {
   constructor(props) {
@@ -17,6 +19,7 @@ export default class ViewWorkers extends Component {
     this.state = {
       workers: [],
       currentUser: undefined,
+      workerId: ""
     };
   }
 
@@ -68,6 +71,12 @@ export default class ViewWorkers extends Component {
     };
   };
 
+  handleAvailability = (workerId) => {
+    return () => {
+      this.setState({workerId: workerId});
+    }
+  };
+
   render() {
     const data = this.state.workers;
     const columns = [
@@ -100,6 +109,12 @@ export default class ViewWorkers extends Component {
             >
               Delete
             </button>
+            <button
+                className="btn btn-success"
+                onClick={this.handleAvailability(cell.original.id)}
+            >
+              Add Availability
+            </button>
           </div>
         ),
       },
@@ -119,6 +134,7 @@ export default class ViewWorkers extends Component {
             <div>
               <hr />
               <NotificationContainer />
+              <NewWorkerAvailability key={this.state.workerId} workerId={this.state.workerId}/>
             </div>
           </div>
         );
