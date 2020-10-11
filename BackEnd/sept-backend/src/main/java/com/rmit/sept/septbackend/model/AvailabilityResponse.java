@@ -13,7 +13,6 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class AvailabilityResponse {
-    private int workerId;
     private LocalDate effectiveStartDate;
     private LocalDate effectiveEndDate;
     private List<InnerAvailabilityResponse> availability = new ArrayList<>();

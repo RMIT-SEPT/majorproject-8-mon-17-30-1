@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -136,7 +137,6 @@ public class WorkerService {
         }
 
         return new AvailabilityResponse(
-                workerId,
                 effectiveStartDate,
                 effectiveEndDate,
                 availabilityEntities
@@ -144,6 +144,7 @@ public class WorkerService {
                         .map(availabilityEntity ->
                                 new InnerAvailabilityResponse(
                                         availabilityEntity.getServiceWorkerAvailabilityId(),
+                                        availabilityEntity.getServiceWorker().getWorker().getWorkerId(),
                                         availabilityEntity.getServiceWorker().getService().getServiceName(),
                                         availabilityEntity.getAvailability().getDay(),
                                         availabilityEntity.getAvailability().getStartTime(),
@@ -156,7 +157,7 @@ public class WorkerService {
         );
     }
 
-    public void addAvailability(AvailabilityRequest availabilityRequest) {
+    public Optional<ServiceWorkerAvailabilityEntity> addAvailability(AvailabilityRequest availabilityRequest) {
         ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(
                 availabilityRequest.getServiceId(),
                 availabilityRequest.getWorkerId()
@@ -190,6 +191,7 @@ public class WorkerService {
 
         availabilityRepository.save(availabilityEntity);
         serviceWorkerAvailabilityRepository.save(workerAvailabilityEntity);
+        return Optional.of(workerAvailabilityEntity);
     }
 
     public void deleteAvailability(int serviceWorkerAvailabilityId) {
@@ -198,10 +200,24 @@ public class WorkerService {
         if (entity.isPresent()) {
             serviceWorkerAvailabilityRepository.delete(entity.get());
 
-
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find availability entry for given id");
         }
+    }
 
+    public void editAvailability(int serviceWorkerAvailabilityId, AvailabilityRequest availabilityRequest) {
+
+        //grab the entity from the db
+        //change the effective end date of the entity to end now so it wont collide with the new times in the edit
+        //attempt to add the availability
+        //if unsuccessful, change the effective end date back
+
+        Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(serviceWorkerAvailabilityId);
+        LocalDate endDate = entity.get().getEffectiveEndDate();
+        entity.get().setEffectiveEndDate(LocalDate.now().minusDays(1));
+
+        if (addAvailability(availabilityRequest).isEmpty()) {
+            entity.get().setEffectiveEndDate(endDate);
+        }
     }
 }
