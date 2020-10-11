@@ -9,6 +9,7 @@ import Service from "../service/service";
 
 import WorkerService from "../service/workers";
 import NewWorker from "./newWorker";
+import NewWorkerAvailability from "./newAvailability";
 import AuthService from "../service/auth";
 
 export default class ViewWorkers extends Component {
@@ -18,6 +19,7 @@ export default class ViewWorkers extends Component {
             workers: [],
             currentUser: undefined,
             workerViewDateData: undefined,
+            workerId: ""
         };
     }
 
@@ -98,6 +100,12 @@ export default class ViewWorkers extends Component {
         };
     };
 
+    handleAvailability = (workerId) => {
+        return () => {
+            this.setState({workerId: workerId});
+        }
+    };
+
     render() {
         const data = this.state.workers;
         const columns = [
@@ -135,6 +143,12 @@ export default class ViewWorkers extends Component {
                             onClick={this.handleDelete(cell.original.id)}
                         >
                             Delete
+                        </button>
+                        <button
+                            className="btn btn-success"
+                            onClick={this.handleAvailability(cell.original.id)}
+                        >
+                            Add Availability
                         </button>
                     </div>
                 ),
@@ -180,6 +194,7 @@ export default class ViewWorkers extends Component {
                         <div>
                             <hr/>
                             <NotificationContainer/>
+                            <NewWorkerAvailability key={this.state.workerId} workerId={this.state.workerId}/>
                         </div>
                     </div>
                 );
