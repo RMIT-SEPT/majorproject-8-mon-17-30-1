@@ -61,6 +61,25 @@ class Workers {
                 return response.data;
             });
     }
+
+    editWorker(username, password, firstName, lastName, workerId) {
+        /*        console.log(username);
+                console.log(password);
+                console.log(firstName);
+                console.log(lastName);
+                console.log(workerId);*/
+        return axios
+            .put(API_URL + "edit", {
+                workerId,
+                username,
+                password,
+                firstName,
+                lastName,
+            }, {headers: authHeader()})
+            .then(response => {
+                return response.data;
+            });
+    }
 }
 
 export default new Workers();
