@@ -1,14 +1,15 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import ReactTable from "react-table-6";
 import "react-table-6/react-table.css";
 import {
-  NotificationContainer,
-  NotificationManager,
+    NotificationContainer,
+    NotificationManager,
 } from "react-notifications";
 import Service from "../service/service";
 
 import WorkerService from "../service/workers";
 import NewWorker from "./newWorker";
+import NewWorkerAvailability from "./newAvailability";
 import AuthService from "../service/auth";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
@@ -17,13 +18,15 @@ export default class ViewWorkers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      workers: [],
-      currentUser: undefined,
-      editUsername: '',
-      editFName: '',
-      editLName: '',
-      editId: '',
-      editPassword: '',
+        workers: [],
+        currentUser: undefined,
+        workerViewDateData: undefined,
+        workerId: "",
+        editUsername: '',
+        editFName: '',
+        editLName: '',
+        editId: '',
+        editPassword: '',
     };
   }
 
@@ -39,56 +42,89 @@ export default class ViewWorkers extends Component {
     this.setState({ editLName: event.target.value });
   };
 
-  async componentDidMount() {
-    const user = AuthService.getCurrentUser();
-    if (user) {
-      this.setState({
-        currentUser: user,
-      });
-      await this.updateWorkerList()
-
-    }
-  }
-
-  async updateWorkerList() {
-    await WorkerService.viewWorkers().then((data) => {
-      console.log(data);
-      this.handleResponse(data);
-    });
-  }
-
-  handleResponse(data) {
-    const workers = this.formatBooking(data);
-    console.log(workers);
-    this.setState({ workers });
-  }
-
-  formatBooking(workers) {
-    return workers.map((worker) => {
-      console.log(worker);
-      return {
-        id: worker.workerId,
-        userName: worker.userName,
-        fName: worker.firstName,
-        lName: worker.lastName,
-
-      };
-    });
-  }
-
-  handleDelete = (workerId) => {
-    return () => {
-      WorkerService.deleteWorker(workerId).then(
-        () => {
-          NotificationManager.info("Worker Deleted");
-          this.updateWorkerList()
-        },
-        (error) => {
-          NotificationManager.error("Failed to delete");
+    async componentDidMount() {
+        const user = AuthService.getCurrentUser();
+        if (user) {
+            this.setState({
+                currentUser: user,
+            });
+            await this.updateWorkerList();
         }
-      );
+    }
+
+    async updateWorkerList() {
+        await WorkerService.viewWorkers().then((data) => {
+            this.handleResponse(data);
+        });
+    }
+
+    handleResponse(data) {
+        const workers = this.formatBooking(data);
+        console.log(workers);
+        this.setState({workers});
+    }
+
+    async updateWorkerView(workerId) {
+        console.log(workerId);
+        await WorkerService.viewWorkerDateData(workerId).then( response => {
+            console.log(response);
+            console.log(response.availability);
+            const workerViewDateData = this.formatDateData(response.availability);
+            this.setState({workerViewDateData});
+            console.log(this.state.workerViewDateData);
+        });
+    }
+
+    handleView = (workerId) => {
+        return () => {
+            this.updateWorkerView(workerId);
+        }
+    }
+
+
+    formatDateData(workerDateData) {
+        return workerDateData.map((date) => {
+            return {
+                day: date.day,
+                startDate: date.effectiveStartDate,
+                endDate: date.effectiveEndDate,
+                startTime: date.startTime,
+                endTime: date.endTime,
+            };
+        });
+    }
+
+    formatBooking(workers) {
+        return workers.map((workers) => {
+            return {
+                id: workers.workerId,
+                userName: workers.userName,
+                fName: workers.firstName,
+                lName: workers.lastName,
+            };
+        });
+    }
+
+    handleDelete = (workerId) => {
+        return () => {
+            var result = "";
+            WorkerService.deleteWorker(workerId).then(
+                () => {
+                    NotificationManager.info("Worker Deleted");
+                    this.updateWorkerList()
+                },
+                (error) => {
+                    NotificationManager.error("Failed to delete");
+                }
+            );
+        };
     };
-  };
+
+    handleAvailability = (workerId) => {
+        return () => {
+            this.setState({workerId: workerId});
+        }
+    };
 
   updateEditDetails(worker) {
     this.setState({
@@ -146,53 +182,94 @@ export default class ViewWorkers extends Component {
             >
               Edit
             </button>
+              <button
+                  className="btn btn-primary"
+                  onClick={this.handleView(cell.original.id)}
+              >
+                  View
+              </button>
             <button
               className="btn btn-danger"
               onClick={this.handleDelete(cell.original.id)}
             >
               Delete
             </button>
+              <button
+                  className="btn btn-success"
+                  onClick={this.handleAvailability(cell.original.id)}
+              >
+                  Add Availability
+              </button>
           </div>
         ),
       },
     ];
 
-    var viewToShow;
-    var showEdit;
+        const workerViewData = this.state.workerViewDateData;
+        const workerViewDateColumns = [
+            {
+                Header: "Day",
+                accessor: "day",
+            },
+            {
+                Header: "Start Time",
+                accessor: "startTime",
+            },
+            {
+                Header: "End Time",
+                accessor: "endTime",
+            },
+            {
+                Header: "Start Date",
+                accessor: "startDate",
+            },
+            {
+                Header: "End State",
+                accessor: "endDate",
+            },
+        ]
 
-    if (this.state.currentUser) {
-      if (this.state.currentUser.role === "ADMIN") {
-        viewToShow = (
-          <div>
-            <div>
-              <h3>Create a new worker</h3>
-              <NewWorker callback={i => this.updateWorkerList() && console.log(i)}/>
-            </div>
-            <ReactTable data={data} columns={columns} defaultPageSize={5} />
-            <div>
-              <hr />
-              <NotificationContainer />
-            </div>
-            <div>
+        var viewToShow;
+        var workerView;
+      var showEdit;
 
-            </div>
-          </div>
+        if (this.state.currentUser) {
+            if (this.state.currentUser.role === "ADMIN") {
+                viewToShow = (
+                    <div>
+                        <div>
+                            <h3>Create a new worker</h3>
+                            <NewWorker callback={i => this.updateWorkerList() && console.log(i)}/>
+                        </div>
+                        <ReactTable data={data} columns={columns} defaultPageSize={5}/>
+                        <div>
+                            <hr/>
+                            <NotificationContainer/>
+                            <NewWorkerAvailability key={this.state.workerId} workerId={this.state.workerId}/>
+                        </div>
+                    </div>
+                );
 
-        );
-      } else {
-        viewToShow = (
-          <div>
-            <h5>You are not logged in as an administrator!</h5>
-          </div>
-        );
-      }
-    } else {
-      viewToShow = (
-        <div>
-          <h5>You are not logged in!</h5>
-        </div>
-      );
-    }
+                workerView = (
+                    <div>
+                        <h4>Worker Availability</h4>
+                        <ReactTable data={workerViewData} columns={workerViewDateColumns} defaultPageSize={5} />
+                    </div>
+                );
+            } else {
+                viewToShow = (
+                    <div>
+                        <h5>You are not logged in as an administrator!</h5>
+                    </div>
+                );
+            }
+        } else {
+            viewToShow = (
+                <div>
+                    <h5>You are not logged in!</h5>
+                </div>
+            );
+        }
 
     if (this.state.editId != '') {
       showEdit = (
@@ -274,6 +351,7 @@ export default class ViewWorkers extends Component {
           <h3>Workers</h3>
         </header>
         {viewToShow}
+          {workerView}
         {showEdit}
       </div>
     );

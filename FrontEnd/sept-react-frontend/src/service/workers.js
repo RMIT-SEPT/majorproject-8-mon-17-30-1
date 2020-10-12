@@ -27,6 +27,21 @@ class Workers {
             });
     }
 
+    newAvailability(workerId, serviceId, day, startTime, endTime, effectiveEndDate) {
+        return axios
+            .post(API_URL + "availability", {
+                workerId,
+                serviceId,
+                day,
+                startTime,
+                endTime,
+                effectiveEndDate
+            }, {headers: authHeader()})
+            .then(response => {
+                return response.data;
+            });
+    }
+
     deleteWorker(workerId) {
         return axios
             .delete(API_URL + "delete/" + workerId, {
@@ -37,12 +52,22 @@ class Workers {
             });
     }
 
+    viewWorkerDateData(workerId) {
+        return axios
+            .get(API_URL + "availability/" + workerId, {
+                headers: authHeader()
+            })
+            .then(response => {
+                return response.data;
+            });
+    }
+
     editWorker(username, password, firstName, lastName, workerId) {
-/*        console.log(username);
-        console.log(password);
-        console.log(firstName);
-        console.log(lastName);
-        console.log(workerId);*/
+        /*        console.log(username);
+                console.log(password);
+                console.log(firstName);
+                console.log(lastName);
+                console.log(workerId);*/
         return axios
             .put(API_URL + "edit", {
                 workerId,
