@@ -4,72 +4,59 @@ import BookService from "./bookservice";
 
 import AuthService from "../service/auth";
 export default class Dashboard extends Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.state = {
-			// showModeratorBoard: false,
-			// showAdminBoard: false,
-			currentUser: undefined,
-		};
-	}
+        this.state = {
+            // showModeratorBoard: false,
+            // showAdminBoard: false,
+            currentUser: undefined,
+        };
+    }
 
-	onClick() {}
+    onClick() {}
 
-	componentDidMount() {
-		const user = AuthService.getCurrentUser();
+    componentDidMount() {
+        const user = AuthService.getCurrentUser();
 
-		if (user) {
-			this.setState({
-				currentUser: user,
-			});
-		}
-	}
+        if (user) {
+            this.setState({
+                currentUser: user,
+            });
+        }
+    }
 
-	render() {
-		const { currentUser } = this.state;
+    render() {
+        const { currentUser } = this.state;
 
-		return (
-			<div className="container">
-				<header className="jumbotron">
-					<h3>Dashboard</h3>
-					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", search: "?view=all"}} className="btn btn-primary btn-lg active">
-							Bookings
-						</Link>
-					</button>
-					<button id="bookingsButton">
-						<Link to={{pathname: "/bookings", search: "?view=history"}} className="btn btn-primary btn-lg active">
-							Booking History
-						</Link>
-					</button>
-					{currentUser && currentUser.role === "ADMIN" && <button id="bookingsButton">
-						<Link to={{pathname: "/bookings", search: "?view=allhistory"}}
-							  className="btn btn-primary btn-lg active">
-							Admin Booking History
-						</Link>
-					</button>
-					}
-					{currentUser && currentUser.role === "ADMIN" && <button id="bookingsButton">
-						<Link to={{pathname: "/workers"}} className="btn btn-primary btn-lg active">
-							Workers
-						</Link>
-					</button>}
-					{currentUser && currentUser.role === "ADMIN" && <button>
-						<Link to={{pathname: "/services"}} className="btn btn-primary btn-lg active">
-							Services
-						</Link>
-					</button>}
-				</header>
-				<BookService/>
-				{currentUser ? (
-					<p>Logged in as {currentUser.role}</p>
-				) : (
-					<p>
-						You are not logged in! You need to login <a href="/login">here</a>.
-					</p>
-				)}
-			</div>
-		);
-	}
+        return (
+            <div className="container">
+                <h3 class="title is-3">Dashboard</h3>
+                {currentUser ? (
+                    <div>
+                        <div class="card events-card">
+                            <section class="hero is-info welcome is-small">
+                                <div class="hero-body">
+                                    <div class="container">
+                                        <h1 class="title">
+                                            Hello, {currentUser.username}.
+                                        </h1>
+                                        <h2 class="subtitle">
+                                            Good to see you back!
+                                        </h2>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <BookService />
+                    </div>
+                ) : (
+                    <h2 class="subtitle">
+                        You are not logged in! You need to login{" "}
+                        <a href="/login">here</a>.
+                    </h2>
+                )}
+            </div>
+        );
+    }
 }

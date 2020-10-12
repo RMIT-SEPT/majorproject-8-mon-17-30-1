@@ -26,6 +26,7 @@ export default class DateCalendar extends Component {
                 minDate={new Date()}
                 showDisabledMonthNavigation
                 dateFormat="d MMMM yyyy"
+                inline
             />
         );
     }
