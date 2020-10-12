@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @EqualsAndHashCode
 @ToString
-@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.KebabCaseStrategy.class)
 public class EditWorkerRequest {
     @NotNull
     private int workerId;

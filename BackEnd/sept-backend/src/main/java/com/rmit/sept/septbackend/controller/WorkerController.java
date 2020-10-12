@@ -34,7 +34,7 @@ public class WorkerController {
         workerService.createNewWorker(newWorkerRequest);
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public void editWorker(@Valid @RequestBody EditWorkerRequest editWorkerRequest) {
         workerService.editExistingWorker(editWorkerRequest);
     }
