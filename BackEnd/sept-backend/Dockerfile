@@ -13,4 +13,4 @@ RUN --mount=type=cache,target=/root/.m2 mvn -B package
 FROM openjdk:11-jre-slim
 COPY --from=build /usr/app/target/*.jar /usr/app/app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/app/app.jar"]
+ENTRYPOINT ["java","-jar","/usr/app/app.jar", "--spring.profiles.active=deploy"]

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Switch, Route, Link, withRouter } from "react-router-dom";
+import "bulma/css/bulma.min.css";
+import "@fortawesome/fontawesome-free/css/all.css";
 import "./App.css";
 import AuthService from "./service/auth";
 
@@ -14,132 +15,290 @@ import Contact from "./component/contact";
 import viewBookings from "./component/viewBookings";
 import viewWorkers from "./component/viewWorkers";
 import ViewService from "./component/viewService";
-// import BoardUser from "./components/board-user.component";
-// import BoardModerator from "./components/board-moderator.component";
-// import BoardAdmin from "./components/board-admin.component";
-
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.logOut = this.logOut.bind(this);
+    constructor(props) {
+        super(props);
+        this.handleEvent = this.handleEvent.bind(this);
+        this.handleSideColumn = this.handleSideColumn.bind(this);
+        this.logout = this.logout.bind(this);
 
-    this.state = {
-      // showModeratorBoard: false,
-      // showAdminBoard: false,
-      currentUser: undefined
-    };
-  }
-
-  componentDidMount() {
-    const user = AuthService.getCurrentUser();
-
-    if (user) {
-      this.setState({
-        currentUser: user
-        // showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-        // showAdminBoard: user.roles.includes("ROLE_ADMIN")
-      });
+        this.state = {
+            currentUser: undefined,
+            activeHamburger: false,
+            activeLeftColumn: "dashboard",
+        };
     }
-  }
 
-  logOut() {
-    AuthService.logout();
-  }
+    componentDidMount() {
+        const user = AuthService.getCurrentUser();
 
-  render() {
-    const { currentUser
-      // , showModeratorBoard, showAdminBoard 
-    } = this.state;
+        if (user) {
+            this.setState({
+                currentUser: user,
+            });
+        }
+    }
 
-    return (
-      <Router>
-        <div>
-          <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <Link to={"/"} className="navbar-brand">
-              AGME
-            </Link>
-            <div className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to={"/about"} className="nav-link">
-                  About us
-                </Link>
-              </li>
+    logout() {
+        AuthService.logout();
+        this.props.history.push("/login");
+        window.location.reload();
+    }
 
-              <li className="nav-item">
-                <Link to={"/contact"} className="nav-link">
-                  Contact us
-                </Link>
-              </li>
+    handleEvent() {
+        this.setState({ activeHamburger: !this.state.activeHamburger });
+    }
 
-              {currentUser && (
-                <li className="nav-item">
-                  <Link to={"/dashboard"} className="nav-link">
-                    Dashboard
-                  </Link>
-                </li>
-              )}
+    handleSideColumn(e) {
+        this.setState({ activeLeftColumn: e });
+    }
 
-              {currentUser && currentUser.role === "CUSTOMER" && (
-                <li className="nav-item">
-                  <Link to={"/bookings"} className="nav-link">
-                    Bookings
-                  </Link>
-                </li>
-              )}
-            </div>
+    render() {
+        const { currentUser } = this.state;
 
-            {currentUser ? (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
-                    {currentUser.username}
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
-                    Logout
-                  </a>
-                </li>
-              </div>
-            ) : (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
-                    Login
-                  </Link>
-                </li>
+        return (
+            <Router>
+                <div>
+                    <nav className="navbar is-white">
+                        <div class="container">
+                            <div class="navbar-brand">
+                                <Link to={"/"} className="navbar-item brand-text">
+                                    AGME
+                                </Link>
+                                <div
+                                    class={`navbar-burger burger ${this.state.activeHamburger ? "is-active" : ""}`}
+                                    onClick={this.handleEvent}
+                                    data-target="navMenu"
+                                >
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div id="navMenu" class={`navbar-menu ${this.state.activeHamburger ? "is-active" : ""}`}>
+                                <div class="navbar-start">
+                                    <Link to={"/about"} className="navbar-item">
+                                        About us
+                                    </Link>
 
-                <li className="nav-item">
-                  <Link to={"/register"} className="nav-link">
-                    Register
-                  </Link>
-                </li>
-              </div>
-            )}
-          </nav>
+                                    <Link to={"/contact"} className="navbar-item">
+                                        Contact us
+                                    </Link>
 
-          <div className="container mt-3">
-            <Switch>
-              <Route exact path={"/"} component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/about" component={About} />
-              <Route exact path="/contact" component={Contact} />
-              <Route exact path="/bookings" component={viewBookings} />
-              <Route exact path="/workers" component={viewWorkers} />
-              <Route exact path="/services" component={ViewService} />
-              {/* <Route path="/user" component={BoardUser} />
-              <Route path="/mod" component={BoardModerator} />
-              <Route path="/admin" component={BoardAdmin} /> */}
-            </Switch>
-          </div>
-        </div>
-      </Router>
-    );
-  }
+                                    {currentUser && currentUser.role === "CUSTOMER" && (
+                                        <Link to={"/bookings"} className="navbar-item">
+                                            Bookings
+                                        </Link>
+                                    )}
+                                </div>
+
+                                {currentUser ? (
+                                    <div class="navbar-end">
+                                        <Link to={"/profile"} className="navbar-item">
+                                            {currentUser.username}
+                                        </Link>
+                                        <Link className="navbar-item" onClick={this.logout}>
+                                            Logout
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <div class="navbar-end">
+                                        <Link to={"/login"} className="navbar-item">
+                                            Login
+                                        </Link>
+                                        <Link to={"/register"} className="navbar-item">
+                                            Register
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div className="container mt-3">
+                        <div class="columns">
+                            {currentUser && (
+                                <div class="column is-3 ">
+                                    <aside class="menu is-hidden-mobile">
+                                        <div>
+                                            <p class="menu-label">General</p>
+                                            <ul class="menu-list">
+                                                <li>
+                                                    <Link
+                                                        to={"/dashboard"}
+                                                        onClick={() => this.handleSideColumn("dashboard")}
+                                                        className={
+                                                            this.state.activeLeftColumn === "dashboard"
+                                                                ? "is-active"
+                                                                : ""
+                                                        }
+                                                    >
+                                                        Dashboard
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {currentUser.role === "ADMIN" && (
+                                            <div>
+                                                <p class="menu-label">Administrator</p>
+                                                <ul class="menu-list">
+                                                    <li>
+                                                        <Link
+                                                            to={{
+                                                                pathname: "/bookings",
+                                                                search: "?view=all",
+                                                            }}
+                                                            onClick={() => this.handleSideColumn("bookingsall")}
+                                                            className={
+                                                                this.state.activeLeftColumn === "bookingsall"
+                                                                    ? "is-active"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            Bookings
+                                                        </Link>
+                                                        <ul>
+                                                            <li>
+                                                                <Link
+                                                                    to={{
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=history",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        this.handleSideColumn("bookingshistory")
+                                                                    }
+                                                                    className={
+                                                                        this.state.activeLeftColumn ===
+                                                                        "bookingshistory"
+                                                                            ? "is-active"
+                                                                            : ""
+                                                                    }
+                                                                >
+                                                                    Bookings history
+                                                                </Link>
+                                                            </li>
+                                                            <li>
+                                                                <Link
+                                                                    to={{
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=allhistory",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        this.handleSideColumn("bookingsallhistory")
+                                                                    }
+                                                                    className={
+                                                                        this.state.activeLeftColumn ===
+                                                                        "bookingsallhistory"
+                                                                            ? "is-active"
+                                                                            : ""
+                                                                    }
+                                                                >
+                                                                    All bookings history
+                                                                </Link>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            to={{
+                                                                pathname: "/workers",
+                                                            }}
+                                                            onClick={() => this.handleSideColumn("workers")}
+                                                            className={
+                                                                this.state.activeLeftColumn === "workers"
+                                                                    ? "is-active"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            Workers
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            to={{
+                                                                pathname: "/services",
+                                                            }}
+                                                            onClick={() => this.handleSideColumn("services")}
+                                                            className={
+                                                                this.state.activeLeftColumn === "services"
+                                                                    ? "is-active"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            Services
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {currentUser.role === "CUSTOMER" && (
+                                            <div>
+                                                <p class="menu-label">Customer</p>
+                                                <ul class="menu-list">
+                                                    <li>
+                                                        <Link
+                                                            to={{
+                                                                pathname: "/bookings",
+                                                                search: "?view=all",
+                                                            }}
+                                                            onClick={() => this.handleSideColumn("bookingsall")}
+                                                            className={
+                                                                this.state.activeLeftColumn === "bookingsall"
+                                                                    ? "is-active"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            Bookings
+                                                        </Link>
+                                                        <ul>
+                                                            <li>
+                                                                <Link
+                                                                    to={{
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=history",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        this.handleSideColumn("bookingshistory")
+                                                                    }
+                                                                    className={
+                                                                        this.state.activeLeftColumn ===
+                                                                        "bookingshistory"
+                                                                            ? "is-active"
+                                                                            : ""
+                                                                    }
+                                                                >
+                                                                    Bookings history
+                                                                </Link>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </aside>
+                                </div>
+                            )}
+                            <div class="column is-9">
+                                <Switch>
+                                    <Route exact path={"/"} component={Home} />
+                                    <Route exact path="/login" component={Login} />
+                                    <Route exact path="/register" component={Register} />
+                                    <Route exact path="/profile" component={Profile} />
+                                    <Route exact path="/dashboard" component={Dashboard} />
+                                    <Route exact path="/about" component={About} />
+                                    <Route exact path="/contact" component={Contact} />
+                                    <Route exact path="/bookings" component={viewBookings} />
+                                    <Route exact path="/workers" component={viewWorkers} />
+                                    <Route exact path="/services" component={ViewService} />
+                                </Switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Router>
+        );
+    }
 }
 
-export default App;
+export default withRouter(App);

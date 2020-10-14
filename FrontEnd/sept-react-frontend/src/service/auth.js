@@ -1,23 +1,27 @@
 import axios from "axios";
+import determineError from "./helper";
 
 // For local development, this is hardcoded in at the moment
 export const API_URL = "http://localhost:8080/api/v1/auth";
 
-const kebabcaseKeys = require('kebabcase-keys');
+const kebabcaseKeys = require("kebabcase-keys");
 
 class Auth {
     login(username, password) {
         return axios
             .post(API_URL + "/login", {
                 username,
-                password
+                password,
             })
-            .then(response => {
+            .then((response) => {
                 if (response.data.token) {
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
 
                 return response.data;
+            })
+            .catch((error) => {
+                determineError(error);
             });
     }
 
@@ -26,25 +30,34 @@ class Auth {
     }
 
     register(username, password, firstName, lastName, roleArgs) {
-        return axios.post(API_URL + "/register", kebabcaseKeys({
-            username,
-            password,
-            firstName,
-            lastName,
-            roleArgs
-        }, {deep: true}))
-            .then(response => {
+        return axios
+            .post(
+                API_URL + "/register",
+                kebabcaseKeys(
+                    {
+                        username,
+                        password,
+                        firstName,
+                        lastName,
+                        roleArgs,
+                    },
+                    { deep: true }
+                )
+            )
+            .then((response) => {
                 if (response.data.token) {
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
 
                 return response.data;
+            })
+            .catch((error) => {
+                determineError(error);
             });
     }
 
-
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
+        return JSON.parse(localStorage.getItem("user"));
     }
 }
 

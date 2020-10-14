@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/booking")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class BookingController {
+public class BookingController extends AbstractBaseController {
 
     @Autowired
     private BookingService bookingService;
@@ -35,11 +35,11 @@ public class BookingController {
 
     @PostMapping("/create")
     public void createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
-        bookingService.createBooking(bookingRequest);
+        handleValidationResponse(bookingService.createBooking(bookingRequest));
     }
 
     @DeleteMapping("/cancel/{bookingId}")
     public void cancelBooking(@Valid @PathVariable int bookingId) {
-        bookingService.cancelBooking(bookingId);
+        handleValidationResponse(bookingService.cancelBooking(bookingId));
     }
 }

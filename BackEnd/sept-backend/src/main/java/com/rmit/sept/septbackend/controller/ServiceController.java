@@ -18,7 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/v1/service")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class ServiceController {
+public class ServiceController extends AbstractBaseController {
 
     private final ServiceService serviceService;
 

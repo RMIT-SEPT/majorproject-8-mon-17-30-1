@@ -9,12 +9,12 @@ export default class DateList extends Component {
     }
 
     state = {
-        startDate: new Date()
+        startDate: new Date(),
     };
 
-    handleDateChange = date => {
+    handleDateChange = (date) => {
         this.setState({
-            startDate: date
+            startDate: date,
         });
     };
 
@@ -25,6 +25,8 @@ export default class DateList extends Component {
                 onChange={this.handleDateChange}
                 showTimeSelect
                 dateFormat="d MMMM yyyy hh:mm"
+                inline
+                minDate={new Date()}
             />
         );
     }

@@ -291,7 +291,8 @@ public class BookingServiceTest {
                         "Minecraft",
                         "Marcus Pearson",
                         LocalDateTime.of(2020, 10, 15, 15, 30),
-                        0
+                        0,
+                        "Notch"
                 )
         );
 
@@ -368,8 +369,8 @@ public class BookingServiceTest {
                                 )));
 
         List<BookingResponse> expected = Arrays.asList(
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 0),
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 0));
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 0, "Notch"),
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 0, "Notch"));
 
 
         List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);

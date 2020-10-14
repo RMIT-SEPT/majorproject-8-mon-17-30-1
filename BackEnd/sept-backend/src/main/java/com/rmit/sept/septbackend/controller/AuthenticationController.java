@@ -11,7 +11,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api/v1/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class AuthenticationController {
+public class AuthenticationController extends AbstractBaseController {
 
     private final AuthenticationService authenticationService;
 
