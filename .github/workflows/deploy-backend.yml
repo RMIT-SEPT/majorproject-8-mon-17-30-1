@@ -2,7 +2,7 @@ name: Continuous Deployment - Backend
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ master ]
 
 jobs:
   deploy:

@@ -2,7 +2,7 @@ name: Continuous Deployment - Frontend
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ master ]
 
 jobs:
   build:
