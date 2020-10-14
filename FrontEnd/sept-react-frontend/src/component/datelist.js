@@ -15,49 +15,75 @@ dayofWeek[6] = "SATURDAY";
 
 export default class DateList extends Component {
     state = {
-        startDate: new Date(),
+        startDate: undefined,
         minHour: 0,
         maxHour: 0,
+        includeDatesStart: [],
+        includeDatesEnd: [],
     };
 
     constructor(props) {
         super(props);
+
+        this.handleMonthChange = this.handleMonthChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateWorkerAvailability();
     }
 
     handleDateChange = (date) => {
         this.setState({
             startDate: date,
         });
-        this.updateWorkerAvailability(date);
+        this.updateHours(date);
     };
 
-    async updateWorkerAvailability(date) {
+    async updateWorkerAvailability() {
+        this.setState({
+            includeDatesStart: [],
+            includeDatesEnd: []
+        });
         await Workers.viewWorkerDateData(this.props.workerId).then(availabilityResponse => {
-            let index = -1;
             for(let i = 0; i < availabilityResponse.availability.length; i++) {
-                if(availabilityResponse.availability[i].day === dayofWeek[date.getDay()]
-                && new Date(availabilityResponse.availability[i].effectiveStartDate) < date
-                && new Date(availabilityResponse.availability[i].effectiveEndDate) > date) {
-                    index = i;
+                for(let d = new Date(); d < new Date(availabilityResponse.availability[i].effectiveEndDate); d.setDate(d.getDate() + 1)) {
+                    if(availabilityResponse.availability[i].day === dayofWeek[d.getDay()]) {
+                        this.state.includeDatesStart.push(new Date(d.getTime()).setHours(parseInt(availabilityResponse.availability[i].startTime.substr(0, 2))));
+                        this.state.includeDatesEnd.push(new Date(d.getTime()).setHours(parseInt(availabilityResponse.availability[i].endTime.substr(0, 2))));
+                    }
                 }
-            }
-            if(index >= 0) {
-                this.setState({
-                    minHour: availabilityResponse.availability[index].startTime.substr(0, 2),
-                    maxHour: availabilityResponse.availability[index].endTime.substr(0, 2),
-                });
-            } else {
-                this.setState({
-                    minHour: 0,
-                    maxHour: 0,
-                });
             }
         });
     }
 
-    from9to5 = (time) => {
+    updateHours(date) {
+        let index = -1;
+        for(let i = 0; i < this.state.includeDatesStart.length; i++) {
+            if(new Date(this.state.includeDatesStart[i]).getDate() === date.getDate()) {
+                index = i;
+            }
+        }
+        if(index >= 0) {
+
+            this.setState({
+                minHour: new Date(this.state.includeDatesStart[index]).getHours(),
+                maxHour: new Date(this.state.includeDatesEnd[index]).getHours(),
+            });
+        } else {
+            this.setState({
+                minHour: 0,
+                maxHour: 0,
+            });
+        }
+    }
+
+    updateTime = (time) => {
         const hour = time.getHours();
         return hour >= this.state.minHour && hour < this.state.maxHour;
+    }
+
+    handleMonthChange() {
+        this.updateWorkerAvailability();
     }
 
     render() {
@@ -65,9 +91,11 @@ export default class DateList extends Component {
             <DatePicker
                 selected={this.state.startDate}
                 onChange={this.handleDateChange}
+                onMonthChange={this.handleMonthChange}
                 showTimeSelect
-                filterTime={this.from9to5}
-                minDate={new Date()}
+                filterTime={this.updateTime}
+                includeDates={this.state.includeDatesStart}
+                forceShowMonthNavigation
                 inline
                 fixedHeight
                 dateFormat="d MMMM yyyy hh:mm"

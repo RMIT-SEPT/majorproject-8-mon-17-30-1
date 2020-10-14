@@ -202,7 +202,7 @@ export default class BookService extends Component {
                             <div className="field">
                                 <label class="label">Date and time</label>
                                 <div className="control">
-                                    <DateList ref={this.dateListRef} workerId={this.state.workerID}/>
+                                    <DateList ref={this.dateListRef} workerId={this.state.workerID} key={this.state.workerID}/>
                                 </div>
                             </div>
 
