@@ -71,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/service").hasAuthority(Role.ADMIN.name())
                 .antMatchers( "/api/v1/worker").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/v1/worker/availability").fullyAuthenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/service").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/api/v1/service").hasAuthority(Role.ADMIN.name())
                 .antMatchers(HttpMethod.GET, "/api/v1/service").fullyAuthenticated()
