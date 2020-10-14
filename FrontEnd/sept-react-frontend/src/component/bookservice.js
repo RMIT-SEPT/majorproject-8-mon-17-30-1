@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
 import DateList from "../component/datelist";
@@ -38,6 +38,8 @@ export default class BookService extends Component {
             businessOptions: [],
             serviceOptions: [],
             workerOptions: [],
+            minHour: 4,
+            maxHour: 14,
         };
     }
 
@@ -45,19 +47,19 @@ export default class BookService extends Component {
     async componentDidMount() {
         Service.getBusinessesAll().then((response) => {
             const businessOptions = this.formatBusiness(response.data);
-            this.setState({ businessOptions });
+            this.setState({businessOptions});
         });
     }
 
     formatBusiness(businesses) {
         return businesses.map((business) => {
-            return { value: business.businessId, label: business.businessName };
+            return {value: business.businessId, label: business.businessName};
         });
     }
 
     formatServices(services) {
         return services.map((service) => {
-            return { value: service.serviceId, label: service.serviceName };
+            return {value: service.serviceId, label: service.serviceName};
         });
     }
 
@@ -72,32 +74,32 @@ export default class BookService extends Component {
 
     onChangeBusiness(business) {
         const businessID = business.value;
-        this.setState({ businessID });
+        this.setState({businessID});
         this.populateServiceList(businessID);
     }
 
     onChangeService(service) {
         const serviceID = service.value;
-        this.setState({ serviceID });
+        this.setState({serviceID});
         this.populateWorkerList(serviceID);
     }
 
     onChangeWorker(worker) {
         const workerID = worker.value;
-        this.setState({ workerID });
+        this.setState({workerID});
     }
 
     populateServiceList(businessID) {
         Service.getServicesByBusinessID(businessID).then((response) => {
             const serviceOptions = this.formatServices(response.data);
-            this.setState({ serviceOptions });
+            this.setState({serviceOptions});
         });
     }
 
     populateWorkerList(serviceID) {
         Service.getWorkersByServiceID(serviceID).then((response) => {
             const workerOptions = this.formatWorkers(response.data);
-            this.setState({ workerOptions });
+            this.setState({workerOptions});
         });
     }
 
@@ -116,7 +118,7 @@ export default class BookService extends Component {
 
         const local = new Date(
             dateList.state.startDate.getTime() -
-                dateList.state.startDate.getTimezoneOffset() * 60000
+            dateList.state.startDate.getTimezoneOffset() * 60000
         ).toISOString();
 
         if (this.checkBtn.context._errors.length === 0) {
@@ -202,7 +204,8 @@ export default class BookService extends Component {
                             <div className="field">
                                 <label class="label">Date and time</label>
                                 <div className="control">
-                                    <DateList ref={this.dateListRef} />
+                                    <DateList ref={this.dateListRef} minHour={this.state.minHour}
+                                              maxHour={this.state.maxHour}/>
                                 </div>
                             </div>
 
@@ -213,7 +216,7 @@ export default class BookService extends Component {
                                         disabled={this.state.loading}
                                     >
                                         {this.state.loading && (
-                                            <span className="spinner-border spinner-border-sm" />
+                                            <span className="spinner-border spinner-border-sm"/>
                                         )}
                                         <span>Book Service</span>
                                     </button>
@@ -231,7 +234,7 @@ export default class BookService extends Component {
                                 </div>
                             )}
                             <CheckButton
-                                style={{ display: "none" }}
+                                style={{display: "none"}}
                                 ref={(c) => {
                                     this.checkBtn = c;
                                 }}

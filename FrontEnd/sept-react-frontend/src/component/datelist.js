@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 export default class DateList extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         startDate: new Date(),
     };
+
+    constructor(props) {
+        super(props);
+    }
 
     handleDateChange = (date) => {
         this.setState({
@@ -18,16 +18,23 @@ export default class DateList extends Component {
         });
     };
 
+    from9to5 = (time) => {
+        const hour = time.getHours();
+        return hour >= 9 && hour < 17;
+    }
+
     render() {
         return (
             <DatePicker
                 selected={this.state.startDate}
                 onChange={this.handleDateChange}
                 showTimeSelect
-                dateFormat="d MMMM yyyy hh:mm"
-                inline
+                filterTime={this.from9to5}
                 minDate={new Date()}
+                inline
+                fixedHeight
+                dateFormat="d MMMM yyyy hh:mm"
             />
         );
-    }
+    };
 }
