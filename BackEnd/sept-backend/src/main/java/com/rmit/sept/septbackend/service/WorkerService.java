@@ -65,7 +65,7 @@ public class WorkerService {
         WorkerEntity worker = workerRepository.getByWorkerId(editWorkerRequest.getWorkerId());
         worker.getUser().setFirstName(editWorkerRequest.getFirstName());
         worker.getUser().setLastName(editWorkerRequest.getLastName());
-        worker.getUser().setUsername(editWorkerRequest.getUsername());
+   //   worker.getUser().setUsername(editWorkerRequest.getUsername());
         workerRepository.save(worker);
     }
 

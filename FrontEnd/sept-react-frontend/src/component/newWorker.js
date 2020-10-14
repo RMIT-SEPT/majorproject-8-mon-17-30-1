@@ -12,6 +12,7 @@ export default class NewWorker extends Component {
       username: "",
       fName: "",
       lName: "",
+      last: true,
     };
   }
 
@@ -50,6 +51,7 @@ export default class NewWorker extends Component {
           message: resMessage,
         });
       });
+      this.props.callback(this.state.last);
     } else {
       this.setState({
         loading: false,
