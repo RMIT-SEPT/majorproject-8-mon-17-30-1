@@ -46,8 +46,8 @@ public class WorkerService {
         return workerResponses;
     }
 
-    public void createNewWorker(NewWorkerRequest newWorkerRequest) {
-        UserEntity newUser = authenticationService.createUser(
+    public ValidationResponse<JwtResponse> createNewWorker(NewWorkerRequest newWorkerRequest) {
+        return authenticationService.registerUser(
                 new RegisterRequest(
                         newWorkerRequest.getUsername(),
                         "temppw",
