@@ -38,8 +38,6 @@ export default class BookService extends Component {
             businessOptions: [],
             serviceOptions: [],
             workerOptions: [],
-            minHour: 4,
-            maxHour: 14,
         };
     }
 
@@ -204,8 +202,7 @@ export default class BookService extends Component {
                             <div className="field">
                                 <label class="label">Date and time</label>
                                 <div className="control">
-                                    <DateList ref={this.dateListRef} minHour={this.state.minHour}
-                                              maxHour={this.state.maxHour}/>
+                                    <DateList ref={this.dateListRef} workerId={this.state.workerID}/>
                                 </div>
                             </div>
 
