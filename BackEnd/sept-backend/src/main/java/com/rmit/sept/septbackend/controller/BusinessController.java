@@ -23,6 +23,6 @@ public class BusinessController extends AbstractBaseController {
 
     @GetMapping("/admin")
     public BusinessResponse getBusinessForAdminUsername(@RequestParam("username") String username) {
-        return businessService.getBusinessForAdminUsername(username);
+        return handleValidationResponse(businessService.getBusinessForAdminUsername(username));
     }
 }
