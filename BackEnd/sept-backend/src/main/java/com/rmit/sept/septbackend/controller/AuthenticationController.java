@@ -26,6 +26,6 @@ public class AuthenticationController extends AbstractBaseController {
 
     @PostMapping("/register")
     public JwtResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        return authenticationService.registerUser(registerRequest);
+        return handleValidationResponse(authenticationService.registerUser(registerRequest));
     }
 }

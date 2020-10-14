@@ -5,14 +5,13 @@ import com.rmit.sept.septbackend.entity.BusinessEntity;
 import com.rmit.sept.septbackend.entity.UserEntity;
 import com.rmit.sept.septbackend.model.BusinessResponse;
 import com.rmit.sept.septbackend.model.Role;
+import com.rmit.sept.septbackend.model.ValidationResponse;
 import com.rmit.sept.septbackend.repository.AdminRepository;
 import com.rmit.sept.septbackend.repository.BusinessRepository;
 import com.rmit.sept.septbackend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,9 @@ public class BusinessService {
                 .collect(Collectors.toList());
     }
 
-    public BusinessResponse getBusinessForAdminUsername(String username) {
+    public ValidationResponse<BusinessResponse> getBusinessForAdminUsername(String username) {
+        ValidationResponse<BusinessResponse> response = new ValidationResponse<>();
+        BusinessResponse businessResponse = null;
         UserEntity user = userRepository.getByUsername(username);
 
         if (user != null) {
@@ -43,21 +44,38 @@ public class BusinessService {
                 if (adminEntity != null) {
                     BusinessEntity business = adminEntity.getBusiness();
 
-                    return new BusinessResponse(
+                    businessResponse = new BusinessResponse(
                             business.getBusinessName(),
                             business.getBusinessId()
                     );
 
                 } else {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, String.format(
-                            "Unexpected error occurred when retrieving admin details [username=%s]", username));
+                    response.addError(
+                            "An unexpected error occurred",
+                            "Could not retrieve admin details [username=%s]",
+                            username
+                    );
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an admin!");
+                response.addError(
+                        "An unexpected error occurred",
+                        "User is not an admin [username=%s,role=%s]",
+                        username,
+                        user.getRole()
+                );
             }
 
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+            response.addError(
+                    "The specified user does not exist",
+                    "User does not exist [username=%s]",
+                    username
+            );
+
         }
+
+        response.setBody(businessResponse);
+
+        return response;
     }
 }

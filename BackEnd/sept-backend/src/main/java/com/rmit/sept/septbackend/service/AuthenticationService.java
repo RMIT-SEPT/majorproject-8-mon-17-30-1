@@ -9,7 +9,6 @@ import com.rmit.sept.septbackend.repository.WorkerRepository;
 import com.rmit.sept.septbackend.security.JwtUtils;
 import com.rmit.sept.septbackend.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
@@ -63,18 +61,20 @@ public class AuthenticationService {
         );
     }
 
-    public JwtResponse registerUser(RegisterRequest registerRequest) {
-        JwtResponse response;
+    public ValidationResponse<JwtResponse> registerUser(RegisterRequest registerRequest) {
+        ValidationResponse<JwtResponse> validationResponse = new ValidationResponse<>();
+        JwtResponse response = null;
 
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is already taken");
+            validationResponse.addError("Unable to register - that username is already taken");
         } else {
             createUser(registerRequest);
 
             response = authenticateUser(new LoginRequest(registerRequest.getUsername(), registerRequest.getPassword()));
         }
 
-        return response;
+        validationResponse.setBody(response);
+        return validationResponse;
     }
 
     UserEntity createUser(RegisterRequest registerRequest) {

@@ -5,12 +5,9 @@ import com.rmit.sept.septbackend.model.*;
 import com.rmit.sept.septbackend.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +46,8 @@ public class WorkerService {
         return workerResponses;
     }
 
-    public void createNewWorker(NewWorkerRequest newWorkerRequest) {
-        UserEntity newUser = authenticationService.createUser(
+    public ValidationResponse<JwtResponse> createNewWorker(NewWorkerRequest newWorkerRequest) {
+        return authenticationService.registerUser(
                 new RegisterRequest(
                         newWorkerRequest.getUsername(),
                         "temppw",
@@ -65,11 +62,12 @@ public class WorkerService {
         WorkerEntity worker = workerRepository.getByWorkerId(editWorkerRequest.getWorkerId());
         worker.getUser().setFirstName(editWorkerRequest.getFirstName());
         worker.getUser().setLastName(editWorkerRequest.getLastName());
-   //   worker.getUser().setUsername(editWorkerRequest.getUsername());
+        //   worker.getUser().setUsername(editWorkerRequest.getUsername());
         workerRepository.save(worker);
     }
 
-    public void deleteWorker(int workerId) {
+    public ValidationResponse<Void> deleteWorker(int workerId) {
+        ValidationResponse<Void> response = new ValidationResponse<>();
         Optional<WorkerEntity> optionalWorkerEntity = workerRepository.findById(workerId);
 
         if (optionalWorkerEntity.isPresent() && !optionalWorkerEntity.get().getStatus().equals(Status.CANCELLED)) {
@@ -85,8 +83,14 @@ public class WorkerService {
             userRepository.delete(userEntity);
 
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker does not exist");
+            response.addError(
+                    "An unexpected error occurred - could not delete worker",
+                    "Worker does not exist [workerId=%d]",
+                    workerId
+            );
         }
+
+        return response;
     }
 
     /**
@@ -157,14 +161,21 @@ public class WorkerService {
         );
     }
 
-    public Optional<ServiceWorkerAvailabilityEntity> addAvailability(AvailabilityRequest availabilityRequest) {
+    public ValidationResponse<Optional<ServiceWorkerAvailabilityEntity>> addAvailability(AvailabilityRequest availabilityRequest) {
+        ValidationResponse<Optional<ServiceWorkerAvailabilityEntity>> response = new ValidationResponse<>();
         ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(
                 availabilityRequest.getServiceId(),
                 availabilityRequest.getWorkerId()
         );
 
         if (serviceWorkerEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find service/worker relationship");
+            response.addError(
+                    "An unexpected error occurred - could not add availability",
+                    "Could not find service/worker relationship [serviceId=%d,workerId=%d]",
+                    availabilityRequest.getServiceId(),
+                    availabilityRequest.getWorkerId()
+            );
+            return response;
         }
 
         LocalDate effectiveStartDate = availabilityRequest.getEffectiveStartDate();
@@ -191,33 +202,52 @@ public class WorkerService {
 
         availabilityRepository.save(availabilityEntity);
         serviceWorkerAvailabilityRepository.save(workerAvailabilityEntity);
-        return Optional.of(workerAvailabilityEntity);
+        response.setBody(Optional.of(workerAvailabilityEntity));
+        return response;
     }
 
-    public void deleteAvailability(int serviceWorkerAvailabilityId) {
+    public ValidationResponse<Void> deleteAvailability(int serviceWorkerAvailabilityId) {
+        ValidationResponse<Void> response = new ValidationResponse<>();
         Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(serviceWorkerAvailabilityId);
 
         if (entity.isPresent()) {
             serviceWorkerAvailabilityRepository.delete(entity.get());
 
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find availability entry for given id");
+            response.addError(
+                    "An unexpected error occurred - could not delete availability",
+                    "Could not find service/worker availability relationship [serviceWorkerAvailabilityId=%d]",
+                    serviceWorkerAvailabilityId
+            );
         }
+
+        return response;
     }
 
-    public void editAvailability(int serviceWorkerAvailabilityId, AvailabilityRequest availabilityRequest) {
-
+    public ValidationResponse<Void> editAvailability(int serviceWorkerAvailabilityId, AvailabilityRequest availabilityRequest) {
+        ValidationResponse<Void> response = new ValidationResponse<>();
         //grab the entity from the db
         //change the effective end date of the entity to end now so it wont collide with the new times in the edit
         //attempt to add the availability
         //if unsuccessful, change the effective end date back
 
         Optional<ServiceWorkerAvailabilityEntity> entity = serviceWorkerAvailabilityRepository.findById(serviceWorkerAvailabilityId);
-        LocalDate endDate = entity.get().getEffectiveEndDate();
-        entity.get().setEffectiveEndDate(LocalDate.now().minusDays(1));
 
-        if (addAvailability(availabilityRequest).isEmpty()) {
-            entity.get().setEffectiveEndDate(endDate);
+        if (entity.isPresent()) {
+            LocalDate endDate = entity.get().getEffectiveEndDate();
+            entity.get().setEffectiveEndDate(LocalDate.now().minusDays(1));
+
+            if (addAvailability(availabilityRequest).getBody().isEmpty()) {
+                entity.get().setEffectiveEndDate(endDate);
+            }
+        } else {
+            response.addError(
+                    "An unexpected error occurred - could not delete availability",
+                    "Could not find service/worker availability relationship [serviceWorkerAvailabilityId=%d]",
+                    serviceWorkerAvailabilityId
+            );
         }
+
+        return response;
     }
 }

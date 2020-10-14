@@ -13,7 +13,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -203,7 +202,8 @@ public class BookingServiceTest {
         Mockito.when(bookingRepository.findById(Mockito.any())).thenReturn(
                 Optional.empty()
         );
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.cancelBooking(3));
+        ValidationResponse<Void> actual = bookingService.cancelBooking(3);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
@@ -223,8 +223,8 @@ public class BookingServiceTest {
     public void createBookingWorkerNotAvailable() {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 14, 15, 30));
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
@@ -235,8 +235,8 @@ public class BookingServiceTest {
         Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
                 Mockito.anyInt(), Mockito.any(), Mockito.any()))
                 .thenReturn(new ArrayList<>());
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
@@ -259,7 +259,8 @@ public class BookingServiceTest {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 15, 15, 30));
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
@@ -267,7 +268,8 @@ public class BookingServiceTest {
         BookingRequest br = new BookingRequest(1, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 15, 15, 31));
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
@@ -278,7 +280,8 @@ public class BookingServiceTest {
                 LocalDateTime.of(2020, 10, 15, 15, 30)
         );
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test

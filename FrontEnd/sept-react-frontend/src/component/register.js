@@ -87,13 +87,24 @@ export default class Register extends Component {
         e.preventDefault();
 
         this.setState({
-            message: "",
+            errors: [],
             loading: true,
         });
 
         this.form.validateAll();
 
-        // if (this.checkBtn.context._errors.length === 0) {
+        // Reverting to manual validation for conditional fields
+        if (
+            this.state.username !== "" &&
+            this.state.password !== "" &&
+            this.state.firstName !== "" &&
+            this.state.lastName !== "" &&
+            ((this.state.role === "CUSTOMER" &&
+                this.state.CUSTOMER.streetAddress !== "" &&
+                this.state.CUSTOMER.city !== "" &&
+                this.state.CUSTOMER.postcode !== "") ||
+                (this.state.role === "ADMIN" && this.state.ADMIN.businessName !== ""))
+        ) {
             Auth.register(
                 this.state.username,
                 this.state.password,
@@ -112,11 +123,11 @@ export default class Register extends Component {
                     });
                     console.log(errors);
                 });
-        // } else {
-        //     this.setState({
-        //         loading: false,
-        //     });
-        // }
+        } else {
+            this.setState({
+                loading: false,
+            });
+        }
     }
 
     render() {
@@ -303,6 +314,7 @@ export default class Register extends Component {
                                                         value={this.state.ADMIN.businessName}
                                                         onChange={this.handleAdminChange}
                                                         validations={[required]}
+                                                        placeholder="Enter your business name"
                                                     />
                                                 </div>
                                             </div>

@@ -31,7 +31,7 @@ public class WorkerController extends AbstractBaseController {
 
     @PostMapping("/create")
     public void createWorker(@Valid @RequestBody NewWorkerRequest newWorkerRequest) {
-        workerService.createNewWorker(newWorkerRequest);
+        handleValidationResponse(workerService.createNewWorker(newWorkerRequest));
     }
 
     @PutMapping("/edit")
