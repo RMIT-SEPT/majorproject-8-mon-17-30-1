@@ -5,148 +5,141 @@ import CheckButton from "react-validation/build/button";
 
 import Auth from "../service/auth";
 
-const required = value => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
+const required = (value) => {
+    if (!value) {
+        return <div class="notification is-light is-warning">This field is required!</div>;
+    }
 };
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+    constructor(props) {
+        super(props);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.onChangeUsername = this.onChangeUsername.bind(this);
+        this.onChangePassword = this.onChangePassword.bind(this);
 
-    this.state = {
-      username: "",
-      password: "",
-      loading: false,
-      message: ""
-    };
-  }
-
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value
-    });
-  }
-
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value
-    });
-  }
-
-  handleLogin(e) {
-    e.preventDefault();
-
-    this.setState({
-      message: "",
-      loading: true
-    });
-
-    this.form.validateAll();
-
-    if (this.checkBtn.context._errors.length === 0) {
-      Auth.login(this.state.username, this.state.password).then(
-        () => {
-          this.props.history.push("/dashboard");
-          window.location.reload();
-        },
-        error => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          this.setState({
+        this.state = {
+            username: "",
+            password: "",
             loading: false,
-            message: resMessage
-          });
-        }
-      );
-    } else {
-      this.setState({
-        loading: false
-      });
+            errors: [],
+        };
     }
-  }
 
-  render() {
-    return (
-      <div className="col-md-12">
-        <div className="card card-container">
-          {/* <img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="profile-img-card"
-          /> */}
+    onChangeUsername(e) {
+        this.setState({
+            username: e.target.value,
+        });
+    }
 
-          <Form
-            onSubmit={this.handleLogin}
-            ref={c => {
-              this.form = c;
-            }}
-          >
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Input
-                type="text"
-                className="form-control"
-                name="username"
-                value={this.state.username}
-                onChange={this.onChangeUsername}
-                validations={[required]}
-              />
-            </div>
+    onChangePassword(e) {
+        this.setState({
+            password: e.target.value,
+        });
+    }
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Input
-                type="password"
-                className="form-control"
-                name="password"
-                value={this.state.password}
-                onChange={this.onChangePassword}
-                validations={[required]}
-              />
-            </div>
+    handleLogin(e) {
+        e.preventDefault();
 
-            <div className="form-group">
-              <button
-                className="btn btn-primary btn-block"
-                disabled={this.state.loading}
-              >
-                {this.state.loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                <span>Login</span>
-              </button>
-            </div>
+        this.setState({
+            errors: [],
+            loading: true,
+        });
 
-            {this.state.message && (
-              <div className="form-group">
-                <div className="alert alert-danger" role="alert">
-                  {this.state.message}
+        this.form.validateAll();
+
+        if (this.checkBtn.context._errors.length === 0) {
+            Auth.login(this.state.username, this.state.password)
+                .then((jwtResponse) => {
+                    this.props.history.push("/dashboard");
+                    window.location.reload();
+                })
+                .catch((errors) => {
+                    this.setState({
+                        loading: false,
+                        errors: errors,
+                    });
+                    console.log(errors);
+                });
+        } else {
+            this.setState({
+                loading: false,
+            });
+        }
+    }
+
+    render() {
+        var errorMessages = undefined;
+        if (this.state.errors.length > 0) {
+            errorMessages = this.state.errors.map((errorMessage) => {
+                return <div class="notification is-danger">{errorMessage}</div>;
+            });
+        }
+
+        return (
+            <div className="container">
+                <h3 class="title is-3">Login</h3>
+                <div className="card events-card">
+                    <div class="card-content">
+                        <div class="content">
+                            <Form
+                                onSubmit={this.handleLogin}
+                                ref={(c) => {
+                                    this.form = c;
+                                }}
+                            >
+                                <div className="field">
+                                    <label class="label">AGME username</label>
+                                    <div className="control">
+                                        <Input
+                                            type="text"
+                                            className="input"
+                                            name="username"
+                                            value={this.state.username}
+                                            onChange={this.onChangeUsername}
+                                            validations={[required]}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="field">
+                                    <label class="label">Password</label>
+                                    <div className="control">
+                                        <Input
+                                            type="password"
+                                            className="input"
+                                            name="password"
+                                            value={this.state.password}
+                                            onChange={this.onChangePassword}
+                                            validations={[required]}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <button
+                                            className={`button is-link ${this.state.loading ? "is-loading" : ""}`}
+                                            disabled={this.state.loading}
+                                        >
+                                            <span>Login</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                {this.state.errors.map((errorMessage) => {
+                                    return <div class="notification is-light is-danger">{errorMessage}</div>;
+                                })}
+                                <CheckButton
+                                    style={{ display: "none" }}
+                                    ref={(c) => {
+                                        this.checkBtn = c;
+                                    }}
+                                />
+                            </Form>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            )}
-            <CheckButton
-              style={{ display: "none" }}
-              ref={c => {
-                this.checkBtn = c;
-              }}
-            />
-          </Form>
-        </div>
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }

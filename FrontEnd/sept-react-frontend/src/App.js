@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link, withRouter } from "react-router-dom";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import "bulma/css/bulma.min.css";
+import "@fortawesome/fontawesome-free/css/all.css";
 import "./App.css";
 import AuthService from "./service/auth";
 
@@ -21,7 +21,7 @@ class App extends Component {
         super(props);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSideColumn = this.handleSideColumn.bind(this);
-        this.logOut = this.logOut.bind(this);
+        this.logout = this.logout.bind(this);
 
         this.state = {
             currentUser: undefined,
@@ -40,8 +40,9 @@ class App extends Component {
         }
     }
 
-    logOut() {
+    logout() {
         AuthService.logout();
+        this.props.history.push("/login");
         window.location.reload();
     }
 
@@ -62,18 +63,11 @@ class App extends Component {
                     <nav className="navbar is-white">
                         <div class="container">
                             <div class="navbar-brand">
-                                <Link
-                                    to={"/"}
-                                    className="navbar-item brand-text"
-                                >
+                                <Link to={"/"} className="navbar-item brand-text">
                                     AGME
                                 </Link>
                                 <div
-                                    class={`navbar-burger burger ${
-                                        this.state.activeHamburger
-                                            ? "is-active"
-                                            : ""
-                                    }`}
+                                    class={`navbar-burger burger ${this.state.activeHamburger ? "is-active" : ""}`}
                                     onClick={this.handleEvent}
                                     data-target="navMenu"
                                 >
@@ -82,65 +76,38 @@ class App extends Component {
                                     <span></span>
                                 </div>
                             </div>
-                            <div
-                                id="navMenu"
-                                class={`navbar-menu ${
-                                    this.state.activeHamburger
-                                        ? "is-active"
-                                        : ""
-                                }`}
-                            >
+                            <div id="navMenu" class={`navbar-menu ${this.state.activeHamburger ? "is-active" : ""}`}>
                                 <div class="navbar-start">
                                     <Link to={"/about"} className="navbar-item">
                                         About us
                                     </Link>
 
-                                    <Link
-                                        to={"/contact"}
-                                        className="navbar-item"
-                                    >
+                                    <Link to={"/contact"} className="navbar-item">
                                         Contact us
                                     </Link>
 
-                                    {currentUser &&
-                                        currentUser.role === "CUSTOMER" && (
-                                            <Link
-                                                to={"/bookings"}
-                                                className="navbar-item"
-                                            >
-                                                Bookings
-                                            </Link>
-                                        )}
+                                    {currentUser && currentUser.role === "CUSTOMER" && (
+                                        <Link to={"/bookings"} className="navbar-item">
+                                            Bookings
+                                        </Link>
+                                    )}
                                 </div>
 
                                 {currentUser ? (
                                     <div class="navbar-end">
-                                        <Link
-                                            to={"/profile"}
-                                            className="navbar-item"
-                                        >
+                                        <Link to={"/profile"} className="navbar-item">
                                             {currentUser.username}
                                         </Link>
-                                        <Link
-                                            to={"/login"}
-                                            className="navbar-item"
-                                            onClick={this.logOut}
-                                        >
+                                        <Link className="navbar-item" onClick={this.logout}>
                                             Logout
                                         </Link>
                                     </div>
                                 ) : (
                                     <div class="navbar-end">
-                                        <Link
-                                            to={"/login"}
-                                            className="navbar-item"
-                                        >
+                                        <Link to={"/login"} className="navbar-item">
                                             Login
                                         </Link>
-                                        <Link
-                                            to={"/register"}
-                                            className="navbar-item"
-                                        >
+                                        <Link to={"/register"} className="navbar-item">
                                             Register
                                         </Link>
                                     </div>
@@ -160,15 +127,9 @@ class App extends Component {
                                                 <li>
                                                     <Link
                                                         to={"/dashboard"}
-                                                        onClick={() =>
-                                                            this.handleSideColumn(
-                                                                "dashboard"
-                                                            )
-                                                        }
+                                                        onClick={() => this.handleSideColumn("dashboard")}
                                                         className={
-                                                            this.state
-                                                                .activeLeftColumn ===
-                                                            "dashboard"
+                                                            this.state.activeLeftColumn === "dashboard"
                                                                 ? "is-active"
                                                                 : ""
                                                         }
@@ -180,27 +141,17 @@ class App extends Component {
                                         </div>
                                         {currentUser.role === "ADMIN" && (
                                             <div>
-                                                <p class="menu-label">
-                                                    Administrator
-                                                </p>
+                                                <p class="menu-label">Administrator</p>
                                                 <ul class="menu-list">
                                                     <li>
                                                         <Link
                                                             to={{
-                                                                pathname:
-                                                                    "/bookings",
-                                                                search:
-                                                                    "?view=all",
+                                                                pathname: "/bookings",
+                                                                search: "?view=all",
                                                             }}
-                                                            onClick={() =>
-                                                                this.handleSideColumn(
-                                                                    "bookingsall"
-                                                                )
-                                                            }
+                                                            onClick={() => this.handleSideColumn("bookingsall")}
                                                             className={
-                                                                this.state
-                                                                    .activeLeftColumn ===
-                                                                "bookingsall"
+                                                                this.state.activeLeftColumn === "bookingsall"
                                                                     ? "is-active"
                                                                     : ""
                                                             }
@@ -211,53 +162,39 @@ class App extends Component {
                                                             <li>
                                                                 <Link
                                                                     to={{
-                                                                        pathname:
-                                                                            "/bookings",
-                                                                        search:
-                                                                            "?view=history",
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=history",
                                                                     }}
                                                                     onClick={() =>
-                                                                        this.handleSideColumn(
-                                                                            "bookingshistory"
-                                                                        )
+                                                                        this.handleSideColumn("bookingshistory")
                                                                     }
                                                                     className={
-                                                                        this
-                                                                            .state
-                                                                            .activeLeftColumn ===
+                                                                        this.state.activeLeftColumn ===
                                                                         "bookingshistory"
                                                                             ? "is-active"
                                                                             : ""
                                                                     }
                                                                 >
-                                                                    Bookings
-                                                                    history
+                                                                    Bookings history
                                                                 </Link>
                                                             </li>
                                                             <li>
                                                                 <Link
                                                                     to={{
-                                                                        pathname:
-                                                                            "/bookings",
-                                                                        search:
-                                                                            "?view=allhistory",
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=allhistory",
                                                                     }}
                                                                     onClick={() =>
-                                                                        this.handleSideColumn(
-                                                                            "bookingsallhistory"
-                                                                        )
+                                                                        this.handleSideColumn("bookingsallhistory")
                                                                     }
                                                                     className={
-                                                                        this
-                                                                            .state
-                                                                            .activeLeftColumn ===
+                                                                        this.state.activeLeftColumn ===
                                                                         "bookingsallhistory"
                                                                             ? "is-active"
                                                                             : ""
                                                                     }
                                                                 >
-                                                                    All bookings
-                                                                    history
+                                                                    All bookings history
                                                                 </Link>
                                                             </li>
                                                         </ul>
@@ -265,18 +202,11 @@ class App extends Component {
                                                     <li>
                                                         <Link
                                                             to={{
-                                                                pathname:
-                                                                    "/workers",
+                                                                pathname: "/workers",
                                                             }}
-                                                            onClick={() =>
-                                                                this.handleSideColumn(
-                                                                    "workers"
-                                                                )
-                                                            }
+                                                            onClick={() => this.handleSideColumn("workers")}
                                                             className={
-                                                                this.state
-                                                                    .activeLeftColumn ===
-                                                                "workers"
+                                                                this.state.activeLeftColumn === "workers"
                                                                     ? "is-active"
                                                                     : ""
                                                             }
@@ -287,18 +217,11 @@ class App extends Component {
                                                     <li>
                                                         <Link
                                                             to={{
-                                                                pathname:
-                                                                    "/services",
+                                                                pathname: "/services",
                                                             }}
-                                                            onClick={() =>
-                                                                this.handleSideColumn(
-                                                                    "services"
-                                                                )
-                                                            }
+                                                            onClick={() => this.handleSideColumn("services")}
                                                             className={
-                                                                this.state
-                                                                    .activeLeftColumn ===
-                                                                "services"
+                                                                this.state.activeLeftColumn === "services"
                                                                     ? "is-active"
                                                                     : ""
                                                             }
@@ -309,57 +232,65 @@ class App extends Component {
                                                 </ul>
                                             </div>
                                         )}
+                                        {currentUser.role === "CUSTOMER" && (
+                                            <div>
+                                                <p class="menu-label">Customer</p>
+                                                <ul class="menu-list">
+                                                    <li>
+                                                        <Link
+                                                            to={{
+                                                                pathname: "/bookings",
+                                                                search: "?view=all",
+                                                            }}
+                                                            onClick={() => this.handleSideColumn("bookingsall")}
+                                                            className={
+                                                                this.state.activeLeftColumn === "bookingsall"
+                                                                    ? "is-active"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            Bookings
+                                                        </Link>
+                                                        <ul>
+                                                            <li>
+                                                                <Link
+                                                                    to={{
+                                                                        pathname: "/bookings",
+                                                                        search: "?view=history",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        this.handleSideColumn("bookingshistory")
+                                                                    }
+                                                                    className={
+                                                                        this.state.activeLeftColumn ===
+                                                                        "bookingshistory"
+                                                                            ? "is-active"
+                                                                            : ""
+                                                                    }
+                                                                >
+                                                                    Bookings history
+                                                                </Link>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
                                     </aside>
                                 </div>
                             )}
                             <div class="column is-9">
                                 <Switch>
                                     <Route exact path={"/"} component={Home} />
-                                    <Route
-                                        exact
-                                        path="/login"
-                                        component={Login}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/register"
-                                        component={Register}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/profile"
-                                        component={Profile}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/dashboard"
-                                        component={Dashboard}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/about"
-                                        component={About}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/contact"
-                                        component={Contact}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/bookings"
-                                        component={viewBookings}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/workers"
-                                        component={viewWorkers}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/services"
-                                        component={ViewService}
-                                    />
+                                    <Route exact path="/login" component={Login} />
+                                    <Route exact path="/register" component={Register} />
+                                    <Route exact path="/profile" component={Profile} />
+                                    <Route exact path="/dashboard" component={Dashboard} />
+                                    <Route exact path="/about" component={About} />
+                                    <Route exact path="/contact" component={Contact} />
+                                    <Route exact path="/bookings" component={viewBookings} />
+                                    <Route exact path="/workers" component={viewWorkers} />
+                                    <Route exact path="/services" component={ViewService} />
                                 </Switch>
                             </div>
                         </div>
@@ -370,4 +301,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withRouter(App);

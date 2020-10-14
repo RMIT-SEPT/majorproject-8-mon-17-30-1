@@ -87,6 +87,7 @@ export default class viewBookings extends Component {
                 wName: booking.workerFullName,
                 date: new Date(booking.date).toString(),
                 bookingId: booking.bookingId.toString(),
+                customerUsername: booking.customerUsername
             };
         });
     }
@@ -121,6 +122,10 @@ export default class viewBookings extends Component {
             {
                 Header: "Worker Name",
                 accessor: "wName",
+            },
+            {
+                Header: "Customer",
+                accessor: "customerUsername",
             },
             {
                 Header: "",

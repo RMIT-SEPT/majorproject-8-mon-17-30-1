@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("api/v1/worker")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor(onConstructor_ = {@Autowired})
-public class WorkerController {
+public class WorkerController extends AbstractBaseController {
 
     private final WorkerService workerService;
 

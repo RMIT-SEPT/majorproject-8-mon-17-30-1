@@ -4,15 +4,14 @@ import com.rmit.sept.septbackend.entity.*;
 import com.rmit.sept.septbackend.model.BookingRequest;
 import com.rmit.sept.septbackend.model.BookingResponse;
 import com.rmit.sept.septbackend.model.Status;
+import com.rmit.sept.septbackend.model.ValidationResponse;
 import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerAvailabilityRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -39,14 +38,14 @@ public class BookingService {
                     bookingEntity.getServiceWorker().getService().getServiceName(),
                     userEntity.getFirstName() + " " + userEntity.getLastName(),
                     bookingEntity.getBookingTime(),
-                    bookingEntity.getBookingId()
+                    bookingEntity.getBookingId(),
+                    username
             );
         }).collect(Collectors.toList()
         );
     }
 
     public List<BookingResponse> viewAllPastBookings() {
-
         List<BookingEntity> bookingEntities = new ArrayList<>();
         for (BookingEntity bookingEntity : bookingRepository.findAll()) {
             if (bookingEntity.getBookingTime().isBefore(LocalDateTime.now()))
@@ -60,13 +59,15 @@ public class BookingService {
                     bookingEntity.getServiceWorker().getService().getServiceName(),
                     userEntity.getFirstName() + " " + userEntity.getLastName(),
                     bookingEntity.getBookingTime(),
-                    bookingEntity.getBookingId()
+                    bookingEntity.getBookingId(),
+                    bookingEntity.getCustomer().getUser().getUsername()
             );
         }).collect(Collectors.toList()
         );
     }
 
-    public void createBooking(BookingRequest bookingRequest) {
+    public ValidationResponse<Void> createBooking(BookingRequest bookingRequest) {
+        ValidationResponse<Void> validationResponse = new ValidationResponse<>();
 
         // Validation performed (in order):
         //     - Check if the customer exists
@@ -78,13 +79,21 @@ public class BookingService {
         // Check if the customer exists
         CustomerEntity customerEntity = customerRepository.getByUserUsername(bookingRequest.getCustomerUsername());
         if (customerEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer doesn't exist");
+            validationResponse.addError("Customer doesn't exist", "Customer doesn't exist [username=%s]", bookingRequest.getCustomerUsername());
+            // Guard statement - customerEntity is required below
+            return validationResponse;
         }
 
         // Check if the service/worker relationship exists
         ServiceWorkerEntity serviceWorkerEntity = serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(bookingRequest.getServiceId(), bookingRequest.getWorkerId());
         if (serviceWorkerEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Service/worker relationship doesn't exist");
+            validationResponse.addError("Service/worker relationship doesn't exist",
+                    "Service/worker relationship doesn't exist [serviceId=%d,workerId=%d]",
+                    bookingRequest.getServiceId(),
+                    bookingRequest.getWorkerId()
+            );
+            // Guard statement - serviceWorkerEntity is required below
+            return validationResponse;
         }
 
         LocalDateTime bookingStartTime = bookingRequest.getBookingTime();
@@ -114,7 +123,7 @@ public class BookingService {
                 });
 
         if (!ref.valid) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested booking time does not fit within worker's availability schedule");
+            validationResponse.addError("Requested booking time does not fit within worker's availability schedule");
         }
 
 
@@ -124,7 +133,13 @@ public class BookingService {
         for (BookingEntity be : serviceBookings) {
             if (!(bookingStartTime.isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))
                     || !bookingEndTime.isAfter(be.getBookingTime()))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Worker has an overlapping booking");
+                validationResponse.addError(
+                        "Worker has an overlapping booking",
+                        "Worker has an overlapping booking [newBookingTime=%s,existingBookingTime=%s,serviceDurationMinutes=%d]",
+                        bookingStartTime,
+                        be.getBookingTime(),
+                        be.getServiceWorker().getService().getDurationMinutes()
+                );
             }
         }
 
@@ -134,7 +149,14 @@ public class BookingService {
         for (BookingEntity be : customerBookings) {
             if (!(bookingStartTime.isAfter(be.getBookingTime().plusMinutes(be.getServiceWorker().getService().getDurationMinutes()))
                     || !bookingEndTime.isAfter(be.getBookingTime()))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer has an overlapping booking");
+                validationResponse.addError(
+                        "Customer has an overlapping booking",
+                        "Customer has an overlapping booking [newBookingTime=%s,existingBookingTime=%s,serviceDurationMinutes=%d]",
+                        bookingStartTime,
+                        be.getBookingTime(),
+                        be.getServiceWorker().getService().getDurationMinutes()
+                );
+
             }
         }
 
@@ -145,17 +167,25 @@ public class BookingService {
         );
 
         bookingRepository.save(bookingEntity);
+
+        return validationResponse;
     }
 
-    public void cancelBooking(int bookingId) {
+    public ValidationResponse<Void> cancelBooking(int bookingId) {
+        ValidationResponse<Void> validationResponse = new ValidationResponse<>();
         Optional<BookingEntity> entity = bookingRepository.findById(bookingId);
         if (entity.isPresent()) {
             BookingEntity bookingEntity = entity.get();
             bookingEntity.setStatus(Status.CANCELLED);
             bookingRepository.save(bookingEntity);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking not found");
+            validationResponse.addError(
+                    "There was an error cancelling your booking",
+                    "Booking not found [bookingId=%d]",
+                    bookingId
+            );
         }
-    }
 
+        return validationResponse;
+    }
 }
