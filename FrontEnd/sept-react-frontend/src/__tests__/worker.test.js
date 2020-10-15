@@ -6,6 +6,7 @@ import Service, {BOOKING_URL} from "../service/service";
 
 jest.mock('axios');
 
+// Related Acceptance test ID:
 describe('Workers.viewWorkers', () => {
     it('successfully get a list of workers', async () => {
         const data = {
@@ -33,18 +34,9 @@ describe('Workers.viewWorkers', () => {
             `${API_URL}`, {"headers": {}}
         );
     });
-
-    it('erroneously calls API', async () => {
-        const errorMessage = 'Network Error';
-
-        axios.get.mockImplementationOnce(() =>
-            Promise.reject(new Error(errorMessage)),
-        );
-
-        await expect(Workers.viewWorkers()).rejects.toThrow(errorMessage);
-    });
 });
 
+// Related Acceptance test ID:
 describe('Workers.newWorker', () => {
     it('successfully create a new worker', async () => {
         const username = "worker"
@@ -68,21 +60,9 @@ describe('Workers.newWorker', () => {
             }, {"headers": {}}
         );
     });
-
-    it('erroneously calls API', async () => {
-        const username = "worker"
-        const firstName = "user"
-        const lastName = "name"
-        const errorMessage = 'Network Error';
-
-        axios.post.mockImplementationOnce(() =>
-            Promise.reject(new Error(errorMessage)),
-        );
-
-        await expect(Workers.newWorker(username, firstName, lastName)).rejects.toThrow(errorMessage);
-    });
 });
 
+// Related Acceptance test ID:
 describe('Workers.deleteWorker', () => {
     it('successfully delete a worker', async () => {
         const workerId = "0"
@@ -99,16 +79,5 @@ describe('Workers.deleteWorker', () => {
         expect(axios.delete).toHaveBeenCalledWith(
             `${API_URL + "delete/" + workerId}`, {"headers": {}}
         );
-    });
-
-    it('erroneously calls API', async () => {
-        const workerId = "0"
-        const errorMessage = 'Network Error';
-
-        axios.delete.mockImplementationOnce(() =>
-            Promise.reject(new Error(errorMessage)),
-        );
-
-        await expect(Workers.deleteWorker(workerId)).rejects.toThrow(errorMessage);
     });
 });

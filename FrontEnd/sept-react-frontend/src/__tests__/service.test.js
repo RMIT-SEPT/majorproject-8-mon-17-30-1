@@ -4,6 +4,7 @@ import Service, {BOOKING_URL, BUSINESS_URL, SERVICE_URL, WORKER_URL} from '../se
 
 jest.mock('axios');
 
+// Related Acceptance test ID:
 describe('Service.bookService', () => {
     it('successfully books service', async () => {
         const serviceId = "0"
@@ -45,6 +46,7 @@ describe('Service.bookService', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.cancelBooking', () => {
     it('successfully cancel booking', async () => {
         const bookingId = "0"
@@ -75,6 +77,7 @@ describe('Service.cancelBooking', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.deleteService', () => {
     it('successfully delete service', async () => {
         const serviceId = "0"
@@ -105,6 +108,7 @@ describe('Service.deleteService', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.getBusinessesAll', () => {
     it('successfully calls the API', async () => {
         const data = {
@@ -144,6 +148,7 @@ describe('Service.getBusinessesAll', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.getServicesByBusinessID', () => {
     it('successfully calls the API for services', async () => {
         const businessId = 1;
@@ -185,6 +190,7 @@ describe('Service.getServicesByBusinessID', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.getBusinessByAdminUsername', () => {
     it('successfully get businesses by admin username', async () => {
         const username = "user"
@@ -226,6 +232,7 @@ describe('Service.getBusinessByAdminUsername', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.getWorkersByServiceID', () => {
     it('successfully get workers by service id', async () => {
         const serviceId = "0"
@@ -267,6 +274,7 @@ describe('Service.getWorkersByServiceID', () => {
     });
 });
 
+// Related Acceptance test ID:
 describe('Service.createService', () => {
     it('successfully create service', async () => {
         const businessId = "0"
