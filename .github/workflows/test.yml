@@ -21,7 +21,7 @@ jobs:
           instance-ids: ${{ secrets.TEST_INSTANCE_ID }}
 
           working-directory: /home/ec2-user
-          command: echo $(date) >> logs.txt
+          command: sh script.sh
           comment: Hello world!
 
       # Catch SSM outputs
