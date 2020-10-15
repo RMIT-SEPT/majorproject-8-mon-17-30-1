@@ -1,0 +1,29 @@
+name: AWS SSM Send-Command Example
+
+on:
+  push:
+    branches: [feature/87-cicd]
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: AWS SSM Send-Command
+        uses: peterkimzz/aws-ssm-send-command@master
+        id: ssm
+        with:
+          aws-region: ${{ secrets.TEST_REGION }}
+          aws-access-key-id: ${{ secrets.TEST_ACCESS_ID }}
+          aws-secret-access-key: ${{ secrets.TEST_SECRET_ACCESS_ID }}
+          instance-ids: ${{ secrets.TEST_INSTANCE_ID }}
+
+          working-directory: /home/ec2-user
+          command: echo $(date) >> logs.txt
+          comment: Hello world!
+
+      # Catch SSM outputs
+      - name: Get the outputs
+        run: echo "The Command id is ${{ steps.ssm.outputs.command-id }}"
