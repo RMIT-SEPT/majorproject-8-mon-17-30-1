@@ -2,7 +2,7 @@ name: Continuous Deployment - Backend
 
 on:
   push:
-    branches: [feature/87-cicd]
+    branches: [ master ]
 
 jobs:
   start:
