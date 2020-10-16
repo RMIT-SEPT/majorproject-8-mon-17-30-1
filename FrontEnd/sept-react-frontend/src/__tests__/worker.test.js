@@ -6,7 +6,7 @@ import Service, {BOOKING_URL} from "../service/service";
 
 jest.mock('axios');
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 4
 describe('Workers.viewWorkers', () => {
     it('successfully get a list of workers', async () => {
         const data = {
@@ -36,7 +36,7 @@ describe('Workers.viewWorkers', () => {
     });
 });
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 4
 describe('Workers.newWorker', () => {
     it('successfully create a new worker', async () => {
         const username = "worker"
@@ -62,7 +62,7 @@ describe('Workers.newWorker', () => {
     });
 });
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 24, 26
 describe('Workers.deleteWorker', () => {
     it('successfully delete a worker', async () => {
         const workerId = "0"

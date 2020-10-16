@@ -5,7 +5,7 @@ import authHeader from "../service/auth-header";
 
 jest.mock('axios');
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 18, 19, 20
 describe('Booking.viewBooking', () => {
     it('successfully get list of active bookings for username', async () => {
         const username = "user"
@@ -35,7 +35,7 @@ describe('Booking.viewBooking', () => {
     });
 });
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 18, 19, 20
 describe('Booking.viewBookingHistory', () => {
     it('successfully get list of inactive bookings for username', async () => {
         const username = "user"
@@ -65,7 +65,7 @@ describe('Booking.viewBookingHistory', () => {
     });
 });
 
-// Related Acceptance test ID:
+// Related Acceptance test ID: 18, 19, 20
 describe('Booking.viewAllBookingHistory', () => {
     it('successfully get ', async () => {
         const data = {
