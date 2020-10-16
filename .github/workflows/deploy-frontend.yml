@@ -2,7 +2,7 @@ name: Continuous Deployment - Frontend
 
 on:
   push:
-    branches: [ master ]
+    branches: [ feature/87-cicd ]
 
 jobs:
   build:
