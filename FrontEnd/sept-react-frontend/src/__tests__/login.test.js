@@ -4,6 +4,7 @@ import Auth, { API_URL } from '../service/auth';
 
 jest.mock('axios');
 
+// Related Acceptance test ID: 9, 10, 11
 describe('Auth.login', () => {
     it('successfully logs into valid account', async () => {
         const username = "John";
@@ -30,6 +31,7 @@ describe('Auth.login', () => {
     });
 });
 
+// Related Acceptance test ID: 12, 13
 describe('Auth.register', () => {
     it('successfully register a customer', async () => {
         const username = "user"
