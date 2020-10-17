@@ -30,9 +30,9 @@ jobs:
     - run: npm test
       working-directory: ./FrontEnd/sept-react-frontend
 
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: frontend_package
-    #     path: ./FrontEnd/sept-react-frontend/build/
-    #   env:
-    #     CI: true
+    - uses: actions/upload-artifact@v2
+      with:
+        name: frontend_package
+        path: ./FrontEnd/sept-react-frontend/build/
+      env:
+        CI: true
