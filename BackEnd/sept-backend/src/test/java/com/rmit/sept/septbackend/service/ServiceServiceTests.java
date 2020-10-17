@@ -40,6 +40,9 @@ public class ServiceServiceTests {
         serviceService = new ServiceService(serviceRepository, businessRepository, serviceWorkerRepository, workerRepository, serviceWorkerAvailabilityRepository, availabilityRepository);
     }
 
+    /**
+     * Acceptance tests 023
+     */
     @Test
     public void testGetServicesForBusinessId() {
         Mockito.when(businessRepository.existsById(Mockito.any()))
@@ -62,7 +65,9 @@ public class ServiceServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
-
+    /**
+     * Acceptance tests 023
+     */
     @Test
     public void testGetServicesForUsername() {
         Mockito.when(workerRepository.existsByUserUsername(Mockito.any()))
@@ -105,6 +110,9 @@ public class ServiceServiceTests {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 021
+     */
     @Test
     public void testEditService() {
         Mockito.when(serviceRepository.findById(Mockito.anyInt())).thenReturn(
