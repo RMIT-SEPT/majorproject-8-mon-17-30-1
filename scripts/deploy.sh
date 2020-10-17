@@ -1,5 +1,5 @@
 cd majorproject-8-mon-17-30-1
-git checkout develop
+git checkout master
 git pull
 cd BackEnd/sept-backend
 docker-compose down
