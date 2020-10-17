@@ -15,7 +15,7 @@ jobs:
           java-version: 11
       - run: mvn -B package --file BackEnd/sept-backend/pom.xml
       - run: mkdir build && cp BackEnd/sept-backend/target/*.jar build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: backend_package
-          path: build
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: backend_package
+      #     path: build
