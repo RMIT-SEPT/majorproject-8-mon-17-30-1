@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 // For local development, this is hardcoded in at the moment
-export const API_URL = "http://localhost:8080/api/v1/booking/";
+export const API_URL = "http://ec2-13-211-211-139.ap-southeast-2.compute.amazonaws.com:8080/api/v1/booking/";
 
 class Booking {
     viewBooking(username) {

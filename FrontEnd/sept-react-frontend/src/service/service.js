@@ -2,10 +2,10 @@ import axios from "axios";
 import authHeader from './auth-header';
 
 // For local development, this is hardcoded in at the moment
-export const SERVICE_URL = "http://localhost:8080/api/v1/service/";
-export const BOOKING_URL = "http://localhost:8080/api/v1/booking/";
-export const BUSINESS_URL = "http://localhost:8080/api/v1/business/";
-export const WORKER_URL = "http://localhost:8080/api/v1/worker/";
+export const SERVICE_URL = "http://ec2-13-211-211-139.ap-southeast-2.compute.amazonaws.com:8080/api/v1/service/";
+export const BOOKING_URL = "http://ec2-13-211-211-139.ap-southeast-2.compute.amazonaws.com:8080/api/v1/booking/";
+export const BUSINESS_URL = "http://ec2-13-211-211-139.ap-southeast-2.compute.amazonaws.com:8080/api/v1/business/";
+export const WORKER_URL = "http://ec2-13-211-211-139.ap-southeast-2.compute.amazonaws.com:8080/api/v1/worker/";
 
 class Service {
     bookService(serviceId, workerId, bookingTime, customerUsername) {
