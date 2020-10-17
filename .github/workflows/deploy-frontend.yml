@@ -35,10 +35,10 @@ jobs:
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-2
+        aws-access-key-id: ${{ secrets.TEST_ACCESS_ID }}
+        aws-secret-access-key: ${{ secrets.TEST_SECRET_ACCESS_ID }}
+        aws-region: ${{ secrets.TEST_REGION }}
 
-    - name: Copy files to the test website with the AWS CLI
+    - name: Copy files to the website with the AWS CLI
       run: |
-        aws s3 cp ./FrontEnd/sept-react-frontend/build/ s3://sept-frontent --recursive
+        aws s3 cp ./FrontEnd/sept-react-frontend/build/ s3://sept-frontend-s3 --recursive
