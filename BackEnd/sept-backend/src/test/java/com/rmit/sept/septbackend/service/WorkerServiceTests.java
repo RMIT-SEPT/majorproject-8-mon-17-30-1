@@ -43,6 +43,9 @@ public class WorkerServiceTests {
         workerService = new WorkerService(serviceWorkerRepository, workerRepository, userRepository, authenticationService, serviceWorkerAvailabilityRepository, availabilityRepository);
     }
 
+    /**
+     * Acceptance tests 016
+     */
     @Test
     public void testGetWorkersByServiceId() {
         ServiceEntity firstService = new ServiceEntity(0, new BusinessEntity("testBusiness"), "testService", 123, Status.ACTIVE);
@@ -66,11 +69,9 @@ public class WorkerServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
-    @Test
-    public void testDeleteWorker() {
-        // TODO - implement
-    }
-
+    /**
+     * Acceptance tests 009
+     */
     @Test
     public void testViewAvailabilityAllServices() {
         WorkerEntity firstWorker = new WorkerEntity(0, new UserEntity("testUsername", "testPassword", "testFirstName", "testLastName", Role.WORKER), Status.ACTIVE);
@@ -151,6 +152,9 @@ public class WorkerServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 009
+     */
     @Test
     public void testViewAvailabilitySingleService() {
         WorkerEntity firstWorker = new WorkerEntity(0, new UserEntity("testUsername", "testPassword", "testFirstName", "testLastName", Role.WORKER), Status.ACTIVE);
@@ -203,6 +207,9 @@ public class WorkerServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 025
+     */
     @Test
     public void testAddAvailability() {
         ServiceWorkerEntity testServiceWorkerEntity = new ServiceWorkerEntity(

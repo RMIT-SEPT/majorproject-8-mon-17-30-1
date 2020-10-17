@@ -47,6 +47,9 @@ public class AuthenticationServiceTests {
         authenticationService = new AuthenticationService(authenticationManager, jwtUtils, passwordEncoder, userRepository, adminRepository, workerRepository, customerRepository);
     }
 
+    /**
+     * Acceptance tests 001, 002, 003
+     */
     @Test
     public void testCreatingJwtResponse() {
         List<SimpleGrantedAuthority> customer = Collections.singletonList(new SimpleGrantedAuthority("CUSTOMER"));
@@ -74,6 +77,9 @@ public class AuthenticationServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 004
+     */
     @Test
     public void testRegisterCustomer() {
         RegisterRequest registerRequest = new RegisterRequest(
@@ -113,6 +119,9 @@ public class AuthenticationServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 005
+     */
     @Test
     public void testExistingCustomer() {
         Mockito.when(userRepository.existsByUsername(Mockito.any())).thenReturn(true);

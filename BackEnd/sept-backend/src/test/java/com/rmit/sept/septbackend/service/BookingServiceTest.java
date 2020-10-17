@@ -175,6 +175,9 @@ public class BookingServiceTest {
                 );
     }
 
+    /**
+     * Acceptance tests 014
+     */
     @Test
     public void cancelBooking() {
         LocalDateTime testTime = LocalDateTime.now();
@@ -197,6 +200,9 @@ public class BookingServiceTest {
         }));
     }
 
+    /**
+     * Acceptance tests 015
+     */
     @Test
     public void cancelBookingNotFound() {
         Mockito.when(bookingRepository.findById(Mockito.any())).thenReturn(
@@ -206,6 +212,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 016
+     */
     @Test
     public void createBooking() {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
@@ -219,6 +228,9 @@ public class BookingServiceTest {
         }));
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
     public void createBookingWorkerNotAvailable() {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
@@ -227,6 +239,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
     public void createBookingWorkerNotAvailableEffectiveDates() {
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
@@ -239,6 +254,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
     public void createBookingWorkerOverlap() {
         Mockito.when(bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(Mockito.anyInt(), Mockito.any()))
@@ -263,6 +281,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
     public void createBookingCustomerOverlap() {
         BookingRequest br = new BookingRequest(1, 0, "Lachlan",
@@ -272,6 +293,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
     public void createBookingCustomerDoesntExist() {
         Mockito.when(customerRepository.getByUserUsername(Mockito.any())).thenReturn(null);
@@ -284,6 +308,9 @@ public class BookingServiceTest {
         Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 018, 020
+     */
     @Test
     public void testViewBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
@@ -304,6 +331,9 @@ public class BookingServiceTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 019
+     */
     @Test
     public void testNoBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
@@ -342,6 +372,9 @@ public class BookingServiceTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 016
+     */
     @Test
     public void testMultipleBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
