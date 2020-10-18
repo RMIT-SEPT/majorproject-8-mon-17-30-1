@@ -11,5 +11,4 @@ import java.util.List;
 public interface ServiceRepository extends CrudRepository<ServiceEntity, Integer> {
 
     List<ServiceEntity> getAllByBusinessBusinessIdAndStatus(Integer businessId, Status status);
-
 }

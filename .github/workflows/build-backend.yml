@@ -1,10 +1,8 @@
-name: Build Backend
+name: Continuous Integration - Backend
 
 on:
-  push:
-    branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -21,47 +19,3 @@ jobs:
         with:
           name: backend_package
           path: build
-
-  # deploy:
-  #   name: Deploy
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-east-1
-  #     - name: Download Backend Artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: backend_package
-  #         path: build
-  #     - name: Deploy to S3
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       run: |
-  #         aws s3 cp \
-  #         --recursive \
-  #         --acl public-read \
-  #         ./build s3://sept-backend-jars
-  # deploy:
-  #   name: Deploy
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #     - name: Download backend artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: backend_package
-  #         path: build/artifact
-  #     - uses: actions/checkout@v2
-  #     - name: Deploy to S3
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       run: |
-  #         aws s3 cp build/artifact/backend_package s3://sept-backend-jars --region us-east-1

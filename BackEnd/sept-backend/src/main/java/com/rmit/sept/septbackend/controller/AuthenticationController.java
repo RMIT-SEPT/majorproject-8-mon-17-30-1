@@ -11,7 +11,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api/v1/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class AuthenticationController {
+public class AuthenticationController extends AbstractBaseController {
 
     private final AuthenticationService authenticationService;
 
@@ -26,6 +26,6 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public JwtResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        return authenticationService.registerUser(registerRequest);
+        return handleValidationResponse(authenticationService.registerUser(registerRequest));
     }
 }

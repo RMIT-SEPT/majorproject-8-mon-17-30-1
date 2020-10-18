@@ -1,14 +1,8 @@
 package com.rmit.sept.septbackend.service;
 
 import com.rmit.sept.septbackend.entity.*;
-import com.rmit.sept.septbackend.model.CreateServiceRequest;
-import com.rmit.sept.septbackend.model.Role;
-import com.rmit.sept.septbackend.model.ServiceResponse;
-import com.rmit.sept.septbackend.model.Status;
-import com.rmit.sept.septbackend.repository.BusinessRepository;
-import com.rmit.sept.septbackend.repository.ServiceRepository;
-import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import com.rmit.sept.septbackend.repository.WorkerRepository;
+import com.rmit.sept.septbackend.model.*;
+import com.rmit.sept.septbackend.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,7 +11,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,15 +27,22 @@ public class ServiceServiceTests {
     private ServiceWorkerRepository serviceWorkerRepository;
     @Mock
     private WorkerRepository workerRepository;
+    @Mock
+    private ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
+    @Mock
+    private AvailabilityRepository availabilityRepository;
 
     private ServiceService serviceService;
 
     @BeforeAll
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        serviceService = new ServiceService(serviceRepository, businessRepository, serviceWorkerRepository, workerRepository);
+        serviceService = new ServiceService(serviceRepository, businessRepository, serviceWorkerRepository, workerRepository, serviceWorkerAvailabilityRepository, availabilityRepository);
     }
 
+    /**
+     * Acceptance tests 023
+     */
     @Test
     public void testGetServicesForBusinessId() {
         Mockito.when(businessRepository.existsById(Mockito.any()))
@@ -60,12 +60,14 @@ public class ServiceServiceTests {
                 new ServiceResponse(1, "testBusiness", "anotherTestService", 124235)
         );
 
-        List<ServiceResponse> actual = serviceService.getServicesForBusinessId(0);
+        List<ServiceResponse> actual = serviceService.getServicesForBusinessId(0).getBody();
 
         Assertions.assertEquals(expected, actual);
     }
 
-
+    /**
+     * Acceptance tests 023
+     */
     @Test
     public void testGetServicesForUsername() {
         Mockito.when(workerRepository.existsByUserUsername(Mockito.any()))
@@ -87,7 +89,7 @@ public class ServiceServiceTests {
                 new ServiceResponse(1, "testBusiness", "anotherTestService", 124235)
         );
 
-        List<ServiceResponse> actual = serviceService.getServicesForUsername("testUsername");
+        List<ServiceResponse> actual = serviceService.getServicesForUsername("testUsername").getBody();
 
         Assertions.assertEquals(expected, actual);
     }
@@ -96,18 +98,21 @@ public class ServiceServiceTests {
     public void testGetServicesForBusinessNameDoesntExist() {
         Mockito.when(businessRepository.existsByBusinessName(Mockito.any()))
                 .thenReturn(false);
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> serviceService.getServicesForBusinessId(0));
+        ValidationResponse<List<ServiceResponse>> actual = serviceService.getServicesForBusinessId(0);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
     @Test
     public void testGetServicesForUsernameDoesntExist() {
         Mockito.when(workerRepository.existsByUserUsername(Mockito.any()))
                 .thenReturn(false);
-
-        Assertions.assertThrows(ResponseStatusException.class, () -> serviceService.getServicesForUsername("testUsername"));
+        ValidationResponse<List<ServiceResponse>> actual = serviceService.getServicesForUsername("testUsername");
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 021
+     */
     @Test
     public void testEditService() {
         Mockito.when(serviceRepository.findById(Mockito.anyInt())).thenReturn(

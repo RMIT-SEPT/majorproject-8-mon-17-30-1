@@ -18,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +47,9 @@ public class AuthenticationServiceTests {
         authenticationService = new AuthenticationService(authenticationManager, jwtUtils, passwordEncoder, userRepository, adminRepository, workerRepository, customerRepository);
     }
 
+    /**
+     * Acceptance tests 001, 002, 003
+     */
     @Test
     public void testCreatingJwtResponse() {
         List<SimpleGrantedAuthority> customer = Collections.singletonList(new SimpleGrantedAuthority("CUSTOMER"));
@@ -75,6 +77,9 @@ public class AuthenticationServiceTests {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 004
+     */
     @Test
     public void testRegisterCustomer() {
         RegisterRequest registerRequest = new RegisterRequest(
@@ -107,32 +112,34 @@ public class AuthenticationServiceTests {
         Mockito.when(jwtUtils.generateJwtToken(Mockito.any()))
                 .thenReturn("token");
 
-        JwtResponse actual = authenticationService.registerUser(registerRequest);
+        JwtResponse actual = authenticationService.registerUser(registerRequest).getBody();
 
         JwtResponse expected = new JwtResponse("token", "test_username", Role.CUSTOMER);
 
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 005
+     */
     @Test
     public void testExistingCustomer() {
         Mockito.when(userRepository.existsByUsername(Mockito.any())).thenReturn(true);
-        Assertions.assertThrows(
-                ResponseStatusException.class,
-                () -> authenticationService.registerUser(
-                        new RegisterRequest(
-                                "test_username",
-                                "test_password",
-                                "test_first",
-                                "test_last",
-                                new CustomerRegisterArguments(
-                                        "test_address",
-                                        "test_city",
-                                        State.QLD,
-                                        "1234"
-                                )
+        ValidationResponse<JwtResponse> validationResponse = authenticationService.registerUser(
+                new RegisterRequest(
+                        "test_username",
+                        "test_password",
+                        "test_first",
+                        "test_last",
+                        new CustomerRegisterArguments(
+                                "test_address",
+                                "test_city",
+                                State.QLD,
+                                "1234"
                         )
                 )
         );
+
+        Assertions.assertFalse(validationResponse.isSuccessful());
     }
 }

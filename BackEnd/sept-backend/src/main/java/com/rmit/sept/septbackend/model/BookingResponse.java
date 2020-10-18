@@ -14,5 +14,6 @@ public class BookingResponse {
     private String workerFullName;
     private LocalDateTime date;
     private int bookingId;
+    private String customerUsername;
 
 }

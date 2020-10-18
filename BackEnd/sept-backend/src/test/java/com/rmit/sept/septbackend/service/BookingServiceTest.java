@@ -4,102 +4,194 @@ import com.rmit.sept.septbackend.entity.*;
 import com.rmit.sept.septbackend.model.*;
 import com.rmit.sept.septbackend.repository.BookingRepository;
 import com.rmit.sept.septbackend.repository.CustomerRepository;
+import com.rmit.sept.septbackend.repository.ServiceWorkerAvailabilityRepository;
 import com.rmit.sept.septbackend.repository.ServiceWorkerRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
 
 public class BookingServiceTest {
-
     @Mock
     private BookingRepository bookingRepository;
-    private BookingService bookingService;
     @Mock
     private CustomerRepository customerRepository;
     @Mock
     private ServiceWorkerRepository serviceWorkerRepository;
+    @Mock
+    private ServiceWorkerAvailabilityRepository serviceWorkerAvailabilityRepository;
 
-    List<BookingEntity> getAllByCustomer;
+    private BookingService bookingService;
+
+    private CustomerEntity testCustomerEntity;
+    private CustomerEntity testSecondCustomerEntity;
+    private ServiceWorkerEntity testServiceWorkerEntity;
+    private BookingEntity expectedBookingEntity;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        bookingService = new BookingService(bookingRepository, customerRepository, serviceWorkerRepository);
-    }
+        bookingService = new BookingService(bookingRepository, customerRepository, serviceWorkerRepository, serviceWorkerAvailabilityRepository);
 
-    @BeforeEach
-    public void setMocks() {
-        Mockito.when(customerRepository.getByUserUsername(Mockito.any()))
-                .thenReturn(new CustomerEntity(
-                        new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                        "String streetAddress", "String city", State.TAS, "String postcode"));
+        /*
+         * Represents perfect scenario (all cases passing).
+         * It is up to each of the test methods to override an appropriate mocked method to demonstrate different validation.
+         * In this basic example, there is:
+         * - a single business (Mojang)
+         * - a single service (Minecraft) with a duration of 30 minutes
+         * - a single worker (Notch) whose availability is 12pm-5pm Thursdays, effective until Thursday 15th October
+         * - two customers (Lachlan and Jimmy), although Lachlan is the main one used
+         * - a new booking to be made (at 3:30pm on Thursday 15th October)
+         * - two existing bookings (one at 12pm, another at 4pm)
+         */
+
+        LocalDateTime testTime = LocalDateTime.now();
+
+        testCustomerEntity = new CustomerEntity(
+                new UserEntity(
+                        "Lachlan",
+                        "bort",
+                        "Lachlan",
+                        "Lachlan",
+                        Role.CUSTOMER),
+                "String streetAddress",
+                "String city",
+                State.TAS,
+                "String postcode"
+        );
+
+        testSecondCustomerEntity = new CustomerEntity(
+                new UserEntity(
+                        "Jimmy",
+                        "youcanthandletheneutronstyle",
+                        "Jimmy",
+                        "Neutron",
+                        Role.CUSTOMER),
+                "123 Blast Off Street",
+                "Retroville",
+                State.TAS,
+                "1234"
+        );
+
+        testServiceWorkerEntity = new ServiceWorkerEntity(
+                new ServiceEntity(
+                        new BusinessEntity("Mojang"),
+                        "Minecraft",
+                        30),
+                new WorkerEntity(
+                        new UserEntity(
+                                "Notch",
+                                "Cool",
+                                "Marcus",
+                                "Pearson",
+                                Role.WORKER
+                        )
+                )
+        );
+
+        expectedBookingEntity = new BookingEntity(
+                0,
+                testServiceWorkerEntity,
+                testCustomerEntity,
+                LocalDateTime.of(2020, 10, 15, 15, 30),
+                testTime,
+                testTime,
+                Status.ACTIVE
+        );
+
+        Mockito.when(customerRepository.getByUserUsername(Mockito.any())).thenReturn(testCustomerEntity);
 
         Mockito.when(serviceWorkerRepository.getByServiceServiceIdAndWorkerWorkerId(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(new ServiceWorkerEntity
-                        (new ServiceEntity(
-                                new BusinessEntity("Mojang")
-                                , "Minecraft"
-                                , 30)
-                                , new WorkerEntity(
-                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))));
+                .thenReturn(testServiceWorkerEntity);
 
-        getAllByCustomer = Arrays.asList(new BookingEntity(0, new ServiceWorkerEntity
-                        (new ServiceEntity(
-                                new BusinessEntity(0,"Mojang")
-                                , "Minecraft"
-                                , 30)
-                                , new WorkerEntity(0,
-                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
-                        new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                        "String streetAddress", "String city", State.TAS, "String postcode"),
-                        LocalDateTime.of(2020, 10, 15, 15, 30),
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        Status.ACTIVE));
+        Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
+                Mockito.anyInt(), Mockito.any(), Mockito.any()))
+                .thenReturn(
+                        Collections.singletonList(
+                                new ServiceWorkerAvailabilityEntity(
+                                        0,
+                                        testServiceWorkerEntity,
+                                        new AvailabilityEntity(
+                                                0,
+                                                DayOfWeek.THURSDAY,
+                                                LocalTime.of(12, 0),
+                                                LocalTime.of(17, 0)
+                                        ),
+                                        LocalDate.of(2020, 10, 15),
+                                        LocalDate.of(2020, 10, 15)
+                                )
+                        )
+                );
+
+        Mockito.when(bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(Mockito.anyInt(), Mockito.any()))
+                .thenReturn(
+                        Collections.singletonList(
+                                // Booking made by Jimmy - just to show the worker can be occupied by someone else
+                                new BookingEntity(
+                                        0,
+                                        testServiceWorkerEntity,
+                                        testSecondCustomerEntity,
+                                        LocalDateTime.of(2020, 10, 15, 16, 30),
+                                        testTime,
+                                        testTime,
+                                        Status.ACTIVE
+                                )
+                        )
+                );
 
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
-                .thenReturn(getAllByCustomer);
+                .thenReturn(
+                        Arrays.asList(
+                                // Before above booking
+                                new BookingEntity(
+                                        0,
+                                        testServiceWorkerEntity,
+                                        testCustomerEntity,
+                                        LocalDateTime.of(2020, 10, 15, 12, 0),
+                                        testTime,
+                                        testTime,
+                                        Status.ACTIVE
+                                ),
+                                // After above booking
+                                new BookingEntity(
+                                        0,
+                                        testServiceWorkerEntity,
+                                        testCustomerEntity,
+                                        LocalDateTime.of(2020, 10, 15, 16, 0),
+                                        testTime,
+                                        testTime,
+                                        Status.ACTIVE
+                                )
+                        )
+                );
     }
 
+    /**
+     * Acceptance tests 014
+     */
     @Test
     public void cancelBooking() {
         LocalDateTime testTime = LocalDateTime.now();
-        Mockito.when(bookingRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(new BookingEntity(0, new ServiceWorkerEntity
-                (new ServiceEntity(
-                        new BusinessEntity(0, "Mojang")
-                        , "Minecraft"
-                        , 30)
-                        , new WorkerEntity(0,
-                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
-                new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                "String streetAddress", "String city", State.TAS, "String postcode"),
-                LocalDateTime.of(2020, 10, 15, 15, 30),
-                testTime,
-                testTime,
-                Status.ACTIVE)));
+        Mockito.when(bookingRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(expectedBookingEntity));
 
-        BookingEntity expected = new BookingEntity(0, new ServiceWorkerEntity
-                (new ServiceEntity(
-                        new BusinessEntity(0,"Mojang")
-                        , "Minecraft"
-                        , 30)
-                        , new WorkerEntity(0,
-                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
-                new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                "String streetAddress", "String city", State.TAS, "String postcode"),
+        BookingEntity expected = new BookingEntity(
+                expectedBookingEntity.getBookingId(),
+                testServiceWorkerEntity,
+                testCustomerEntity,
                 LocalDateTime.of(2020, 10, 15, 15, 30),
                 testTime,
                 testTime,
-                Status.CANCELLED);
+                Status.CANCELLED
+        );
 
         bookingService.cancelBooking(0);
         Mockito.verify(bookingRepository).save(ArgumentMatchers.argThat(actual -> {
@@ -108,142 +200,129 @@ public class BookingServiceTest {
         }));
     }
 
+    /**
+     * Acceptance tests 015
+     */
     @Test
     public void cancelBookingNotFound() {
         Mockito.when(bookingRepository.findById(Mockito.any())).thenReturn(
                 Optional.empty()
         );
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.cancelBooking(3));
+        ValidationResponse<Void> actual = bookingService.cancelBooking(3);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 016
+     */
     @Test
     public void createBooking() {
-        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
-                .thenReturn(getAllByCustomer.stream().anyMatch(a -> a.getCustomer().getUser().getUsername().equals("Lachlan")));
-
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
-                LocalDateTime.of(2020, 11, 15, 20, 30));
-
-        BookingEntity expected = new BookingEntity(0, new ServiceWorkerEntity
-                (new ServiceEntity(
-                        new BusinessEntity("Mojang")
-                        , "Minecraft"
-                        , 30)
-                        , new WorkerEntity(
-                        new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER))), new CustomerEntity(
-                new UserEntity("Lachlan", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                "String streetAddress", "String city", State.TAS, "String postcode"),
-                LocalDateTime.of(2020, 11, 15, 20, 30),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                Status.ACTIVE);
+                LocalDateTime.of(2020, 10, 15, 15, 30));
 
         bookingService.createBooking(br);
 
         Mockito.verify(bookingRepository).save(ArgumentMatchers.argThat(actual -> {
-            Assertions.assertEquals(expected, actual);
+            Assertions.assertEquals(expectedBookingEntity, actual);
             return true;
         }));
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
-    public void createBookingWorkerBusy() {
-        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
-                .thenReturn(getAllByCustomer.stream().anyMatch(a -> a.getCustomer().getUser().getUsername().equals("Lachlan")));
+    public void createBookingWorkerNotAvailable() {
+        BookingRequest br = new BookingRequest(0, 0, "Lachlan",
+                LocalDateTime.of(2020, 10, 14, 15, 30));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
+    }
 
+    /**
+     * Acceptance tests 017
+     */
+    @Test
+    public void createBookingWorkerNotAvailableEffectiveDates() {
+        BookingRequest br = new BookingRequest(0, 0, "Lachlan",
+                LocalDateTime.of(2020, 10, 22, 15, 30));
+
+        Mockito.when(serviceWorkerAvailabilityRepository.getAllByServiceWorkerId(
+                Mockito.anyInt(), Mockito.any(), Mockito.any()))
+                .thenReturn(new ArrayList<>());
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
+    }
+
+    /**
+     * Acceptance tests 017
+     */
+    @Test
+    public void createBookingWorkerOverlap() {
         Mockito.when(bookingRepository.getAllByServiceWorkerWorkerWorkerIdAndStatus(Mockito.anyInt(), Mockito.any()))
-                .thenReturn(Arrays.asList(new BookingEntity(0, new ServiceWorkerEntity
-                        (new ServiceEntity(
-                                new BusinessEntity(0,"Mojang")
-                                , "Minecraft"
-                                , 30)
-                                , new WorkerEntity(0,
-                                new UserEntity("Notch", "Cool", "Marcus", "Pearson", Role.WORKER), Status.ACTIVE)), new CustomerEntity(
-                        new UserEntity("Jerry", "bort", "Lachlan", "Lachlan", Role.CUSTOMER),
-                        "String streetAddress", "String city", State.TAS, "String postcode"),
-                        LocalDateTime.of(2020, 10, 15, 15, 30),
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        Status.ACTIVE)));
-
-        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
-                .thenReturn(true);
+                .thenReturn(
+                        Collections.singletonList(
+                                new BookingEntity(0,
+                                        testServiceWorkerEntity,
+                                        testSecondCustomerEntity,
+                                        // This is the overlap (3:29pm)
+                                        LocalDateTime.of(2020, 10, 15, 15, 29),
+                                        LocalDateTime.now(),
+                                        LocalDateTime.now(),
+                                        Status.ACTIVE
+                                )
+                        )
+                );
 
         BookingRequest br = new BookingRequest(0, 0, "Lachlan",
                 LocalDateTime.of(2020, 10, 15, 15, 30));
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
-
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
-    public void createBookingCustomerBusy() {
-        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
-                .thenReturn(getAllByCustomer.stream().anyMatch(a -> a.getCustomer().getUser().getUsername().equals("Lachlan")));
-
+    public void createBookingCustomerOverlap() {
         BookingRequest br = new BookingRequest(1, 0, "Lachlan",
-                LocalDateTime.of(2020, 10, 15, 15, 30));
+                LocalDateTime.of(2020, 10, 15, 15, 31));
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 017
+     */
     @Test
-    public void createBookingCustomerNotExist() {
-        Mockito.when(customerRepository.existsByUserUsername(Mockito.any()))
-                .thenReturn(getAllByCustomer.stream().anyMatch(a -> a.getCustomer().getUser().getUsername().equals("DoesntExist")));
+    public void createBookingCustomerDoesntExist() {
+        Mockito.when(customerRepository.getByUserUsername(Mockito.any())).thenReturn(null);
 
         BookingRequest br = new BookingRequest(0, 0, "DoesntExist",
                 LocalDateTime.of(2020, 10, 15, 15, 30)
         );
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> bookingService.createBooking(br));
+        ValidationResponse<Void> actual = bookingService.createBooking(br);
+        Assertions.assertFalse(actual.isSuccessful());
     }
 
+    /**
+     * Acceptance tests 018, 020
+     */
     @Test
     public void testViewBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
-                .thenReturn(Arrays.asList(
-                        new BookingEntity(
-                                new ServiceWorkerEntity(
-                                        new ServiceEntity(
-                                                new BusinessEntity("Mojang"),
-                                                "Minecraft",
-                                                180
-                                        ),
-                                        new WorkerEntity(
-                                                new UserEntity(
-                                                        "Notch",
-                                                        "Cool",
-                                                        "Marcus",
-                                                        "Pearson",
-                                                        Role.WORKER
-                                                )
-                                        )
-                                ),
-                                new CustomerEntity(
-                                        new UserEntity(
-                                                "Lachlan",
-                                                "bort",
-                                                "Lachlan",
-                                                "Lachlan",
-                                                Role.CUSTOMER
-                                        ),
-                                        "String streetAddress",
-                                        "String city",
-                                        State.TAS,
-                                        "String postcode"
-                                ),
-                                LocalDateTime.of(2020, 10, 15, 15, 30)
-                        )
-                        )
-                );
+                .thenReturn(Collections.singletonList(expectedBookingEntity));
 
-        List<BookingResponse> expected = Arrays.asList(
+        List<BookingResponse> expected = Collections.singletonList(
                 new BookingResponse(
                         "Minecraft",
                         "Marcus Pearson",
                         LocalDateTime.of(2020, 10, 15, 15, 30),
-                        0
+                        0,
+                        "Notch"
                 )
         );
 
@@ -252,8 +331,11 @@ public class BookingServiceTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 019
+     */
     @Test
-    public void TestNoBookings() {
+    public void testNoBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
                 .thenReturn(new ArrayList<>());
 
@@ -266,7 +348,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    public void TestNoLogin() {
+    public void testNoLogin() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
                 .thenReturn(Arrays.asList(
                         new BookingEntity
@@ -290,8 +372,11 @@ public class BookingServiceTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Acceptance tests 016
+     */
     @Test
-    public void TestMultipleBookings() {
+    public void testMultipleBookings() {
         Mockito.when(bookingRepository.getAllByCustomerUserUsernameAndStatus(Mockito.any(), Mockito.any()))
                 .thenReturn(Arrays.asList(
                         new BookingEntity
@@ -320,8 +405,8 @@ public class BookingServiceTest {
                                 )));
 
         List<BookingResponse> expected = Arrays.asList(
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 0),
-                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 0));
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 15, 15, 30), 0, "Notch"),
+                new BookingResponse("Minecraft", "Marcus Pearson", LocalDateTime.of(2020, 10, 16, 15, 30), 0, "Notch"));
 
 
         List<BookingResponse> actual = bookingService.viewBookings("Notch", Status.ACTIVE);

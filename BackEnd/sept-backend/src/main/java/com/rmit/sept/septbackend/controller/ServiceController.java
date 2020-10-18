@@ -1,20 +1,24 @@
 package com.rmit.sept.septbackend.controller;
 
+import com.rmit.sept.septbackend.exception.Error;
+import com.rmit.sept.septbackend.exception.ResponseException;
+import com.rmit.sept.septbackend.model.AvailabilityResponse;
 import com.rmit.sept.septbackend.model.CreateServiceRequest;
 import com.rmit.sept.septbackend.model.ServiceResponse;
 import com.rmit.sept.septbackend.service.ServiceService;
-import org.springframework.http.HttpStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/service")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class ServiceController {
+public class ServiceController extends AbstractBaseController {
 
     private final ServiceService serviceService;
 
@@ -33,18 +37,23 @@ public class ServiceController {
         List<ServiceResponse> serviceResponses;
         if (!(businessId.isPresent() && username.isPresent())) {
             if (businessId.isPresent()) {
-                serviceResponses = serviceService.getServicesForBusinessId(businessId.get());
+                serviceResponses = handleValidationResponse(serviceService.getServicesForBusinessId(businessId.get()));
 
             } else if (username.isPresent()) {
-                serviceResponses = serviceService.getServicesForUsername(username.get());
+                serviceResponses = handleValidationResponse(serviceService.getServicesForUsername(username.get()));
 
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No parameters specified");
+                throw new ResponseException(Collections.singletonList(new Error("An unexpected error occurred", "No parameters specified")));
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only specify one parameter");
+            throw new ResponseException(Collections.singletonList(new Error("An unexpected error occurred", "Must only specify one parameter")));
         }
         return serviceResponses;
+    }
+
+    @GetMapping("/service")
+    public List<ServiceResponse> getServicesByWorker(@Valid @RequestParam(name = "worker-id") int workerId) {
+        return handleValidationResponse(serviceService.getServicesByWorkerId(workerId));
     }
 
     @DeleteMapping("/delete/{serviceId}")
@@ -52,10 +61,17 @@ public class ServiceController {
         serviceService.deleteService(serviceId);
     }
 
-
     @PutMapping("/{service-id}")
     public void editService(@PathVariable("service-id") int serviceId, @RequestBody CreateServiceRequest createServiceRequest) {
         serviceService.editService(serviceId, createServiceRequest);
     }
 
+    @GetMapping("/availability/{serviceId}")
+    public AvailabilityResponse viewAvailability(@Valid @PathVariable int serviceId,
+                                                 @RequestParam(required = false)
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveStartDate,
+                                                 @RequestParam(required = false)
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate effectiveEndDate) {
+        return handleValidationResponse(serviceService.viewServiceAvailability(serviceId, effectiveStartDate, effectiveEndDate));
+    }
 }

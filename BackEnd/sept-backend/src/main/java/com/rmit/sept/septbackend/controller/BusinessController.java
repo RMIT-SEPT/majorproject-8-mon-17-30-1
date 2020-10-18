@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("api/v1/business")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor(onConstructor_ = {@Autowired})
-public class BusinessController {
+public class BusinessController extends AbstractBaseController {
 
     private final BusinessService businessService;
 
@@ -23,6 +23,6 @@ public class BusinessController {
 
     @GetMapping("/admin")
     public BusinessResponse getBusinessForAdminUsername(@RequestParam("username") String username) {
-        return businessService.getBusinessForAdminUsername(username);
+        return handleValidationResponse(businessService.getBusinessForAdminUsername(username));
     }
 }
